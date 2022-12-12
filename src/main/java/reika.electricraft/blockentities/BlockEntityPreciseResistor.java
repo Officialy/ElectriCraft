@@ -1,0 +1,83 @@
+/*******************************************************************************
+ * @author Reika Kalseki
+ *
+ * Copyright 2017
+ *
+ * All rights reserved.
+ * Distribution of the software in any form is only allowed with
+ * explicit, prior permission from the owner.
+ ******************************************************************************/
+package reika.electricraft.blockentities;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
+import reika.electricraft.base.BlockEntityResistorBase;
+import reika.electricraft.registry.ElectriBlockEntities;
+import reika.electricraft.registry.ElectriTiles;
+
+import java.util.ArrayList;
+
+public class BlockEntityPreciseResistor extends BlockEntityResistorBase {
+
+	/** Use these to control current limits; change by right-clicking with dye */
+	private ColorBand[] bands = {ColorBand.BLACK, ColorBand.BLACK, ColorBand.BLACK, ColorBand.BLACK};
+
+	public BlockEntityPreciseResistor(BlockPos pos, BlockState state) {
+		super(ElectriBlockEntities.PRECISE_RESISTOR.get(), pos, state);
+	}
+
+	@Override
+	protected int calculateCurrentLimit() {
+		int digit1 = bands[0].ordinal();
+		int digit2 = bands[1].ordinal();
+		int digit3 = bands[2].ordinal();
+		int multiplier = bands[3].ordinal();
+		int base = Integer.parseInt(String.format("%d%d%d", digit1, digit2, digit3));
+		return base*ReikaMathLibrary.intpow2(10, multiplier);
+	}
+
+	@Override
+	public ElectriTiles getMachine() {
+		return ElectriTiles.PRECISERESISTOR;
+	}
+
+	@Override
+	public void readSyncTag(CompoundTag NBT) {
+		super.readSyncTag(NBT);
+	}
+
+	@Override
+	public void writeSyncTag(CompoundTag NBT) {
+		super.writeSyncTag(NBT);
+	}
+
+	@Override
+	public ColorBand[] getColorBands() {
+		return bands;
+	}
+
+	@Override
+	protected void setColorBands(ColorBand[] bands) {
+		this.bands = bands;
+	}
+
+	@Override
+	public void findAndJoinNetwork(Level world, int x, int y, int z) {
+
+	}
+
+	@Override
+	public boolean onShiftRightClick(Level world, BlockPos pos, Direction side) {
+		return false;
+	}
+
+	@Override
+	public ArrayList<String> getMessages(Level world, BlockPos pos, Direction side) {
+		return null;
+	}
+}
