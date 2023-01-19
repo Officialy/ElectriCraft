@@ -12,7 +12,6 @@ package reika.electricraft.blockentities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -320,10 +319,10 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 		if (Aout > 0 && Vout > 0) {
 			double ratio = this.getRatio();
 			double r = ratio >= 0 ? ratio : 1/ratio;
-			double d = tank.getLevel() >= 50 ? 0.035 : 0.35;
+			double d = tank.getFluidLevel() >= 50 ? 0.035 : 0.35;
 			temperature += d*Math.sqrt(Ain*Vin)+Math.max(0, ReikaMathLibrary.logbase(r+1, 2));
 		}
-		if (tank.getLevel() >= 50) {
+		if (tank.getFluidLevel() >= 50) {
 			tank.removeLiquid(50);
 			//temperature *= 0.75;
 		}
@@ -385,12 +384,12 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 	}
 
 	@Override
-	public int fill(Direction from, FluidStack resource, FluidAction action) {
+	public int fillPipe(Direction from, FluidStack resource, FluidAction action) {
 		return this.canFill(from, resource.getFluid()) ? tank.fill(resource, action) : 0;
 	}
 
 	@Override
-	public FluidStack drain(Direction from, int maxDrain, boolean doDrain) {
+	public FluidStack drainPipe(Direction from, int maxDrain, FluidAction doDrain) {
 		return null;
 	}
 

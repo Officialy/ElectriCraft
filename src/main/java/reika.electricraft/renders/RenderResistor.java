@@ -24,6 +24,7 @@ import reika.dragonapi.libraries.java.ReikaJavaLibrary;
 import reika.electricraft.base.BlockEntityResistorBase;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.blocks.BlockElectricMachine;
+import reika.electricraft.registry.ElectriBlocks;
 import reika.electricraft.registry.ElectriModelLayers;
 import reika.electricraft.renders.model.ResistorModel;
 import reika.rotarycraft.auxiliary.IORenderer;
@@ -41,7 +42,7 @@ public class RenderResistor extends ElectriTERenderer<BlockEntityResistorBase> {
 
         Level level = tile.getLevel();
         boolean flag = level != null;
-        BlockState blockstate = flag ? tile.getBlockState() : RotaryBlocks.ENGINE.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
+        BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.RESISTOR.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
 
         float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
         stack.pushPose();
@@ -49,7 +50,7 @@ public class RenderResistor extends ElectriTERenderer<BlockEntityResistorBase> {
         stack.mulPose(Axis.YP.rotationDegrees(-f));
         stack.mulPose(Axis.ZP.rotationDegrees(180));
 
-//		GL11.glRotatef(var11, 0.0F, 1.0F, 0.0F);
+//		stack.mulPose(var11, 0.0F, 1.0F, 0.0F);
 		BlockEntityResistorBase.ColorBand[] colors = tile.getColorBands();
         VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entitySolid((ResistorModel.TEXTURE_LOCATION)));
         resistorModel.renderAll(stack, vertexconsumer, light, tile, ReikaJavaLibrary.makeListFrom(colors), tile.phi, 0);

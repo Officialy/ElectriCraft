@@ -37,7 +37,7 @@
 //
 //		IIcon ico = b.getIcon(0, metadata);
 //
-//		GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+//		stack.mulPose(90.0F, 0.0F, 1.0F, 0.0F);
 //		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 //		tessellator.startDrawingQuads();
 //		tessellator.normal(0.0F, -1.0F, 0.0F);

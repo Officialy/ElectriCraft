@@ -165,8 +165,8 @@
 //				double dz = 0;
 //				stack.translate(-dx, -dy, -dz);
 //				GL11.glScaled(sc, -sc, sc);
-//				GL11.glRotatef(renderq, 1, 0, 0);
-//				GL11.glRotatef(r, 0, 1, 0);
+//				stack.mulPose(renderq, 1, 0, 0);
+//				stack.mulPose(r, 0, 1, 0);
 //				stack.translate(a, b, c);
 //				if (te instanceof BlockEntityWire) {
 //					BlockEntityWire tw = (BlockEntityWire)te;
@@ -178,8 +178,8 @@
 //				}
 //				TileEntityRendererDispatcher.instance.renderTileEntityAt(te, -0.5, 0, -0.5, 0);
 //				stack.translate(-a, -b, -c);
-//				GL11.glRotatef(-r, 0, 1, 0);
-//				GL11.glRotatef(-renderq, 1, 0, 0);
+//				stack.mulPose(-r, 0, 1, 0);
+//				stack.mulPose(-renderq, 1, 0, 0);
 //				stack.translate(-dx, -dy, -dz);
 //				GL11.glScaled(1D/sc, -1D/sc, 1D/sc);
 //			}
@@ -189,8 +189,8 @@
 //				double dz = 0;
 //				stack.translate(-dx, -dy, -dz);
 //				GL11.glScaled(sc, -sc, sc);
-//				GL11.glRotatef(renderq, 1, 0, 0);
-//				GL11.glRotatef(r, 0, 1, 0);
+//				stack.mulPose(renderq, 1, 0, 0);
+//				stack.mulPose(r, 0, 1, 0);
 //				stack.translate(a, b, c);
 //				if (te instanceof TileEntityResistorBase) {
 //					TileEntityResistorBase tr = (TileEntityResistorBase)te;
@@ -207,8 +207,8 @@
 //						tr.setColor(ColorBand.BLACK, i+1);
 //				}
 //				stack.translate(-a, -b, -c);
-//				GL11.glRotatef(-r, 0, 1, 0);
-//				GL11.glRotatef(-renderq, 1, 0, 0);
+//				stack.mulPose(-r, 0, 1, 0);
+//				stack.mulPose(-renderq, 1, 0, 0);
 //				stack.translate(-dx, -dy, -dz);
 //				GL11.glScaled(1D/sc, -1D/sc, 1D/sc);
 //			}
@@ -218,8 +218,8 @@
 //				double dz = 0;
 //				stack.translate(dx, dy, dz);
 //				GL11.glScaled(sc, -sc, sc);
-//				GL11.glRotatef(renderq, 1, 0, 0);
-//				GL11.glRotatef(r, 0, 1, 0);
+//				stack.mulPose(renderq, 1, 0, 0);
+//				stack.mulPose(r, 0, 1, 0);
 //				ReikaTextureHelper.bindTerrainTexture();
 //				stack.translate(a, b, c);
 //				int meta = et.getBlockMetadata();
@@ -228,8 +228,8 @@
 //				}
 //				rb.renderBlockAsItem(et.get(), meta, 1);
 //				stack.translate(-a, -b, -c);
-//				GL11.glRotatef(-r, 0, 1, 0);
-//				GL11.glRotatef(-renderq, 1, 0, 0);
+//				stack.mulPose(-r, 0, 1, 0);
+//				stack.mulPose(-renderq, 1, 0, 0);
 //				GL11.glScaled(1D/sc, -1D/sc, 1D/sc);
 //				stack.translate(-dx, -dy, -dz);
 //			}

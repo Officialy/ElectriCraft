@@ -26,6 +26,7 @@ import reika.dragonapi.libraries.rendering.ReikaRenderHelper;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.blockentities.BlockEntityTransformer;
 import reika.electricraft.blocks.BlockElectricMachine;
+import reika.electricraft.registry.ElectriBlocks;
 import reika.electricraft.registry.ElectriModelLayers;
 import reika.electricraft.renders.model.TransformerModel;
 import reika.rotarycraft.auxiliary.IORenderer;
@@ -43,7 +44,7 @@ public class RenderTransformer extends ElectriTERenderer<BlockEntityTransformer>
 	{
 		Level level = tile.getLevel();
 		boolean flag = level != null;
-		BlockState blockstate = flag ? tile.getBlockState() : RotaryBlocks.ENGINE.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
+		BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.TRANSFORMER.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
 
 		float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
 		stack.pushPose();

@@ -16,8 +16,8 @@
 //
 //import Reika.ChromatiCraft.API.Interfaces.WorldRift;
 //import reika.dragonapi.modlist;
-//import reika.dragonapi.ASM.APIStripper.Strippable;
-//import reika.dragonapi.ASM.DependentMethodStripper.ModDependent;
+//import reika.dragonapi.asm.APIStripper.Strippable;
+//import reika.dragonapi.asm.DependentMethodStripper.ModDependent;
 //import reika.electricraft.base.ElectriCable;
 //import reika.electricraft.registry.ElectriTiles;
 //

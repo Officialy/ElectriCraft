@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.blockentities.BlockEntityFuse;
 import reika.electricraft.blocks.BlockElectricMachine;
+import reika.electricraft.registry.ElectriBlocks;
 import reika.electricraft.registry.ElectriModelLayers;
 import reika.electricraft.renders.model.FuseModel;
 import reika.rotarycraft.auxiliary.IORenderer;
@@ -48,7 +49,7 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
 
         Level level = tile.getLevel();
         boolean flag = level != null;
-        BlockState blockstate = flag ? tile.getBlockState() : RotaryBlocks.ENGINE.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
+        BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.FUSE.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
 
         float facing = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
 

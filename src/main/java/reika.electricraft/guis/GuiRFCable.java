@@ -55,10 +55,10 @@
 //			int dy = 20+i*12;
 //			int w = 50;
 //			int nve = i != 0 ? -i : -40;
-//			renderables.add(new ImagedButton(i, j+dx-w, k+dy, 24, 12, 18, 54, tex, RotaryCraft.class));
-//			renderables.add(new ImagedButton(nve, j+dx+w, k+dy, 24, 12, 42, 54, tex, RotaryCraft.class));
+//			addRenderableWidget(new ImagedButton(i, j+dx-w, k+dy, 24, 12, 18, 54, tex, RotaryCraft.class));
+//			addRenderableWidget(new ImagedButton(nve, j+dx+w, k+dy, 24, 12, 42, 54, tex, RotaryCraft.class));
 //		}
-//		renderables.add(new Button(100, j+xSize/2-20, k+72, 40, 20, "Reset"));
+//		addRenderableWidget(new Button(100, j+xSize/2-20, k+72, 40, 20, "Reset"));
 //	}
 //
 //	@Override

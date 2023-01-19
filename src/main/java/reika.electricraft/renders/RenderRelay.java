@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.blockentities.BlockEntityRelay;
 import reika.electricraft.blocks.BlockElectricMachine;
+import reika.electricraft.registry.ElectriBlocks;
 import reika.electricraft.registry.ElectriModelLayers;
 import reika.electricraft.renders.model.RelayModel;
 import reika.rotarycraft.auxiliary.IORenderer;
@@ -40,7 +41,7 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 
 		Level level = tile.getLevel();
 		boolean flag = level != null;
-		BlockState blockstate = flag ? tile.getBlockState() : RotaryBlocks.ENGINE.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
+		BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.RELAY.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
 
 		float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
 		stack.pushPose();
@@ -52,7 +53,7 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entitySolid((RelayModel.TEXTURE_LOCATION)));
 		relay.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
 		stack.popPose();
-//		GL11.glRotatef(var11, 0.0F, 1.0F, 0.0F);
+//		stack.mulPose(var11, 0.0F, 1.0F, 0.0F);
 //		var14.renderAll(tile, null, tile.phi);
 	}
 

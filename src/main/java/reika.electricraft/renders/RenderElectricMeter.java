@@ -28,6 +28,7 @@ import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.blockentities.BlockEntityMeter;
 import reika.electricraft.blocks.BlockElectricMachine;
+import reika.electricraft.registry.ElectriBlocks;
 import reika.electricraft.registry.ElectriModelLayers;
 import reika.electricraft.renders.model.MeterModel;
 import reika.rotarycraft.auxiliary.IORenderer;
@@ -46,7 +47,7 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
 
         Level level = tile.getLevel();
         boolean flag = level != null;
-        BlockState blockstate = flag ? tile.getBlockState() : RotaryBlocks.ENGINE.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
+        BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.METER.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
 
         float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
         stack.pushPose();

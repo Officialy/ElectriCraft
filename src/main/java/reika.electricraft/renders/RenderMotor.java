@@ -26,6 +26,7 @@ import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.blockentities.BlockEntityMotor;
 import reika.electricraft.blocks.BlockElectricMachine;
+import reika.electricraft.registry.ElectriBlocks;
 import reika.electricraft.registry.ElectriModelLayers;
 import reika.rotarycraft.auxiliary.IORenderer;
 import reika.rotarycraft.base.blocks.BlockRotaryCraftMachine;
@@ -45,7 +46,7 @@ public class RenderMotor extends ElectriTERenderer<BlockEntityMotor> {
 
         Level level = tile.getLevel();
         boolean flag = level != null;
-        BlockState blockstate = flag ? tile.getBlockState() : RotaryBlocks.ENGINE.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
+        BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.MOTOR.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
 
         float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
         stack.pushPose();

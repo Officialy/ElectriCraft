@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.blockentities.BlockEntityGenerator;
 import reika.electricraft.blocks.BlockElectricMachine;
+import reika.electricraft.registry.ElectriBlocks;
 import reika.electricraft.registry.ElectriModelLayers;
 import reika.rotarycraft.auxiliary.IORenderer;
 import reika.rotarycraft.modinterface.model.GeneratorModel;
@@ -34,7 +35,7 @@ public class RenderGenerator extends ElectriTERenderer<BlockEntityGenerator>
     }
 	public void renderBlockEntityGeneratorAt(BlockEntityGenerator tile, PoseStack stack, MultiBufferSource bufferSource, int light)
 	{
-        BlockState blockstate = tile.getLevel() != null ? tile.getBlockState() : RotaryBlocks.ENGINE.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
+        BlockState blockstate = tile.getLevel() != null ? tile.getBlockState() : ElectriBlocks.GENERATOR.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
         float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
         stack.pushPose();
         stack.translate(0.5F, 1.5F, 0.5F);

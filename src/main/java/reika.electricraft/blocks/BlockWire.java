@@ -72,7 +72,7 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 	{
 		if (!player.isCreative() && this.canHarvest(world, player, x, y, z))
 			this.harvestBlock(world, player, x, y, z, world.getBlockMetadata(x, y, z));
-		return world.setBlockToAir(x, y, z);
+		return world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 	}
 
 	@Override

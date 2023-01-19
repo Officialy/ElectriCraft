@@ -16,8 +16,8 @@
 //
 //
 //import reika.dragonapi.modlist;
-//import reika.dragonapi.ASM.APIStripper.Strippable;
-//import reika.dragonapi.ASM.DependentMethodStripper.ModDependent;
+//import reika.dragonapi.asm.APIStripper.Strippable;
+//import reika.dragonapi.asm.DependentMethodStripper.ModDependent;
 //import reika.dragonapi.libraries.level.ReikaWorldHelper;
 //import reika.dragonapi.modinteract.ItemHandlers.IC2Handler;
 //import reika.dragonapi.modinteract.power.ReikaEUHelper;

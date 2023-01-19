@@ -29,7 +29,7 @@ import reika.electricraft.base.WiringTile;
 
 public final class WirePath {
 
-	final LinkedList<WiringTile> nodes = new LinkedList();
+	final LinkedList<WiringTile> nodes = new LinkedList<>();
 	final Collection<WireFuse> fuses = new ArrayList<>();
 	final Collection<ToggledConnection> toggles = new ArrayList<>();
 	final WireEmitter start;
