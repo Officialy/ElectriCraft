@@ -38,7 +38,6 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 	}
 	public void renderBlockEntityRelayAt(BlockEntityRelay tile, PoseStack stack, MultiBufferSource bufferSource, int light)
 	{
-
 		Level level = tile.getLevel();
 		boolean flag = level != null;
 		BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.RELAY.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
@@ -48,7 +47,6 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 		stack.translate(0.5F, 1.5F, 0.5F);
 		stack.mulPose(Axis.YP.rotationDegrees(-f));
 		stack.mulPose(Axis.ZP.rotationDegrees(180));
-
 
 		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entitySolid((RelayModel.TEXTURE_LOCATION)));
 		relay.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
