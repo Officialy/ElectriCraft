@@ -178,4 +178,9 @@ public class PreciseResistorModel extends ResistorBaseModel {
     public void renderToBuffer(PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         root.render(stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
+
+    @Override
+    public ResourceLocation getTexture() {
+        return TEXTURE_LOCATION;
+    }
 }

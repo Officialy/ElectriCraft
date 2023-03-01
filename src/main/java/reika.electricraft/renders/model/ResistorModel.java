@@ -159,4 +159,9 @@ public class ResistorModel extends ResistorBaseModel {
         bands.add(new ResistorBand(3, band3a, band3b));
         return Collections.unmodifiableList(bands);
     }
+
+    @Override
+    public ResourceLocation getTexture() {
+        return TEXTURE_LOCATION;
+    }
 }
