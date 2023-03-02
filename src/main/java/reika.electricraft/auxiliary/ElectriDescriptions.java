@@ -65,7 +65,7 @@
 //		return locale && FMLLoader.getDist() == Dist.CLIENT ? getLocalizedParent() : "resources/";
 //	}
 //
-//	@OnlyIn(Dist.CLIENT)
+//
 //	private static String getLocalizedParent() {
 //		LanguageInfo language = Minecraft.getInstance().getLanguageManager().getSelected();
 //		String lang = language.getCode();

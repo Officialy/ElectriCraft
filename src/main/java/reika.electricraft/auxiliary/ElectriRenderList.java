@@ -18,7 +18,7 @@ import reika.dragonapi.libraries.java.ReikaJavaLibrary;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.registry.ElectriTiles;
-@OnlyIn(Dist.CLIENT)
+
 public class ElectriRenderList {
 
 	private static HashMap<ElectriTiles, ElectriTERenderer> renders = new HashMap<ElectriTiles, ElectriTERenderer>();
