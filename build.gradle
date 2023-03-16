@@ -44,7 +44,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.19.3-44.0.37'
-    //You'll need these on your local maven, to do this build DragonAPI first and push to maven local, then the same for rotarycraft
+    //You'll need these on your local maven, to do this build DragonAPI first and push to maven local, then the same for electricraft
     implementation fg.deobf("reika.dragonapi:DragonAPI:0.0.1a")
     implementation fg.deobf("reika.rotarycraft:RotaryCraft:0.0.1a")
 }
