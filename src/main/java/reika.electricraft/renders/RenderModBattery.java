@@ -37,7 +37,7 @@ public class RenderModBattery extends ElectriTERenderer<BlockEntityBattery> {
 		if (((BlockEntityBase)te).isInWorld())
 			ReikaRenderHelper.prepareGeoDraw(true);
 		else {
-			RenderSystem.disableTexture();
+//			RenderSystem.disableTexture();
 //			GL11.glDisable(GL11.GL_LIGHTING);
 		}
 

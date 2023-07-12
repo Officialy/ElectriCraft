@@ -36,7 +36,7 @@ import reika.rotarycraft.registry.RotaryBlocks;
 import static reika.electricraft.ElectriCraft.MODID;
 
 public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
-    private FuseModel modelFuse;
+    private final FuseModel modelFuse;
 
     public RenderFuse(BlockEntityRendererProvider.Context context) {
         modelFuse = new FuseModel(context.bakeLayer(ElectriModelLayers.FUSE));
@@ -91,7 +91,7 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
 
         {
             //if (this.doRenderModel((BlockEntityFuse)tile))
-            this.renderBlockEntityFuseAt((BlockEntityFuse) tile, stack, bufferSource, light);
+            this.renderBlockEntityFuseAt(tile, stack, bufferSource, light);
             if (tile.isInWorld()) {// && MinecraftForgeClient.getRenderPass() == 1) {
                 IORenderer.renderIO(stack, bufferSource, tile, tile.getX(), tile.getY(), tile.getZ());
             }

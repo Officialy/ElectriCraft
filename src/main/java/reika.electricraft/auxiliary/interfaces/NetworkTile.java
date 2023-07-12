@@ -18,24 +18,24 @@ import reika.electricraft.network.WireNetwork;
 
 public interface NetworkTile {
 
-	public void findAndJoinNetwork(Level world, int x, int y, int z);
+	void findAndJoinNetwork(Level world, int x, int y, int z);
 
-	public WireNetwork getNetwork();
+	WireNetwork getNetwork();
 
-	public void setNetwork(WireNetwork n);
+	void setNetwork(WireNetwork n);
 
-	public void removeFromNetwork();
+	void removeFromNetwork();
 
-	public void resetNetwork();
+	void resetNetwork();
 
-	public boolean isConnectable();
+	boolean isConnectable();
 
-	public void onNetworkChanged();
+	void onNetworkChanged();
 
-	public abstract boolean canNetworkOnSide(Direction dir);
+	boolean canNetworkOnSide(Direction dir);
 
-	public Level getWorld();
-	public int getX();
-	public int getY();
-	public int getZ();
+	Level getWorld();
+	int getX();
+	int getY();
+	int getZ();
 }

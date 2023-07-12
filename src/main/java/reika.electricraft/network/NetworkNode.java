@@ -60,8 +60,7 @@ public final class NetworkNode {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof NetworkNode) {
-			NetworkNode n = (NetworkNode)o;
+		if (o instanceof NetworkNode n) {
 			return n.wire == wire && n.network == network && n.connections.equals(connections);
 		}
 		return false;

@@ -95,13 +95,11 @@ public abstract class ElectriBlockEntity extends BlockEntityBase implements Tran
 
 	public final ArrayList<String> getMessages(Level world, int x, int y, int z, int side) {
 		ArrayList<String> li = new ArrayList<>();
-		if (this instanceof BlockEntityWire) {
-			BlockEntityWire wire = (BlockEntityWire)this;
+		if (this instanceof BlockEntityWire wire) {
 			li.add(String.format("Point Voltage: %dV", wire.getWireVoltage()));
 			li.add(String.format("Point Current: %dA", wire.getWireCurrent()));
 		}
-		if (this instanceof BlockEntityBattery) {
-			BlockEntityBattery b = (BlockEntityBattery)this;
+		if (this instanceof BlockEntityBattery b) {
 			double max = b.getMaxEnergy();
 			li.add(String.format("Stored Energy: %s/%s", b.getDisplayEnergy(), b.getBatteryType().getFormattedCapacity()));
 		}

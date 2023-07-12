@@ -92,10 +92,7 @@ public enum ElectriOres implements OreEnum {
     }
 
     public String getProductDictionaryName() {
-        switch (this) {
-            default:
-                return "ingot" + ReikaStringParser.capFirstChar(this.name());
-        }
+        return "ingot" + ReikaStringParser.capFirstChar(this.name());
     }
 
     public Block getBlock() {
@@ -125,10 +122,7 @@ public enum ElectriOres implements OreEnum {
     }
 
     public String getProductName() {
-        switch (this) {
-            default:
-                return I18n.get("Items." + this.name().toLowerCase(Locale.ENGLISH));
-        }
+        return I18n.get("Items." + this.name().toLowerCase(Locale.ENGLISH));
     }
 
     public Block getReplaceableBlock() {
@@ -146,16 +140,11 @@ public enum ElectriOres implements OreEnum {
             return true;
 //        if (id == ReikaTwilightHelper.getDimensionID() && dimensionID == 0)
 //            return true;
-        if (dimensionID == Level.OVERWORLD && id != Level.NETHER && id != Level.END)
-            return true;
-        return false;
+        return dimensionID == Level.OVERWORLD && id != Level.NETHER && id != Level.END;
     }
 
     public boolean isValidBiome(Biome biome) {
-        switch (this) {
-            default:
-                return true;
-        }
+        return true;
     }
 
     public boolean canGenerateInChunk(Level world, int chunkX, int chunkZ) {
@@ -180,9 +169,7 @@ public enum ElectriOres implements OreEnum {
 //            return true;
 //	todo	if (ModList.CONDENSEDORES.isLoaded() && CondensedOreAPI.instance.doesBlockGenerate(this.getBlock(), this.getBlockMetadata()))
 //			return false;
-        if (!this.hasEquivalents())
-            return true;
-        return false;
+        return !this.hasEquivalents();
     }
 
     public boolean hasEquivalents() {

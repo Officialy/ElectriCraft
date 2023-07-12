@@ -19,15 +19,15 @@ public enum ElectriPackets {
 	public final int numInts;
 	public final PacketTypes type;
 
-	private ElectriPackets() {
+	ElectriPackets() {
 		this(0);
 	}
 
-	private ElectriPackets(int size) {
+	ElectriPackets(int size) {
 		this(size, PacketTypes.DATA);
 	}
 
-	private ElectriPackets(int size, PacketTypes t) {
+	ElectriPackets(int size, PacketTypes t) {
 		numInts = size;
 		type = t;
 	}

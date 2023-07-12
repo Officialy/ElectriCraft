@@ -34,7 +34,7 @@ import reika.rotarycraft.modinterface.model.ElecMotorModel;
 import reika.rotarycraft.registry.RotaryBlocks;
 
 public class RenderMotor extends ElectriTERenderer<BlockEntityMotor> {
-    private ElecMotorModel elecMotorModel;
+    private final ElecMotorModel elecMotorModel;
     public RenderMotor(BlockEntityRendererProvider.Context context) {
         elecMotorModel = new ElecMotorModel(context.bakeLayer(ElectriModelLayers.MOTOR));
     }
@@ -57,7 +57,7 @@ public class RenderMotor extends ElectriTERenderer<BlockEntityMotor> {
         if (tile.isFlipped && tile.getFacing().getStepZ() != 0) {
             stack.mulPose(Axis.ZP.rotationDegrees(180));
         }
-        int num = tile.isInWorld() ? 5 : 5;
+        int num = 5;
 //        var14.renderAll(tile, ReikaJavaLibrary.makeListFrom(num, tile.getFinColor(), tile.getPower() > 0), tile.phi, 0);
         VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entitySolid((new ResourceLocation(ElectriCraft.MODID,"textures/elecmotortex.png"))));
         elecMotorModel.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);

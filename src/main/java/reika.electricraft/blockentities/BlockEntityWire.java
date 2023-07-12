@@ -208,10 +208,8 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 		int z = getZ()+dir.getStepZ();
 		ElectriTiles m = this.getMachine();
 		ElectriTiles m2 = ElectriTiles.getTE(level, new BlockPos(x, y, z));
-		if (m == m2)
-			return true;//connectionCount < 3;
+		return m == m2;//connectionCount < 3;
 		//certain TEs
-		return false;
 	}
 
 	@Override

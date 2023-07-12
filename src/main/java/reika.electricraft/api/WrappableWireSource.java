@@ -15,10 +15,10 @@ import reika.rotarycraft.auxiliary.interfaces.PowerSourceTracker;
 
 public interface WrappableWireSource extends ShaftMachine, PowerSourceTracker {
 
-	public boolean canConnectToSide(Direction dir);
+	boolean canConnectToSide(Direction dir);
 
-	public boolean isFunctional();
+	boolean isFunctional();
 
-	public boolean hasPowerStatusChangedSinceLastTick();
+	boolean hasPowerStatusChangedSinceLastTick();
 
 }

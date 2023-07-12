@@ -41,7 +41,7 @@ public abstract class BlockEntityResistorBase extends BlockEntityWireComponent i
 
 		public static final ColorBand[] bandList = values();
 
-		private ColorBand(ReikaDyeHelper color) {
+		ColorBand(ReikaDyeHelper color) {
 			renderColor = color;
 		}
 

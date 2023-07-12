@@ -62,9 +62,9 @@ public enum ElectriTiles implements TileEnum {
     WIRELESSPAD("machine.wirelesspad", ElectriBlocks.WIRELESS_CHARGER.get(), BlockEntityWirelessCharger.class),
     PRECISERESISTOR("machine.precresistor", ElectriBlocks.PRECISE_RESISTOR.get(), BlockEntityPreciseResistor.class, "RenderPreciseResistor");
 
-    private String name;
+    private final String name;
     private final Class<? extends BlockEntity> teClass;
-    private String render;
+    private final String render;
     private final Block blockInstance;
     private BlockEntity renderInstance;
 
@@ -223,10 +223,7 @@ public enum ElectriTiles implements TileEnum {
     }
 
     public boolean renderInPass1() {
-        if (this == ElectriTiles.TRANSFORMER) {
-            return true;
-        }
-        return false;
+        return this == ElectriTiles.TRANSFORMER;
     }
 
     public boolean isDummiedOut() {

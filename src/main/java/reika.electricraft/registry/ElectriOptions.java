@@ -19,10 +19,10 @@ public enum ElectriOptions implements IntegerConfig, BooleanConfig, UserSpecific
 	RETROGEN("Retrogenerate Ores", false),
 	DISCRETE("Ore Discretization", 1);
 
-	private String label;
+	private final String label;
 	private boolean defaultState;
 	private int defaultValue;
-	private Class type;
+	private final Class type;
 	private boolean enforcing = false;
 
 	public static final ElectriOptions[] optionList = ElectriOptions.values();
@@ -97,10 +97,7 @@ public enum ElectriOptions implements IntegerConfig, BooleanConfig, UserSpecific
 
 	@Override
 	public boolean isUserSpecific() {
-		switch(this) {
-			default:
-				return false;
-		}
+		return false;
 	}
 
 }

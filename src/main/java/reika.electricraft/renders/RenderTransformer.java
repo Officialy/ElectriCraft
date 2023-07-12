@@ -36,7 +36,7 @@ import reika.rotarycraft.registry.RotaryBlocks;
 
 public class RenderTransformer extends ElectriTERenderer<BlockEntityTransformer>
 {
-	private TransformerModel transformer;
+	private final TransformerModel transformer;
 	public RenderTransformer(BlockEntityRendererProvider.Context context) {
 		transformer = new TransformerModel(context.bakeLayer(ElectriModelLayers.TRANSFORMER));
 	}
@@ -74,7 +74,7 @@ public class RenderTransformer extends ElectriTERenderer<BlockEntityTransformer>
 		if (a > 0) {
 			RenderSystem.enableBlend();
 			RenderSystem.defaultBlendFunc();
-			RenderSystem.disableTexture();
+//			RenderSystem.disableTexture();
 			ReikaRenderHelper.disableEntityLighting();
 			float lw = RenderSystem.getShaderLineWidth();//todo check GL11.glGetFloat(GL11.GL_LINE_WIDTH);
 			RenderSystem.lineWidth(5);

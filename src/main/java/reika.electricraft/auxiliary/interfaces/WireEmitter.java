@@ -14,12 +14,12 @@ import net.minecraft.core.Direction;
 
 public interface WireEmitter extends WireTerminus {
 
-	public abstract int getGenVoltage();
+	int getGenVoltage();
 
-	public abstract int getGenCurrent();
+	int getGenCurrent();
 
-	public boolean canEmitPowerToSide(Direction dir);
+	boolean canEmitPowerToSide(Direction dir);
 
-	public abstract boolean canEmitPower();
+	boolean canEmitPower();
 
 }

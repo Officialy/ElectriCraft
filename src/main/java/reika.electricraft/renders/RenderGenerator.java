@@ -29,7 +29,7 @@ import reika.rotarycraft.registry.RotaryBlocks;
 public class RenderGenerator extends ElectriTERenderer<BlockEntityGenerator>
 {
 
-	private GeneratorModel generatorModel;
+	private final GeneratorModel generatorModel;
     public RenderGenerator(BlockEntityRendererProvider.Context context) {
         generatorModel = new GeneratorModel(context.bakeLayer(ElectriModelLayers.GENERATOR));
     }

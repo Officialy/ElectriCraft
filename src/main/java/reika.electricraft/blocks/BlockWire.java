@@ -138,7 +138,7 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 				if (!te.insulated && net != null) {
 					if (net.isLive()) {
 						int v = net.getPointVoltage(te);
-						EntityDischarge ed = new EntityDischarge(world, pos.offset(0.5, 0.5, 0.5), v, e.blockPosition().getX(), e.blockPosition().getY(), e.blockPosition().getZ());
+						EntityDischarge ed = new EntityDischarge(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, v, e.blockPosition().getX(), e.blockPosition().getY(), e.blockPosition().getZ());
 						world.addFreshEntity(ed);
 						if (!(e instanceof LivingEntity) || !ReikaEntityHelper.isEntityWearingFullSuitOf((LivingEntity)e, ArmorMaterials.CHAIN)) {
 							RotaryCraft.shock.lastMachine = te;
@@ -146,12 +146,12 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 						}
 						if (e instanceof Creeper) {
 							world.explode(e, e.getX(), e.getY(), e.getZ(), 3F, Level.ExplosionInteraction.BLOCK);
-							e.hurt(DamageSource.MAGIC, Integer.MAX_VALUE);
+							e.hurt(e.damageSources().magic(), Integer.MAX_VALUE);
 						}
 						if (v > 100) {
 							e.setDeltaMovement((e.getX()-pos.getX())/4D, 0.33, (e.getZ()-pos.getZ())/4D);
 						}
-						SoundRegistry.SPARK.playSoundAtBlock(world, pos.offset(0.5, 0.5, 0.5), 1.5F, 1F);
+						SoundRegistry.SPARK.playSoundAtBlock(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.5F, 1F);
 						te.getNetwork().shortNetwork();
 					}
 				}

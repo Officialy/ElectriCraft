@@ -65,7 +65,7 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 	public static final int MAXCURRENT = 4096;
 
 	private int temperature;
-	private StepTimer tempTimer = new StepTimer(20);
+	private final StepTimer tempTimer = new StepTimer(20);
 
 	private final HybridTank tank = new HybridTank("transformer", 200);
 

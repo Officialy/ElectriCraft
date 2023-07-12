@@ -24,7 +24,7 @@ import reika.electricraft.registry.ElectriTiles;
 
 public abstract class ElectriCable extends ElectriBlockEntity {
 
-    private boolean[] connections = new boolean[6];
+    private final boolean[] connections = new boolean[6];
 
     public ElectriCable(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);

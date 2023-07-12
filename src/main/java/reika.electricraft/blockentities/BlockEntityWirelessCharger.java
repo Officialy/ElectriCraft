@@ -137,7 +137,7 @@ public class BlockEntityWirelessCharger extends ElectriBlockEntity implements IE
 		return null;
 	}
 
-	public static enum ChargerTiers {
+	public enum ChargerTiers {
 		BASIC(0.4F, 80),
 		IMPROVED(0.6F, 800),
 		ADVANCED(0.8F, 6000),

@@ -67,7 +67,7 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
                 CompoundTag nbt = ((NBTMachine) te).getTagsToWriteToStack();
                 is.setTag(nbt != null ? nbt.copy() : null);
             }
-            ReikaItemHelper.dropItem(world, pos.offset(0.5, 0.5, 0.5), is);
+            ReikaItemHelper.dropItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, is);
         }    }
 /*    @Override
     public final AABB getCollisionBoundingBoxFromPool(Level world, BlockPos pos) {
@@ -132,11 +132,8 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
                 return true;
             }
         }
-        if (e == ElectriTiles.TRANSFORMER) {
-//	todo		ep.openMenu(ElectriCraft.instance, 0, world, x, y, z);
-            return true;
-        }
-        return false;
+        //	todo		ep.openMenu(ElectriCraft.instance, 0, world, x, y, z);
+        return e == ElectriTiles.TRANSFORMER;
     }
 
 }

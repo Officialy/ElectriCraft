@@ -68,9 +68,8 @@ public abstract class NetworkBlockEntity extends ElectriBlockEntity implements N
     }
 
     private void linkTile(BlockEntity te, Direction dir) {
-        if (te instanceof NetworkBlockEntity) {
+        if (te instanceof NetworkBlockEntity n) {
             //ReikaJavaLibrary.pConsole(te, Dist.DEDICATED_SERVER);
-            NetworkBlockEntity n = (NetworkBlockEntity) te;
             if (n.canNetworkOnSide(dir.getOpposite())) {
                 WireNetwork w = n.network;
                 if (w != null) {

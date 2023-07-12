@@ -33,8 +33,8 @@ public class PathCalculator {
 	private final WireReceiver end;
 	private final WireNetwork net;
 
-	private ArrayList<WirePath> paths = new ArrayList<>();
-	private ArrayList<WorldLocation> rifts = new ArrayList<>();
+	private final ArrayList<WirePath> paths = new ArrayList<>();
+	private final ArrayList<WorldLocation> rifts = new ArrayList<>();
 
 	public PathCalculator(WireEmitter start, WireReceiver end, WireNetwork w) {
 		this.start = start;
@@ -190,7 +190,7 @@ public class PathCalculator {
 			sb.append("[");
 			sb.append(loc.getBlockEntity());
 			sb.append(" @ ");
-			sb.append(loc.toString());
+			sb.append(loc);
 			sb.append("]");
 			if (i < li.size()-1)
 				sb.append(" > ");
@@ -200,7 +200,7 @@ public class PathCalculator {
 	}
 
 	private boolean tileCanConnect(WiringTile tile) {
-		return tile instanceof BlockEntityWireComponent ? ((BlockEntityWireComponent)tile).canConnect() : true;
+		return !(tile instanceof BlockEntityWireComponent) || ((BlockEntityWireComponent) tile).canConnect();
 	}
 
 	private boolean isEnd(Level world, int x, int y, int z) {

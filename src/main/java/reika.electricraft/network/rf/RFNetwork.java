@@ -325,8 +325,7 @@ public class RFNetwork implements NetworkObject {
 
         @Override
         public boolean equals(Object o) {
-            if (o instanceof EnergyInteraction) {
-                EnergyInteraction ei = (EnergyInteraction) o;
+            if (o instanceof EnergyInteraction ei) {
                 return ei.location.equals(location);
             }
             return false;

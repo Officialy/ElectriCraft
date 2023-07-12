@@ -12,6 +12,6 @@ package reika.electricraft.auxiliary.interfaces;
 
 public interface CurrentThrottle {
 
-	public int getCurrentLimit();
+	int getCurrentLimit();
 
 }

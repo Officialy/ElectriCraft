@@ -134,8 +134,7 @@ public final class WireNetwork implements NetworkObject {
 			return;
 
 		for (WiringTile w : wires.values()) {
-			if (w instanceof BlockEntityWire) {
-				BlockEntityWire te = (BlockEntityWire)w;
+			if (w instanceof BlockEntityWire te) {
 				int current = this.getPointCurrent(w);
 				if (current > te.getMaxCurrent()) {
 					te.overload(current);
@@ -311,20 +310,17 @@ public final class WireNetwork implements NetworkObject {
 		if (te instanceof WireReceiver) {
 			changed |= !te.equals(sinks.put(this.getLocation(te), (WireReceiver)te));
 		}
-		if (te instanceof WiringTile) {
-			WiringTile wire = (WiringTile)te;
+		if (te instanceof WiringTile wire) {
 			changed |= !te.equals(wires.put(this.getLocation(te), wire));
 			for (int k = 0; k < 6; k++) {
 				Direction side = dirs[k];
 				BlockEntity adj2 = wire.getAdjacentBlockEntity(side);
-				if (adj2 instanceof WiringTile) {
-					WiringTile wire2 = (WiringTile)adj2;
+				if (adj2 instanceof WiringTile wire2) {
 					ArrayList<Direction> sides = new ArrayList<>();
 					for (int i = 0; i < 6; i++) {
 						Direction dir = dirs[i];
 						BlockEntity adj = wire2.getAdjacentBlockEntity(dir);
-						if (adj instanceof NetworkTile) {
-							NetworkTile nw = (NetworkTile)adj;
+						if (adj instanceof NetworkTile nw) {
 							if (((NetworkTile)adj).canNetworkOnSide(dir.getOpposite()))
 								sides.add(dir);
 						}
@@ -566,15 +562,14 @@ public final class WireNetwork implements NetworkObject {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
 		//sb.append(this.getInputCurrent()+"A @ "+this.getNetworkVoltage()+"V");
 		//sb.append(" ");
 		//sb.append(wires.size()+" wires, "+sinks.size()+" emitters, "+sources.size()+" generators");
-		sb.append(sources.size()+"SR/"+wires.size()+"W/"+sinks.size()+"SN-#");
-		sb.append(paths);
-		sb.append(";{"+this.hashCode()+"}");
-		sb.append("$["+dimIDs+"]");
-		return sb.toString();
+		String sb = sources.size() + "SR/" + wires.size() + "W/" + sinks.size() + "SN-#" +
+				paths +
+				";{" + this.hashCode() + "}" +
+				"$[" + dimIDs + "]";
+		return sb;
 	}
 
 	public void removeElement(NetworkBlockEntity te) {

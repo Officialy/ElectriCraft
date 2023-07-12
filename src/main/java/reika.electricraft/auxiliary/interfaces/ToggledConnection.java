@@ -12,6 +12,6 @@ package reika.electricraft.auxiliary.interfaces;
 
 public interface ToggledConnection {
 
-	public boolean canConnect();
+	boolean canConnect();
 
 }

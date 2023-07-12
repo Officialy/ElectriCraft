@@ -21,7 +21,7 @@ import reika.electricraft.registry.ElectriOres;
 public class ElectriConfig extends ControlledConfig {
 
 	private static final ArrayList<String> entries = ReikaJavaLibrary.getEnumEntriesWithoutInitializing(ElectriOres.class);
-	private DataElement<Boolean>[] ores = new DataElement[entries.size()];
+	private final DataElement<Boolean>[] ores = new DataElement[entries.size()];
 
 	public ElectriConfig(DragonAPIMod mod, ConfigList[] option, IDRegistry[] id) {
 		super(mod, option, id);

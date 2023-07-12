@@ -14,8 +14,8 @@ import reika.rotarycraft.api.power.ShaftMachine;
 
 public interface ConversionTile extends ShaftMachine {
 
-	public void setFacing(Direction dir);
+	void setFacing(Direction dir);
 
-	public Direction getFacing();
+	Direction getFacing();
 
 }

@@ -14,8 +14,8 @@ import net.minecraft.core.Direction;
 
 public interface WireReceiver extends WireTerminus {
 
-	public boolean canReceivePowerFromSide(Direction dir);
+	boolean canReceivePowerFromSide(Direction dir);
 
-	public boolean canReceivePower();
+	boolean canReceivePower();
 
 }

@@ -37,7 +37,7 @@ import reika.rotarycraft.registry.RotaryBlocks;
 
 public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
 
-    private MeterModel meterModel;
+    private final MeterModel meterModel;
 
     public RenderElectricMeter(BlockEntityRendererProvider.Context context) {
         meterModel = new MeterModel(context.bakeLayer(ElectriModelLayers.METER));
@@ -69,8 +69,8 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
 
     private void renderText(BlockEntityMeter tile, PoseStack stack) {
         Font f = this.getFontRenderer();
-        String s1 = String.format("Voltage:");
-        String s2 = String.format("Current:");
+        String s1 = "Voltage:";
+        String s2 = "Current:";
         String s1b = String.format("%dV", tile.getWireVoltage());
         String s2b = String.format("%dA", tile.getWireCurrent());
 

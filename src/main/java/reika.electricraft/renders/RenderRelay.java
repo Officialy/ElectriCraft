@@ -32,7 +32,7 @@ import reika.rotarycraft.registry.RotaryBlocks;
 
 public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 {
-	private RelayModel relay;
+	private final RelayModel relay;
 	public RenderRelay(BlockEntityRendererProvider.Context context) {
 		relay = new RelayModel(context.bakeLayer(ElectriModelLayers.RELAY));
 	}

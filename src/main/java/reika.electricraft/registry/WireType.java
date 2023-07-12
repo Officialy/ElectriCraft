@@ -42,7 +42,7 @@ public enum WireType {
 
 	public static final WireType[] wireList = values();
 
-	private WireType(int max, int res, ItemStack mat, ModOreList... ores) {
+	WireType(int max, int res, ItemStack mat, ModOreList... ores) {
 		if (mat != null && mat.getItem() == null)
 			throw new IllegalArgumentException("Null wire item!");
 		material = mat;
@@ -91,8 +91,8 @@ public enum WireType {
 	}
 
 	public void addCrafting() {
-		if (material == null)
-			return;
+		if (material == null) {
+        }
 		/*int amt = DifficultyEffects.PIPECRAFT.getInt();
 		ItemStack is = ReikaItemHelper.getSizedItemStack(this.getCraftedProduct(), amt);
 		ItemStack is2 = ReikaItemHelper.getSizedItemStack(this.getCraftedInsulatedProduct(), amt);

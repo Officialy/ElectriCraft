@@ -186,8 +186,7 @@ public class BlockEntityRFCable extends ElectriCable implements IEnergyStorage, 
 	protected void onNetworkUpdate(Level world, int x, int y, int z, Direction dir) {
 		if (network != null) {
 			BlockEntity te = this.getAdjacentBlockEntity(dir);
-			if (te instanceof IEnergyStorage) {
-				IEnergyStorage ih = (IEnergyStorage)te;
+			if (te instanceof IEnergyStorage ih) {
 				if (ih.canReceive()) {
 					network.addConnection(ih, dir.getOpposite());
 				}

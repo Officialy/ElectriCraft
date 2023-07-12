@@ -12,8 +12,8 @@ package reika.electricraft.auxiliary.interfaces;
 
 public interface Overloadable {
 
-	public int getMaxCurrent();
+	int getMaxCurrent();
 
-	public void overload(int current);
+	void overload(int current);
 
 }

@@ -21,8 +21,8 @@ import reika.electricraft.registry.ElectriTiles;
 
 public class ElectriRenderList {
 
-	private static HashMap<ElectriTiles, ElectriTERenderer> renders = new HashMap<ElectriTiles, ElectriTERenderer>();
-	private static HashMap<ElectriTiles, ElectriTiles> overrides = new HashMap<ElectriTiles, ElectriTiles>();
+	private static final HashMap<ElectriTiles, ElectriTERenderer> renders = new HashMap<ElectriTiles, ElectriTERenderer>();
+	private static final HashMap<ElectriTiles, ElectriTiles> overrides = new HashMap<ElectriTiles, ElectriTiles>();
 
 	public static boolean addRender(ElectriTiles m, ElectriTERenderer r) {
 		if (!renders.containsValue(r)) {

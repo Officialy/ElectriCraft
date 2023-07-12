@@ -52,7 +52,7 @@ import reika.rotarycraft.registry.SoundRegistry;
 public class BlockEntityMotor extends ElectricalReceiver implements Screwdriverable, ShaftPowerEmitter, ConversionTile, NBTMachine, PowerSourceTracker, ShaftMerger {
 
 	private static final int soundtime = (int)(EngineType.DC.getSoundLength()*2.04F);
-	private StepTimer soundTimer = new StepTimer(soundtime);
+	private final StepTimer soundTimer = new StepTimer(soundtime);
 
 	protected int omega;
 	protected int torque;
@@ -91,8 +91,7 @@ public class BlockEntityMotor extends ElectricalReceiver implements Screwdrivera
 			torque = omega = 0;
 		}
 		BlockEntity tg = this.getAdjacentBlockEntity(this.getFacing().getOpposite());
-		if (tg instanceof ShaftPowerReceiver) {
-			ShaftPowerReceiver rec = (ShaftPowerReceiver)tg;
+		if (tg instanceof ShaftPowerReceiver rec) {
 			rec.setOmega(omega);
 			rec.setTorque(torque);
 			rec.setPower(power);

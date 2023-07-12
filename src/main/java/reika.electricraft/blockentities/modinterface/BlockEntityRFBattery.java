@@ -76,13 +76,11 @@ public class BlockEntityRFBattery extends BatteryTileBase implements IEnergyStor
 				BlockEntity te = this.getAdjacentBlockEntity(Direction.UP);
 				if (te instanceof IEnergyStorage) {
 					if (((IEnergyStorage)te).canReceive()) {
-						if (te instanceof IEnergyStorage) {
-							IEnergyStorage ier = (IEnergyStorage)te;
+						if (te instanceof IEnergyStorage ier) {
 							int added = ier.receiveEnergy(exp, false);
 							energy -= added;
 						}
-						else if (te instanceof IEnergyStorage) {
-							IEnergyStorage ieh = (IEnergyStorage)te;
+						else if (te instanceof IEnergyStorage ieh) {
 							int added = ieh.receiveEnergy(exp, false);
 							energy -= added;
 						}
