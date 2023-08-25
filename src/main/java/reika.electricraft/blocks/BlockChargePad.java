@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import reika.electricraft.blockentities.BlockEntityGenerator;
@@ -71,7 +71,7 @@ public class BlockChargePad extends Block implements EntityBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder builder) {
         ArrayList li = new ArrayList<>();
         ItemStack is = ElectriTiles.WIRELESSPAD.getCraftedProduct();
         is.getOrCreateTag().putInt("tier", 1); //todo tier

@@ -62,12 +62,12 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
         meterModel.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
         stack.popPose();
         if (tile.isInWorld())
-            this.renderText(tile, stack);
+            this.renderText(tile, stack, bufferSource);
 
 //		this.closeGL(tile);
     }
 
-    private void renderText(BlockEntityMeter tile, PoseStack stack) {
+    private void renderText(BlockEntityMeter tile, PoseStack stack, MultiBufferSource buffer) {
         Font f = this.getFontRenderer();
         String s1 = "Voltage:";
         String s2 = "Current:";
@@ -99,11 +99,11 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
         int dx = -30;
         int dy = -30;
 
-        f.draw(stack, s1, dx, dy, 0xffffff);
-        f.draw(stack, s1b, dx, dy + 10, 0xffffff);
+        f.drawInBatch(s1, dx, dy, 0xffffff, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 15728880);
+        f.drawInBatch(s1b, dx, dy + 10, 0xffffff, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 15728880);
 
-        f.draw(stack, s2, dx, dy + 30, 0xffffff);
-        f.draw(stack, s2b, dx, dy + 40, 0xffffff);
+        f.drawInBatch(s2, dx, dy + 30, 0xffffff, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 15728880);
+        f.drawInBatch(s2b, dx, dy + 40, 0xffffff, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 15728880);
 
         stack.popPose();
 //		RenderSystem.depthMask(true);

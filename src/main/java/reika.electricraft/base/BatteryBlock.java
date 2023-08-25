@@ -15,7 +15,7 @@ import java.util.List;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraftforge.registries.RegistryObject;
 import reika.dragonapi.base.BlockTEBase;
 import reika.electricraft.auxiliary.interfaces.BatteryTile;
@@ -33,7 +33,7 @@ public abstract class BatteryBlock extends BlockTEBase{//} implements IWailaData
 	public abstract RegistryObject<Item> getItem();
 
 	@Override
-	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
 		ArrayList li = new ArrayList<>();
 		BatteryTile te = (BatteryTile)builder.getLevel().getBlockEntity(null); //todo NULL BLOCKPOS
 		long e = te.getStoredEnergy();

@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import reika.electricraft.registry.ElectriOres;
 
 public class BlockElectriOre extends DropExperienceBlock {
@@ -29,7 +29,7 @@ public class BlockElectriOre extends DropExperienceBlock {
 	}
 
 	@Override
-	public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
+	public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder p_60538_) {
 		ArrayList<ItemStack> li = new ArrayList<>();
 		//ItemStack is = new ItemStack(ElectriBlocks.ORE.getBlock(), 1, metadata);
 		ElectriOres ore = ElectriOres.getOre(this);

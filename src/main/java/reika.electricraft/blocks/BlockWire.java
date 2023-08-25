@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -84,7 +84,7 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 	}*/
 
 	@Override
-	public List<ItemStack> getDrops(BlockState state, LootContext.Builder context) {
+	public List<ItemStack> getDrops(BlockState state, LootParams.Builder context) {
 		ArrayList<ItemStack> li = new ArrayList<>();
 		BlockEntityWire te = (BlockEntityWire)context.getLevel().getBlockEntity(null); //todo NULL BLOCKPOS
 		ItemStack is = te.insulated ? te.getWireType().getCraftedInsulatedProduct() : te.getWireType().getCraftedProduct();

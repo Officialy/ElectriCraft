@@ -13,7 +13,6 @@ import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,14 +23,14 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
+
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import reika.dragonapi.base.BlockEntityBase;
 import reika.dragonapi.libraries.level.ReikaWorldHelper;
 import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
 import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
-import reika.electricraft.ElectriCraft;
 import reika.electricraft.auxiliary.interfaces.BatteryTile;
 import reika.electricraft.registry.BatteryType;
 import reika.electricraft.registry.ElectriBlocks;
@@ -47,7 +46,7 @@ public class ItemBatteryPlacer extends Item {
         var pos = context.getClickedPos();
         var world = context.getLevel();
         var side = context.getClickedFace();
-        if (!ReikaWorldHelper.softBlocks(world, pos) && ReikaWorldHelper.getMaterial(world, pos) != Material.WATER && ReikaWorldHelper.getMaterial(world, pos) != Material.LAVA) {
+        if (!ReikaWorldHelper.softBlocks(world, pos) && ReikaWorldHelper.getMapColor(world, pos) != MapColor.WATER && ReikaWorldHelper.getMapColor(world, pos) != MapColor.FIRE) {  //todo was lava
            /*todo if (side == 0)
                 --y;
             if (side == 1)
@@ -60,14 +59,14 @@ public class ItemBatteryPlacer extends Item {
                 --x;
             if (side == 5)
                 ++x;*/
-            if (!ReikaWorldHelper.softBlocks(world, pos) && ReikaWorldHelper.getMaterial(world, pos) != Material.WATER && ReikaWorldHelper.getMaterial(world, pos) != Material.LAVA)
+            if (!ReikaWorldHelper.softBlocks(world, pos) && ReikaWorldHelper.getMapColor(world, pos) != MapColor.WATER && ReikaWorldHelper.getMapColor(world, pos) != MapColor.FIRE) //todo was lava
                 return InteractionResult.FAIL;
         }
         if (!this.checkValidBounds(context.getItemInHand(), context.getPlayer(), world, pos))
             return InteractionResult.FAIL;
         AABB box = new AABB(pos, pos.offset(1,1,1));
-        List inblock = world.getEntitiesOfClass(LivingEntity.class, box);
-        if (inblock.size() > 0)
+        List<LivingEntity> inblock = world.getEntitiesOfClass(LivingEntity.class, box);
+        if (!inblock.isEmpty())
             return InteractionResult.FAIL;
 //todo        if (!ep.InteractionResult.FAIL(x, y, z, 0, is))
 //            return false;

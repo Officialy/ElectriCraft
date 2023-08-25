@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import reika.electricraft.base.NetworkBlock;
@@ -47,7 +47,7 @@ public class BlockElectricBattery extends NetworkBlock {// implements IWailaData
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder context) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder context) {
         ArrayList li = new ArrayList<>();
         BlockEntityBattery te = (BlockEntityBattery) context.getLevel().getBlockEntity(null); //todo NULL BLOCKPOS
         long e = te.getStoredEnergy();
