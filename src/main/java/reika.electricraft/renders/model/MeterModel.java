@@ -18,7 +18,7 @@ import static reika.electricraft.ElectriCraft.MODID;
 public class MeterModel extends Model
 {
     
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(MODID, "textures/metertex.png");
+    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(MODID, "textures/metertex.png");
     
     private final ModelPart shape1;
     private final ModelPart shape2;

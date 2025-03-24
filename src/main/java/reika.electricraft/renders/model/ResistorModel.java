@@ -22,7 +22,7 @@ import static reika.electricraft.ElectriCraft.MODID;
 
 public class ResistorModel extends ResistorBaseModel {
 
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(MODID, "textures/resistor.png");
+    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(MODID, "textures/resistor.png");
 
     private final ModelPart band3b;
     private final ModelPart band2a;

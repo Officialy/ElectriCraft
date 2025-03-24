@@ -18,7 +18,7 @@ import static reika.electricraft.ElectriCraft.MODID;
 public class TransformerModel extends Model
 {
     
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(MODID, "textures/transformertex.png");
+    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(MODID, "textures/transformertex.png");
     
     private final ModelPart shape1;
     private final ModelPart shape1a;

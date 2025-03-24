@@ -60,17 +60,17 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        ResourceLocation s = new ResourceLocation(MODID, "textures/fusetex.png");
+        ResourceLocation s = ResourceLocation.fromNamespaceAndPath(MODID, "textures/fusetex.png");
         if (tile.isOverloaded()) {
-            s = new ResourceLocation(MODID,"fusetex-burn.png");
+            s = ResourceLocation.fromNamespaceAndPath(MODID,"fusetex-burn.png");
         } else {
             float f = tile.getWireCurrent() / (float) tile.getMaxCurrent();
             if (f >= 0.75) {
-                s = new ResourceLocation(MODID,"fusetex-hot3.png");
+                s = ResourceLocation.fromNamespaceAndPath(MODID,"fusetex-hot3.png");
             } else if (f >= 0.5) {
-                s = new ResourceLocation(MODID,"fusetex-hot2.png");
+                s = ResourceLocation.fromNamespaceAndPath(MODID,"fusetex-hot2.png");
             } else if (f >= 0.25) {
-                s = new ResourceLocation(MODID,"fusetex-hot.png");
+                s = ResourceLocation.fromNamespaceAndPath(MODID,"fusetex-hot.png");
             }
         }
 //		this.bindTextureByName(s);

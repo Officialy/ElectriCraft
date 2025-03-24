@@ -23,7 +23,7 @@ import static reika.electricraft.ElectriCraft.MODID;
 
 public abstract class ResistorBaseModel extends RotaryModelBase {
 
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(MODID, "textures/resistor.png");
+    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(MODID, "textures/resistor.png");
 
     private final ModelPart shape1;
     private final ModelPart shape2a;
