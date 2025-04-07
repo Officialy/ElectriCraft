@@ -8,11 +8,40 @@ plugins {
 version = '0.0.1a'
 group = 'reika.electricraft'
 archivesBaseName = 'ElectriCraft'
-
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
     mappings channel: 'official', version: "1.20.1"
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'trace'
+
+            mods {
+                "electricraft" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', "rotarycraft"
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', "rotarycraft"
+            args '--nogui'
+        }
+
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', "electricraft", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
+    }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
