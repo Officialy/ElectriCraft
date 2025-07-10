@@ -159,13 +159,15 @@ public class ElectriPacketCore implements PacketHandler {
 					break;
 				case TRANSFORMER:
 					BlockEntityTransformer tf = (BlockEntityTransformer)te;
-					tf.setRatio(data[0], data[1]);
+					if (tf != null) {
+						tf.setRatio(data[0], data[1]);
+					}
 					break;
 			}
 		}
 		catch (Exception e) {
-			ElectriCraft.LOGGER.error("Machine/item was deleted before its packet could be received!");
-			ReikaChatHelper.writeString("Machine/item was deleted before its packet could be received!");
+			ElectriCraft.LOGGER.error("Machine/item was deleted before its packet '"+pack+"' could be received!");
+			ReikaChatHelper.writeString("Machine/item was deleted before its packet '"+pack+"' could be received!");
 			e.printStackTrace();
 		}
 	}

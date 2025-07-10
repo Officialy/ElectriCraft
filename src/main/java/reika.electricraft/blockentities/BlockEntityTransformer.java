@@ -20,7 +20,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import org.jetbrains.annotations.NotNull;
+
 import reika.dragonapi.instantiable.HybridTank;
 import reika.dragonapi.instantiable.StepTimer;
 import reika.dragonapi.libraries.ReikaAABBHelper;
@@ -437,7 +437,7 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 	}
 
 	@Override
-	public @NotNull FluidStack getFluidInTank(int tank) {
+	public  FluidStack getFluidInTank(int tank) {
 		return null;
 	}
 
@@ -447,7 +447,7 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 	}
 
 	@Override
-	public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+	public boolean isFluidValid(int tank,  FluidStack stack) {
 		return false;
 	}
 
@@ -457,12 +457,12 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 	}
 
 	@Override
-	public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+	public  FluidStack drain(FluidStack resource, FluidAction action) {
 		return null;
 	}
 
 	@Override
-	public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+	public  FluidStack drain(int maxDrain, FluidAction action) {
 		return null;
 	}
 

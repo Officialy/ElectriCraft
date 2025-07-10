@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+
 import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
 import reika.dragonapi.libraries.registry.ReikaDyeHelper;
 import reika.dragonapi.libraries.registry.ReikaItemHelper;
@@ -56,7 +56,7 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
     }
 
     @Override
-    public void playerDestroy(Level world, Player ep, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack p_49832_) {
+    public void playerDestroy(Level world, Player ep, BlockPos pos, BlockState state,  BlockEntity blockEntity, ItemStack p_49832_) {
         if (!this.canHarvest(world, ep, pos))
             return;
         BlockEntity te = world.getBlockEntity(pos);

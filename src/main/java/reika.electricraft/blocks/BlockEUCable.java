@@ -16,7 +16,7 @@
 //
 //
 //import net.minecraft.world.level.block.state.BlockState;
-//import org.jetbrains.annotations.Nullable;
+//
 //import reika.electricraft.base.BlockElectriCable;
 //import reika.electricraft.registry.ElectriTiles;
 //
@@ -48,7 +48,7 @@
 //		return ElectriTiles.EUCABLE;
 //	}
 //
-//	@Nullable
+//	
 //	@Override
 //	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
 //		return BlockEntityEUCable();

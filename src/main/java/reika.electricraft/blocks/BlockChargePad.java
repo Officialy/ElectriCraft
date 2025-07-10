@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
+
 import reika.electricraft.blockentities.BlockEntityGenerator;
 import reika.electricraft.registry.ElectriTiles;
 import reika.electricraft.blockentities.BlockEntityWirelessCharger;
@@ -42,13 +42,13 @@ public class BlockChargePad extends Block implements EntityBlock {
         super(properties);
     }
 
-    @Nullable
+    
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BlockEntityWirelessCharger(pos, state);
     }
 
-    @Nullable
+    
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState p_153213_, BlockEntityType<T> p_153214_) {
         return pLevel.isClientSide() ? null : ((pLevel1, pPos, pState1, pBlockEntity) -> {
@@ -57,7 +57,7 @@ public class BlockChargePad extends Block implements EntityBlock {
     }
 
     @Override
-    public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity entity, ItemStack stack) {
+    public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state,  BlockEntity entity, ItemStack stack) {
         if (!player.isCreative() && this.canEntityDestroy(state, world, pos, player))
             this.destroy(world, pos, state);
         world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);

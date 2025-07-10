@@ -19,7 +19,7 @@
 //
 //
 //import net.minecraft.world.level.block.state.BlockState;
-//import org.jetbrains.annotations.Nullable;
+//
 //import reika.electricraft.registry.ElectriTiles;
 //
 //public class BlockEUSplitter extends Block implements EntityBlock {
@@ -40,7 +40,7 @@
 //		return false;
 //	}
 //
-//	@Nullable
+//	
 //	@Override
 //	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
 //		return ElectriTiles.createTEFromIDAndMetadata(this);

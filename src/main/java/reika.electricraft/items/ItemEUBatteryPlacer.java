@@ -18,7 +18,7 @@
 //import net.minecraft.world.item.TooltipFlag;
 //import net.minecraft.world.level.Level;
 //import net.minecraft.world.level.block.Block;
-//import org.jetbrains.annotations.Nullable;
+//
 //import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
 //import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
 //import reika.electricraft.registry.ElectriBlocks;
@@ -43,7 +43,7 @@
 //	}
 //
 //	@Override
-//	public void appendHoverText(ItemStack is, @Nullable Level p_41422_, List<Component> li, TooltipFlag p_41424_) {
+//	public void appendHoverText(ItemStack is,  Level p_41422_, List<Component> li, TooltipFlag p_41424_) {
 //		long e = 0;
 //		if (is.stackTagCompound != null) {
 //			e = is.stackTagCompound.getLong("nrg");
