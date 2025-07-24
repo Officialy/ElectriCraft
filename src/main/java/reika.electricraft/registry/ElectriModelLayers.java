@@ -2,8 +2,8 @@ package reika.electricraft.registry;
 
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.neoforged.client.event.EntityRenderersEvent;
+import net.neoforged.eventbus.api.IEventBus;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.renders.*;
 import reika.electricraft.renders.model.*;

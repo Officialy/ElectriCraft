@@ -20,10 +20,10 @@
 //import net.minecraft.client.resources.language.LanguageInfo;
 //import net.minecraft.server.packs.resources.ResourceManager;
 //import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-//import net.minecraftforge.api.distmarker.Dist;
-//import net.minecraftforge.api.distmarker.OnlyIn;
-//import net.minecraftforge.common.MinecraftForge;
-//import net.minecraftforge.fml.loading.FMLLoader;
+//import net.neoforged.api.distmarker.Dist;
+//import net.neoforged.api.distmarker.OnlyIn;
+//import net.neoforged.common.NeoForge;
+//import net.neoforged.fml.loading.FMLLoader;
 //import reika.dragonapi.instantiable.io.XMLInterface;
 //import reika.dragonapi.libraries.java.ReikaObfuscationHelper;
 //import reika.electricraft.ElectriCraft;
@@ -192,7 +192,7 @@
 //
 //	static {
 //		loadNumericalData();
-//		MinecraftForge.EVENT_BUS.register(new ReloadListener());
+//		NeoForge.EVENT_BUS.register(new ReloadListener());
 //	}
 //
 //	public static class ReloadListener implements ResourceManagerReloadListener {

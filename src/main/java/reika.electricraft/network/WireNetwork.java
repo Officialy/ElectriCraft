@@ -14,13 +14,39 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
+<<<<<<< Updated upstream:Network/WireNetwork.java
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.world.WorldEvent;
+
+import Reika.ChromatiCraft.API.Interfaces.WorldRift;
+import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
+import Reika.DragonAPI.Instantiable.Data.Immutable.WorldLocation;
+import Reika.ElectriCraft.ElectriCraft;
+import Reika.ElectriCraft.ElectriNetworkManager;
+import Reika.ElectriCraft.NetworkObject;
+import Reika.ElectriCraft.Auxiliary.ElectriNetworkEvent.ElectriNetworkRepathEvent;
+import Reika.ElectriCraft.Auxiliary.ElectriNetworkEvent.ElectriNetworkTickEvent;
+import Reika.ElectriCraft.Auxiliary.WrappedSource;
+import Reika.ElectriCraft.Auxiliary.Interfaces.NetworkTile;
+import Reika.ElectriCraft.Auxiliary.Interfaces.WireEmitter;
+import Reika.ElectriCraft.Auxiliary.Interfaces.WireReceiver;
+import Reika.ElectriCraft.Base.NetworkTileEntity;
+import Reika.ElectriCraft.Base.WiringTile;
+import Reika.ElectriCraft.TileEntities.TileEntityWire;
+import Reika.RotaryCraft.API.Power.ShaftMerger;
+import Reika.RotaryCraft.Auxiliary.PowerSourceList;
+import Reika.RotaryCraft.Auxiliary.Interfaces.PowerSourceTracker;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+=======
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.event.level.LevelEvent;
+import net.neoforged.eventbus.api.SubscribeEvent;
 import reika.dragonapi.instantiable.data.immutable.WorldLocation;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.ElectriNetworkManager;
@@ -37,6 +63,7 @@ import reika.electricraft.blockentities.BlockEntityWire;
 import reika.rotarycraft.api.power.ShaftMerger;
 import reika.rotarycraft.auxiliary.PowerSourceList;
 import reika.rotarycraft.auxiliary.interfaces.PowerSourceTracker;
+>>>>>>> Stashed changes:src/main/java/reika.electricraft/network/WireNetwork.java
 
 public final class WireNetwork implements NetworkObject {
 

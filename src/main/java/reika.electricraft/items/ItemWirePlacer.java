@@ -34,8 +34,8 @@
 //import net.minecraft.util.AABB;
 //import net.minecraft.util.EnumChatFormatting;
 //
-//import net.minecraftforge.fluids.Fluid;
-//import net.minecraftforge.fluids.FluidRegistry;
+//import net.neoforged.fluids.Fluid;
+//import net.neoforged.fluids.FluidRegistry;
 //
 //import reika.dragonapi.libraries.level.ReikaWorldHelper;
 //import reika.electricraft.ElectriCraft;

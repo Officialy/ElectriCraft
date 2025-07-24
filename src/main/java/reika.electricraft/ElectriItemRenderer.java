@@ -15,7 +15,7 @@
 //import net.minecraft.client.renderer.tileentity.BlockEntityRendererDispatcher;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.world.level.block.entity.BlockEntity;
-//import net.minecraftforge.client.IItemRenderer;
+//import net.neoforged.client.IItemRenderer;
 //
 //import reika.dragonapi.libraries.io.ReikaTextureHelper;
 //import reika.electricraft.auxiliary.interfaces.BatteryTile;

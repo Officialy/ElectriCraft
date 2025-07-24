@@ -10,9 +10,9 @@
 package reika.electricraft.registry;
 
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.registries.DeferredRegister;
+import net.neoforged.registries.ForgeRegistries;
+import net.neoforged.registries.RegistryObject;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriItemBase;
 import reika.electricraft.items.ItemBatteryPlacer;

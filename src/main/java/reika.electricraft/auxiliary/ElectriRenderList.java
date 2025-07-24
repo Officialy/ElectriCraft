@@ -11,13 +11,22 @@ package reika.electricraft.auxiliary;
 
 import java.util.HashMap;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+<<<<<<< Updated upstream:Auxiliary/ElectriRenderList.java
+import Reika.DragonAPI.Exception.RegistrationException;
+import Reika.DragonAPI.Interfaces.TileEntity.RenderFetcher;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.ElectriCraft.ElectriCraft;
+import Reika.ElectriCraft.Base.ElectriTERenderer;
+import Reika.ElectriCraft.Registry.ElectriTiles;
+=======
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import reika.dragonapi.exception.RegistrationException;
 import reika.dragonapi.libraries.java.ReikaJavaLibrary;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.registry.ElectriTiles;
+>>>>>>> Stashed changes:src/main/java/reika.electricraft/auxiliary/ElectriRenderList.java
 
 public class ElectriRenderList {
 

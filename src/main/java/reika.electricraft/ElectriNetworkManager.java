@@ -13,12 +13,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 
+<<<<<<< Updated upstream:ElectriNetworkManager.java
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
+=======
 import net.minecraft.world.entity.vehicle.MinecartCommandBlock;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.event.TickEvent;
 import reika.dragonapi.auxiliary.trackers.TickRegistry;
 import reika.electricraft.auxiliary.ElectriNetworkEvent.ElectriNetworkRepathEvent;
 import reika.electricraft.auxiliary.ElectriNetworkEvent.ElectriNetworkTickEvent;
+>>>>>>> Stashed changes:src/main/java/reika.electricraft/ElectriNetworkManager.java
 
 public class ElectriNetworkManager implements TickRegistry.TickHandler {
 

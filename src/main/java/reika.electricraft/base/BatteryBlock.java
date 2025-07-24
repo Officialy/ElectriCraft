@@ -16,7 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.registries.RegistryObject;
 import reika.dragonapi.base.BlockTEBase;
 import reika.electricraft.auxiliary.interfaces.BatteryTile;
 import reika.electricraft.registry.ElectriTiles;

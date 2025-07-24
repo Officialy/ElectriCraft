@@ -9,26 +9,21 @@
  ******************************************************************************/
 package reika.electricraft.blockentities;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.energy.IEnergyStorage;
 import reika.electricraft.base.ElectriBlock;
 import reika.electricraft.base.ElectriBlockEntity;
 import reika.electricraft.registry.ElectriBlockEntities;
 import reika.electricraft.registry.ElectriTiles;
-import reika.rotarycraft.registry.RotaryBlocks;
-import reika.rotarycraft.registry.RotaryItems;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class BlockEntityWirelessCharger extends ElectriBlockEntity implements IEnergyStorage {
 	public BlockEntityWirelessCharger(BlockPos pos, BlockState state) {
@@ -152,13 +147,6 @@ public class BlockEntityWirelessCharger extends ElectriBlockEntity implements IE
 		ChargerTiers(float f, int th) {
 			efficiency = f;
 			maxThroughput = th;
-		}
-
-		public Object[] getRecipe() {
-			Object[] sides = {Blocks.GLASS, Blocks.GLASS, Blocks.GLASS, RotaryBlocks.BLASTGLASS.get(), RotaryBlocks.BLASTGLASS.get()};
-			Object[] cores = {Items.REDSTONE, Items.GOLD_INGOT, Items.DIAMOND, RotaryItems.INDUCTIVE_INGOT, RotaryItems.ENDERIUM.get()};
-			Object[] ret = {"AEA", "SCS", "PRP", 'A', RotaryItems.HSLA_STEEL_INGOT, 'E', Items.ENDER_PEARL, 'P', RotaryItems.HSLA_PLATE, 'R', RotaryItems.SILICON.get(), 'S', sides[this.ordinal()], 'C', cores[this.ordinal()]};
-			return ret;
 		}
 
 		public String getLocalizedName() {

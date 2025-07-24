@@ -17,7 +17,7 @@ import java.util.Map.Entry;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.energy.IEnergyStorage;
 import reika.dragonapi.instantiable.data.immutable.WorldLocation;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.ElectriNetworkManager;

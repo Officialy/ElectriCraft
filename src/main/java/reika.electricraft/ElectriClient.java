@@ -24,7 +24,7 @@ public class ElectriClient extends ElectriCommon
 
 	@Override
 	public void registerSounds() {
-		//MinecraftForge.EVENT_BUS.register(new SoundLoader(RotaryCraft.getInstance(), SoundRegistry.soundList, SoundRegistry.SOUND_FOLDER));
+		//NeoForge.EVENT_BUS.register(new SoundLoader(RotaryCraft.getInstance(), SoundRegistry.soundList, SoundRegistry.SOUND_FOLDER));
 	}
 
 	@Override

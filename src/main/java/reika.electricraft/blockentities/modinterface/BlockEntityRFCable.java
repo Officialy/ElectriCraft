@@ -15,7 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.energy.IEnergyStorage;
 import reika.dragonapi.interfaces.blockentity.BreakAction;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriCable;
