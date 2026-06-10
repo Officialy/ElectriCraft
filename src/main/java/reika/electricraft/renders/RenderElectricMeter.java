@@ -15,7 +15,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
@@ -58,8 +59,8 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
 //		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 //		this.setupGL(tile, par2, par4, par6);
 
-        VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entitySolid((MeterModel.TEXTURE_LOCATION)));
-        meterModel.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+        VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((MeterModel.TEXTURE_LOCATION)));
+        meterModel.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         stack.popPose();
         if (tile.isInWorld())
             this.renderText(tile, stack, bufferSource);
@@ -111,7 +112,7 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
 //		GL11.glEnable(GL11.GL_LIGHTING);
     }
 
-    @Override
+    // 1.21.5: render -> submit; @Override dropped
     public void render(BlockEntityMeter tile, float p_112308_, PoseStack stack, MultiBufferSource bufferSource, int light, int p_112312_) {
         if (this.doRenderModel(stack, tile))
             this.renderBlockEntityMeterAt(tile, stack, bufferSource, light);
@@ -126,3 +127,4 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
     }
 
 }
+

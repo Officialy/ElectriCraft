@@ -64,7 +64,7 @@ public class ItemBatteryPlacer extends Item {
         }
         if (!this.checkValidBounds(context.getItemInHand(), context.getPlayer(), world, pos))
             return InteractionResult.FAIL;
-        AABB box = new AABB(pos, pos.offset(1,1,1));
+        AABB box = new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
         List<LivingEntity> inblock = world.getEntitiesOfClass(LivingEntity.class, box);
         if (!inblock.isEmpty())
             return InteractionResult.FAIL;
@@ -96,30 +96,32 @@ public class ItemBatteryPlacer extends Item {
 			par3List.add(item);
 		}
 		ItemStack item = new ItemStack(par1, 1);//todo, BatteryType.STAR.ordinal());
-		item.getOrCreateTag().putLong("nrg", BatteryType.STAR.maxCapacity);
+		reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(item, __T__ -> __T__.putLong("nrg", BatteryType.STAR.maxCapacity));
 		par3List.add(item);
 	}*/
 
+    // 1.21.5: Item.appendHoverText now takes (ItemStack, TooltipContext, TooltipDisplay, Consumer<Component>, TooltipFlag).
     @Override
-    public void appendHoverText(ItemStack is,  Level p_41422_, List<Component> li, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack is, net.minecraft.world.item.Item.TooltipContext ctx, net.minecraft.world.item.component.TooltipDisplay display, java.util.function.Consumer<Component> li, TooltipFlag flag) {
         long e = 0;
-        if (is.getTag() != null) {
-            e = is.getTag().getLong("nrg");
+        net.minecraft.nbt.CompoundTag tag = reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is);
+        if (tag != null) {
+            e = tag.getLongOr("nrg", 0L);
         }
-        BatteryType bat = BatteryType.batteryList[1]; //old meta
+        BatteryType bat = BatteryType.batteryList[1];
         long max = bat.maxCapacity;
         String sg = ReikaEngLibrary.getSIPrefix(e);
         String sg2 = ReikaEngLibrary.getSIPrefix(max);
         double b = ReikaMathLibrary.getThousandBase(e);
         double b2 = ReikaMathLibrary.getThousandBase(max);
-        li.add(Component.literal(String.format("Stored Energy: %.1f %sJ/%.1f %sJ", b, sg, b2, sg2)));
+        li.accept(Component.literal(String.format("Stored Energy: %.1f %sJ/%.1f %sJ", b, sg, b2, sg2)));
         int a = bat.outputCurrent;
         int v = bat.outputVoltage;
         long power = (long) a * (long) v;
 
         String ps = ReikaEngLibrary.getSIPrefix(power);
         double p = ReikaMathLibrary.getThousandBase(power);
-        li.add(Component.literal(String.format("Emits %dA at %dV (%.3f%sW)", a, v, p, ps)));
+        li.accept(Component.literal(String.format("Emits %dA at %dV (%.3f%sW)", a, v, p, ps)));
     }
 
     protected boolean checkValidBounds(ItemStack is, Player ep, Level world, BlockPos pos) {

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "electricraft:block/resistor",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "electricraft:block/resistor"
+    },
+    "facing=south": {
+      "model": "electricraft:block/resistor",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "electricraft:block/resistor",
+      "y": 270
+    }
+  }
+}

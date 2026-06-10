@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "electricraft:block/fuse",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "electricraft:block/fuse"
+    },
+    "facing=south": {
+      "model": "electricraft:block/fuse",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "electricraft:block/fuse",
+      "y": 270
+    }
+  }
+}

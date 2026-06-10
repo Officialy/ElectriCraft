@@ -12,7 +12,7 @@
 //import net.minecraft.nbt.CompoundTag;
 //import net.minecraft.world.level.block.entity.BlockEntity;
 //
-//import net.neoforged.common.NeoForge;
+//import net.neoforged.neoforge.common.NeoForge;
 //
 //
 //import reika.dragonapi.modlist;
@@ -153,16 +153,16 @@
 //	protected void readSyncTag(CompoundTag NBT) {
 //		super.readSyncTag(NBT);
 //
-//		facing = dirs[NBT.getInt("face")];
+//		facing = dirs[NBT.getIntOr("face", 0)];
 //
 //		for (int i = 0; i < 6; i++) {
 //			out[i] = NBT.getBoolean("emit"+i);
 //		}
 //
-//		split = NBT.getInt("split");
-//		tierout = NBT.getInt("tierout");
-//		EUin = NBT.getDouble("in");
-//		EUout = NBT.getDouble("out");
+//		split = NBT.getIntOr("split", 0);
+//		tierout = NBT.getIntOr("tierout", 0);
+//		EUin = NBT.getDoubleOr("in", 0D);
+//		EUout = NBT.getDoubleOr("out", 0D);
 //	}
 //
 //	@Override

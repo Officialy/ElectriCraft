@@ -1,0 +1,23 @@
+{
+  "block.electricraft.converter": "Converter",
+  "block.electricraft.electribattery": "Electribattery",
+  "block.electricraft.electrichargepad": "Electrichargepad",
+  "block.electricraft.electriore": "Electriore",
+  "block.electricraft.electrirfbattery": "Electrirfbattery",
+  "block.electricraft.fuse": "Fuse",
+  "block.electricraft.meter": "Meter",
+  "block.electricraft.motor": "Motor",
+  "block.electricraft.precise_resistor": "Precise Resistor",
+  "block.electricraft.relay": "Relay",
+  "block.electricraft.resistor": "Resistor",
+  "block.electricraft.rfcable": "Rfcable",
+  "block.electricraft.transformer": "Transformer",
+  "block.electricraft.wire": "Wire",
+  "item.electricraft.battery": "Battery",
+  "item.electricraft.crafting": "Crafting",
+  "item.electricraft.electribook": "Electribook",
+  "item.electricraft.electricrystal": "Electricrystal",
+  "item.electricraft.electriingots": "Electriingots",
+  "item.electricraft.rfbattery": "Rfbattery",
+  "tab.electricraft": "ElectriCraft"
+}

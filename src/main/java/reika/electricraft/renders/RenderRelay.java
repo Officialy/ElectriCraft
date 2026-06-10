@@ -14,7 +14,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import org.joml.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
@@ -48,14 +49,14 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 		stack.mulPose(Axis.YP.rotationDegrees(-f));
 		stack.mulPose(Axis.ZP.rotationDegrees(180));
 
-		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entitySolid((RelayModel.TEXTURE_LOCATION)));
-		relay.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((RelayModel.TEXTURE_LOCATION)));
+		relay.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		stack.popPose();
 //		stack.mulPose(var11, 0.0F, 1.0F, 0.0F);
 //		var14.renderAll(tile, null, tile.phi);
 	}
 
-    @Override
+    // 1.21.5: render -> submit; @Override dropped
     public void render(BlockEntityRelay tile, float p_112308_, PoseStack stack, MultiBufferSource bufferSource, int light, int p_112312_) {
 		if (this.doRenderModel(stack, tile))
 			this.renderBlockEntityRelayAt(tile, stack, bufferSource, light);
@@ -65,3 +66,4 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 	}
 
 }
+

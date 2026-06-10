@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
 import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
 import reika.electricraft.base.BatteryTileBase;
@@ -66,6 +66,7 @@ public class BlockEntityRFBattery extends BatteryTileBase implements IEnergyStor
 	}
 	@Override
 	public void updateEntity(Level world, BlockPos pos) {
+	    /* 26.1-lifecycle */ super.updateEntity(); // 26.1: drive BlockEntityBase lifecycle (ticksExisted++, onFirstTick → recompute/sync).
 		if (world.getGameTime()%64 == 0) {
 			world.sendBlockUpdated(pos, getBlockState(), getBlockState(), 3);
 		}
@@ -143,7 +144,7 @@ public class BlockEntityRFBattery extends BatteryTileBase implements IEnergyStor
 	protected void readSyncTag(CompoundTag NBT) {
 		super.readSyncTag(NBT);
 
-		energy = NBT.getLong("e");
+		energy = NBT.getLongOr("e", 0L);
 	}
 
 	@Override

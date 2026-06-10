@@ -345,7 +345,7 @@
 //            ArrayList<ItemStack> li = new ArrayList<>();
 //            for (int i = 0; i < BlockEntityWirelessCharger.ChargerTiers.tierList.length; i++) {
 //                ItemStack is = ElectriTiles.WIRELESSPAD.getCraftedProduct();
-//                is.getOrCreateTag().putInt("tier", i);
+//                reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", i));
 //                li.add(is);
 //            }
 //            return li;

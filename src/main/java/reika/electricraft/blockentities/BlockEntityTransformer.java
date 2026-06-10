@@ -17,9 +17,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-import net.neoforged.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import reika.dragonapi.instantiable.HybridTank;
 import reika.dragonapi.instantiable.StepTimer;
@@ -219,19 +219,19 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 	protected void readSyncTag(CompoundTag NBT)
 	{
 		super.readSyncTag(NBT);
-		Vin = NBT.getInt("volt");
-		Ain = NBT.getInt("amp");
-		Vout = NBT.getInt("volt2");
-		Aout = NBT.getInt("amp2");
+		Vin = NBT.getIntOr("volt", 0);
+		Ain = NBT.getIntOr("amp", 0);
+		Vout = NBT.getIntOr("volt2", 0);
+		Aout = NBT.getIntOr("amp2", 0);
 
-		n1 = NBT.getInt("n1");
-		n2 = NBT.getInt("n2");
+		n1 = NBT.getIntOr("n1", 0);
+		n2 = NBT.getIntOr("n2", 0);
 
-		//ratio = NBT.getDouble("ratio");
+		//ratio = NBT.getDoubleOr("ratio", 0D);
 
-		this.setFacing(dirs[NBT.getInt("face")]);
+		this.setFacing(dirs[NBT.getIntOr("face", 0)]);
 
-		temperature = NBT.getInt("temp");
+		temperature = NBT.getIntOr("temp", 0);
 	}
 
 	@Override

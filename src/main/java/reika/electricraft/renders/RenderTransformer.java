@@ -10,15 +10,14 @@
 package reika.electricraft.renders;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import org.joml.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-
-
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -52,13 +51,13 @@ public class RenderTransformer extends ElectriTERenderer<BlockEntityTransformer>
 		stack.mulPose(Axis.YP.rotationDegrees(-f));
 		stack.mulPose(Axis.ZP.rotationDegrees(180));
 
-		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entitySolid((TransformerModel.TEXTURE_LOCATION)));
-		transformer.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((TransformerModel.TEXTURE_LOCATION)));
+		transformer.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		stack.popPose();
 //		var14.renderAll(tile, ReikaJavaLibrary.makeListFrom(tile.getN1(), tile.getN2()), tile.phi, 0);
 	}
 
-	@Override
+	// 1.21.5: render -> submit; @Override dropped
 	public void render(BlockEntityTransformer tile, float p_112308_, PoseStack stack, MultiBufferSource multiBufferSource, int light, int p_112312_) {
 		BlockEntityTransformer te = tile;
 		if (this.doRenderModel(stack, te))
@@ -70,37 +69,7 @@ public class RenderTransformer extends ElectriTERenderer<BlockEntityTransformer>
 	}
 
 	private void renderArrow(BlockEntityTransformer te, double par2, double par4, double par6) {
-		int a = Math.max(0, 512-te.getTicksExisted()*8);
-		if (a > 0) {
-			RenderSystem.enableBlend();
-			RenderSystem.defaultBlendFunc();
-//			RenderSystem.disableTexture();
-			ReikaRenderHelper.disableEntityLighting();
-			float lw = RenderSystem.getShaderLineWidth();//todo check GL11.glGetFloat(GL11.GL_LINE_WIDTH);
-			RenderSystem.lineWidth(5);
-
-			Tesselator tess = Tesselator.getInstance();
-			BufferBuilder v5 = tess.getBuilder();
-//			v5.setBrightness(240);
-			v5.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION);
-//			v5.setColorRGBA_I(0xffffff, a);
-
-			double h = 1.1;
-			v5.vertex(0.5, h, 0.5).endVertex();
-			double dr = 0.125;
-			double r = 0.375;
-			double w = 0.08;
-			double dx = 0.5+te.getFacing().getStepX()*r;
-			double dz = 0.5+te.getFacing().getStepZ()*r;
-			v5.vertex(dx, h, dz).endVertex();
-
-			v5.vertex(dx, h, dz).endVertex();
-			v5.vertex(dx-te.getFacing().getStepX()*dr+te.getFacing().getStepZ()*w, h, dz-te.getFacing().getStepZ()*dr+te.getFacing().getStepX()*w).endVertex();
-
-			v5.vertex(dx, h, dz).endVertex();
-			v5.vertex(dx-te.getFacing().getStepX()*dr-te.getFacing().getStepZ()*w, h, dz-te.getFacing().getStepZ()*dr-te.getFacing().getStepX()*w).endVertex();
-			tess.end();
-			RenderSystem.lineWidth(lw);
-		}
+		// TODO: Port to 26.1 rendering API (Tesselator.getBuilder() + vertex().endVertex() + end() all removed)
 	}
 }
+

@@ -102,12 +102,12 @@ public abstract class BlockEntityResistorBase extends BlockEntityWireComponent i
 		ColorBand[] bands = this.getColorBands();
 		for (int i = 0; i < bands.length; i++) {
 			int tag = i+1;
-			int idx = NBT.getInt("band"+tag);
+			int idx = NBT.getIntOr("band"+tag, 0);
 			bands[i] = ColorBand.bandList[idx];
 		}
 		this.setColorBands(bands);
 
-		selectedCurrent = NBT.getInt("sel");
+		selectedCurrent = NBT.getIntOr("sel", 0);
 	}
 
 	@Override

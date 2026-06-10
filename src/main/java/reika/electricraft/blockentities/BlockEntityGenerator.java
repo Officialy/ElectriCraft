@@ -123,13 +123,13 @@ public class BlockEntityGenerator extends ElectricalEmitter implements Screwdriv
 	public void readSyncTag(CompoundTag NBT) {
 		super.readSyncTag(NBT);
 
-		facing = dirs[NBT.getInt("face")];
+		facing = dirs[NBT.getIntOr("face", 0)];
 
-		omega = NBT.getInt("omg");
-		torque = NBT.getInt("tq");
-		power = NBT.getLong("pwr");
+		omega = NBT.getIntOr("omg", 0);
+		torque = NBT.getIntOr("tq", 0);
+		power = NBT.getLongOr("pwr", 0L);
 
-		iotick = NBT.getInt("io");
+		iotick = NBT.getIntOr("io", 0);
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public abstract class ElectriCable extends ElectriBlockEntity {
         super.readSyncTag(NBT);
 
         for (int i = 0; i < 6; i++) {
-            connections[i] = NBT.getBoolean("conn" + i);
+            connections[i] = NBT.getBooleanOr("conn" + i, false);
         }
     }
 
@@ -54,7 +54,7 @@ public abstract class ElectriCable extends ElectriBlockEntity {
         return connections[dir.ordinal()];
     }
 
-    @Override
+    // 1.21.5: BlockEntity.getRenderBoundingBox removed; renderers compute their own bounds.
     public final AABB getRenderBoundingBox() {
         return new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX() + 1, worldPosition.getY() + 1, worldPosition.getZ() + 1);
     }

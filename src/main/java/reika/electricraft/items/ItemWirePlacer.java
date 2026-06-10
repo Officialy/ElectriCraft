@@ -34,8 +34,8 @@
 //import net.minecraft.util.AABB;
 //import net.minecraft.util.EnumChatFormatting;
 //
-//import net.neoforged.fluids.Fluid;
-//import net.neoforged.fluids.FluidRegistry;
+//import net.neoforged.neoforge.fluids.Fluid;
+//import net.neoforged.neoforge.fluids.FluidRegistry;
 //
 //import reika.dragonapi.libraries.level.ReikaWorldHelper;
 //import reika.electricraft.ElectriCraft;
@@ -108,7 +108,7 @@
 //
 //	private boolean canBePlaced(ItemStack is) {
 //		if (is.getItemDamage()%WireType.INS_OFFSET == WireType.SUPERCONDUCTOR.ordinal()) {
-//			return is.getTag() != null && is.getTag().getBoolean("fluid");
+//			return reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(is) && reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is).getBooleanOr("fluid", false);
 //		}
 //		return true;
 //	}
@@ -121,8 +121,8 @@
 //				par3List.add(item);
 //				if (i%WireType.INS_OFFSET == WireType.SUPERCONDUCTOR.ordinal()) {
 //					ItemStack item2 = item.copy();
-//					item2.getOrCreateTag().putBoolean("fluid", true);
-//					item2.getOrCreateTag().putInt("lvl", this.getCapacity(item2));
+//					reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(item2, __T__ -> __T__.putBoolean("fluid", true));
+//					reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(item2, __T__ -> __T__.putInt("lvl", this.getCapacity(item2)));
 //					par3List.add(item2);
 //				}
 //			}
@@ -131,8 +131,8 @@
 //
 //	public ItemStack getFilledSuperconductor(boolean insulated) {
 //		ItemStack item2 = insulated ? WireType.SUPERCONDUCTOR.getCraftedInsulatedProduct() : WireType.SUPERCONDUCTOR.getCraftedProduct();
-//		item2.getOrCreateTag().putBoolean("fluid", true);
-//		item2.getOrCreateTag().putInt("lvl", this.getCapacity(item2));
+//		reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(item2, __T__ -> __T__.putBoolean("fluid", true));
+//		reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(item2, __T__ -> __T__.putInt("lvl", this.getCapacity(item2)));
 //		return item2;
 //	}
 //
@@ -147,7 +147,7 @@
 //			li.add(ChatFormatting.GREEN+"Hold shift for wire data");
 //		}
 //		if (type == WireType.SUPERCONDUCTOR) {
-//			if (is.getTag() != null && is.getTag().getBoolean("fluid")) {
+//			if (reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(is) && reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is).getBooleanOr("fluid", false)) {
 //				li.add("Filled with Coolant");
 //			}
 //			else
@@ -187,7 +187,7 @@
 //
 //	@Override
 //	public int getCurrentFillLevel(ItemStack is) {
-//		return is.getTag() != null ? is.getTag().getInt("lvl") : 0;
+//		return reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(is) ? reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is).getIntOr("lvl", 0) : 0;
 //	}
 //
 //	@Override
@@ -195,9 +195,9 @@
 //		if (this.canFill(is)) {
 //			int liq = this.getCurrentFillLevel(is);
 //			int added = Math.min(amt, this.getCapacity(is)-liq);
-//			is.getOrCreateTag().putInt("lvl", added+liq);
+//			reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", added+liq));
 //			if (this.isFull(is))
-//				is.getOrCreateTag().putBoolean("fluid", true);
+//				reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
 //			return added;
 //		}
 //		return 0;
@@ -205,7 +205,7 @@
 //
 //	@Override
 //	public boolean isFull(ItemStack is) {
-//		return is.getTag() != null && this.getCurrentFillLevel(is) >= this.getCapacity(is);
+//		return reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(is) && this.getCurrentFillLevel(is) >= this.getCapacity(is);
 //	}
 //
 //	private boolean canFill(ItemStack is) {

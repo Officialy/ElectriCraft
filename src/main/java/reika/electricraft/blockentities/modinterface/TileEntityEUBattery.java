@@ -14,7 +14,7 @@
 //import net.minecraft.world.level.block.entity.BlockEntity;
 //import net.minecraft.util.Mth;
 //
-//import net.neoforged.common.NeoForge;
+//import net.neoforged.neoforge.common.NeoForge;
 //
 //
 //import reika.dragonapi.modlist;
@@ -70,7 +70,7 @@
 //	protected void readSyncTag(CompoundTag NBT) {
 //		super.readSyncTag(NBT);
 //
-//		energy = NBT.getDouble("e");
+//		energy = NBT.getDoubleOr("e", 0D);
 //	}
 //
 //	@Override

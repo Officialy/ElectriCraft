@@ -1,9 +1,9 @@
 package reika.electricraft.registry;
 
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.client.event.EntityRenderersEvent;
-import net.neoforged.eventbus.api.IEventBus;
+import net.minecraft.resources.Identifier;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.bus.api.IEventBus;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.renders.*;
 import reika.electricraft.renders.model.*;
@@ -11,16 +11,16 @@ import reika.rotarycraft.modinterface.model.ElecMotorModel;
 import reika.rotarycraft.modinterface.model.GeneratorModel;
 
 public class ElectriModelLayers {
-    public static final ModelLayerLocation METER = new ModelLayerLocation(new ResourceLocation(ElectriCraft.MODID, "meter"), "main");
-    public static final ModelLayerLocation RESISTOR_BASE = new ModelLayerLocation(new ResourceLocation(ElectriCraft.MODID, "resistor_base"), "main");
-    public static final ModelLayerLocation RESISTOR = new ModelLayerLocation(new ResourceLocation(ElectriCraft.MODID, "resistor"), "main");
-    public static final ModelLayerLocation PRECISE_RESISTOR = new ModelLayerLocation(new ResourceLocation(ElectriCraft.MODID, "precise_resistor"), "main");
-    public static final ModelLayerLocation FUSE = new ModelLayerLocation(new ResourceLocation(ElectriCraft.MODID, "fuse"), "main");
-    public static final ModelLayerLocation RELAY = new ModelLayerLocation(new ResourceLocation(ElectriCraft.MODID, "relay"), "main");
+    public static final ModelLayerLocation METER = new ModelLayerLocation(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "meter"), "main");
+    public static final ModelLayerLocation RESISTOR_BASE = new ModelLayerLocation(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "resistor_base"), "main");
+    public static final ModelLayerLocation RESISTOR = new ModelLayerLocation(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "resistor"), "main");
+    public static final ModelLayerLocation PRECISE_RESISTOR = new ModelLayerLocation(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "precise_resistor"), "main");
+    public static final ModelLayerLocation FUSE = new ModelLayerLocation(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "fuse"), "main");
+    public static final ModelLayerLocation RELAY = new ModelLayerLocation(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "relay"), "main");
 
-    public static final ModelLayerLocation TRANSFORMER = new ModelLayerLocation(new ResourceLocation(ElectriCraft.MODID, "transformer"), "main");
-    public static final ModelLayerLocation MOTOR = new ModelLayerLocation(new ResourceLocation(ElectriCraft.MODID, "motor"), "main");
-    public static final ModelLayerLocation GENERATOR = new ModelLayerLocation(new ResourceLocation(ElectriCraft.MODID, "generator"), "main");
+    public static final ModelLayerLocation TRANSFORMER = new ModelLayerLocation(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "transformer"), "main");
+    public static final ModelLayerLocation MOTOR = new ModelLayerLocation(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "motor"), "main");
+    public static final ModelLayerLocation GENERATOR = new ModelLayerLocation(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "generator"), "main");
 
     public static void init(IEventBus bus) {
         bus.addListener(ElectriModelLayers::registerEntityRenderers);

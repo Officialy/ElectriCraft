@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "electricraft:block/transformer",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "electricraft:block/transformer"
+    },
+    "facing=south": {
+      "model": "electricraft:block/transformer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "electricraft:block/transformer",
+      "y": 270
+    }
+  }
+}

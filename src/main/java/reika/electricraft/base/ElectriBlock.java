@@ -17,14 +17,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import reika.dragonapi.interfaces.block.MachineRegistryBlock;
 import reika.dragonapi.interfaces.registry.TileEnum;
 import reika.electricraft.registry.ElectriTiles;
 
 public abstract class ElectriBlock extends NetworkBlock implements MachineRegistryBlock {
 
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	// 1.21.5: DirectionProperty → EnumProperty<Direction>.
+	public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 	public ElectriBlock(Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));

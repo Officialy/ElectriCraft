@@ -22,8 +22,8 @@
 //import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 //import net.neoforged.api.distmarker.Dist;
 //import net.neoforged.api.distmarker.OnlyIn;
-//import net.neoforged.common.NeoForge;
-//import net.neoforged.fml.loading.FMLLoader;
+//import net.neoforged.neoforge.common.NeoForge;
+//import net.neoforged.fml.loading.FMLEnvironment;
 //import reika.dragonapi.instantiable.io.XMLInterface;
 //import reika.dragonapi.libraries.java.ReikaObfuscationHelper;
 //import reika.electricraft.ElectriCraft;
@@ -62,7 +62,7 @@
 //	}
 //
 //	private static String getParent(boolean locale) {
-//		return locale && FMLLoader.getDist() == Dist.CLIENT ? getLocalizedParent() : "resources/";
+//		return locale && FMLEnvironment.getDist() == Dist.CLIENT ? getLocalizedParent() : "resources/";
 //	}
 //
 //
@@ -213,3 +213,5 @@
 //		addNotes(ElectriTiles.WIRELESSPAD, BlockEntityWirelessCharger.ChargerTiers.getDataForDisplay());
 //	}
 //}
+
+

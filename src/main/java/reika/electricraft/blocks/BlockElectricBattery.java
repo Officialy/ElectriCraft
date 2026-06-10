@@ -48,11 +48,15 @@ public class BlockElectricBattery extends NetworkBlock {// implements IWailaData
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder context) {
-        ArrayList li = new ArrayList<>();
-        BlockEntityBattery te = (BlockEntityBattery) context.getLevel().getBlockEntity(null); //todo NULL BLOCKPOS
-        long e = te.getStoredEnergy();
-        ItemStack is = ElectriItems.BATTERY.get().getDefaultInstance();//.getStackOfMetadata(meta);
-        is.getOrCreateTag().putLong("nrg", e);
+        // 26.1 fix: same NPE pattern as BatteryBlock — null BlockPos lookup was an instant
+        // crash when broken. Use the loot-context BLOCK_ENTITY param which vanilla passes
+        // through automatically for block-break drops.
+        ArrayList<ItemStack> li = new ArrayList<>();
+        net.minecraft.world.level.block.entity.BlockEntity raw = context.getOptionalParameter(
+                net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY);
+        final long e = (raw instanceof BlockEntityBattery te) ? te.getStoredEnergy() : 0L;
+        ItemStack is = ElectriItems.BATTERY.get().getDefaultInstance();
+        reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", e));
         li.add(is);
         return li;
     }

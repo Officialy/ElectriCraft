@@ -16,7 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import reika.electricraft.base.ElectriBlock;
 import reika.electricraft.base.ElectriBlockEntity;
 import reika.electricraft.registry.ElectriBlockEntities;
@@ -64,6 +64,7 @@ public class BlockEntityWirelessCharger extends ElectriBlockEntity implements IE
 
 	@Override
 	public void updateEntity(Level world, BlockPos pos) {
+	    /* 26.1-lifecycle */ super.updateEntity(); // 26.1: drive BlockEntityBase lifecycle (ticksExisted++, onFirstTick → recompute/sync).
 
 	}
 
@@ -83,7 +84,7 @@ public class BlockEntityWirelessCharger extends ElectriBlockEntity implements IE
 	protected void readSyncTag(CompoundTag NBT) {
 		super.readSyncTag(NBT);
 
-		//facing = dirs[NBT.getInt("facing")];
+		//facing = dirs[NBT.getIntOr("facing", 0)];
 	}
 
 	//todo this

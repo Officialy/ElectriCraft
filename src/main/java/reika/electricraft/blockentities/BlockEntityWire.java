@@ -121,11 +121,11 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 	protected void readSyncTag(CompoundTag NBT) {
 		super.readSyncTag(NBT);
 
-		connections = ReikaArrayHelper.booleanFromByteBitflags(NBT.getByte("conn"), 6);
+		connections = ReikaArrayHelper.booleanFromByteBitflags(NBT.getByteOr("conn", (byte)0), 6);
 
-		insulated = NBT.getBoolean("insul");
+		insulated = NBT.getBooleanOr("insul", false);
 
-		shouldMelt = NBT.getBoolean("melt");
+		shouldMelt = NBT.getBooleanOr("melt", false);
 	}
 
 	@Override
@@ -139,7 +139,7 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 		NBT.putBoolean("melt", shouldMelt);
 	}
 
-	@Override
+	// 1.21.5: BlockEntity.getRenderBoundingBox removed; renderers compute their own bounds.
 	public final AABB getRenderBoundingBox() {
 		return new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX()+1, worldPosition.getY()+1, worldPosition.getZ()+1);
 	}

@@ -19,7 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.equipment.ArmorMaterials;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -85,12 +85,26 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder context) {
+		// 26.1 fix: same NPE pattern as the other ElectriCraft drop overrides — null BlockPos
+		// crashed the moment any wire was broken. Use the loot-context BLOCK_ENTITY param.
+		// Defensive fallback: if BE entry missing, drop the default copper-insulated wire so
+		// the user doesn't lose the block entirely.
 		ArrayList<ItemStack> li = new ArrayList<>();
-		BlockEntityWire te = (BlockEntityWire)context.getLevel().getBlockEntity(null); //todo NULL BLOCKPOS
-		ItemStack is = te.insulated ? te.getWireType().getCraftedInsulatedProduct() : te.getWireType().getCraftedProduct();
-		if (/*todo is.getItemDamage()%*/WireType.INS_OFFSET == WireType.SUPERCONDUCTOR.ordinal()) {
-			is.getOrCreateTag().putBoolean("fluid", true);
-			is.getOrCreateTag().putInt("lvl", ((Fillable)is.getItem()).getCapacity(is));
+		net.minecraft.world.level.block.entity.BlockEntity raw = context.getOptionalParameter(
+				net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY);
+		ItemStack is;
+		boolean isSuperconductor;
+		if (raw instanceof BlockEntityWire te) {
+			is = te.insulated ? te.getWireType().getCraftedInsulatedProduct() : te.getWireType().getCraftedProduct();
+			isSuperconductor = te.getWireType() == WireType.SUPERCONDUCTOR;
+		} else {
+			is = WireType.COPPER.getCraftedInsulatedProduct();
+			isSuperconductor = false;
+		}
+		if (isSuperconductor) {
+			reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
+			final int cap = ((Fillable) is.getItem()).getCapacity(is);
+			reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", cap));
 		}
 		li.add(is);
 		return li;
@@ -140,9 +154,8 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 						int v = net.getPointVoltage(te);
 						EntityDischarge ed = new EntityDischarge(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, v, e.blockPosition().getX(), e.blockPosition().getY(), e.blockPosition().getZ());
 						world.addFreshEntity(ed);
-						if (!(e instanceof LivingEntity) || !ReikaEntityHelper.isEntityWearingFullSuitOf((LivingEntity)e, ArmorMaterials.CHAIN)) {
-							RotaryCraft.shock.lastMachine = te;
-							e.hurt(RotaryCraft.shock, v > 10000 ? 20 : v > 1000 ? 10 : v > 100 ? 5 : v > 10 ? 1 : 0);
+						if (!(e instanceof LivingEntity) || !ReikaEntityHelper.isEntityWearingFullSuitOf((LivingEntity)e, ArmorMaterials.CHAINMAIL)) {
+							e.hurt(RotaryCraft.shock.get(world), v > 10000 ? 20 : v > 1000 ? 10 : v > 100 ? 5 : v > 10 ? 1 : 0);
 						}
 						if (e instanceof Creeper) {
 							world.explode(e, e.getX(), e.getY(), e.getZ(), 3F, Level.ExplosionInteraction.BLOCK);
@@ -162,8 +175,8 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 		BlockEntityWire te = (BlockEntityWire)world.getBlockEntity(new BlockPos(x, y, z));
 		ItemStack is = te.insulated ? te.getWireType().getCraftedInsulatedProduct() : te.getWireType().getCraftedProduct();
 		if (te.getWireType() == WireType.SUPERCONDUCTOR) {
-			is.getOrCreateTag().putBoolean("fluid", true);
-			is.getOrCreateTag().putInt("lvl", 25);
+			reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
+			reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", 25));
 		}
 		return is;
 	}

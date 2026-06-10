@@ -16,29 +16,37 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.neoforged.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import reika.dragonapi.base.BlockTEBase;
 import reika.electricraft.auxiliary.interfaces.BatteryTile;
 import reika.electricraft.registry.ElectriTiles;
 
 
-//@Strippable(value = {"mcp.mobius.waila.api.IWailaDataProvider"})
-public abstract class BatteryBlock extends BlockTEBase{//} implements IWailaDataProvider {
+// 1.21.5: RegistryObject → DeferredHolder<Registry, Type>. ItemStack#getOrCreateTag was removed
+// in favour of the CUSTOM_DATA component; persist via ReikaItemHelper.updateStackTag.
+public abstract class BatteryBlock extends BlockTEBase{
 
 	protected BatteryBlock(Properties prop) {
 		super(prop.strength(2, 10));
 	}
 
 	public abstract ElectriTiles getTile();
-	public abstract RegistryObject<Item> getItem();
+	public abstract DeferredHolder<Item, ? extends Item> getItem();
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
-		ArrayList li = new ArrayList<>();
-		BatteryTile te = (BatteryTile)builder.getLevel().getBlockEntity(null); //todo NULL BLOCKPOS
-		long e = te.getStoredEnergy();
+		// 26.1 fix: previously called {@code builder.getLevel().getBlockEntity(null)} — that's
+		// an instant NPE when any battery block is broken (the {@code null} BlockPos parameter
+		// is dereferenced inside vanilla's chunk lookup). The vanilla loot-context system
+		// passes BLOCK_ENTITY as a context parameter for block drops; grab it from there
+		// instead. Falls back gracefully if the BE entry isn't set (shouldn't happen for a
+		// block-broken loot context, but defensive).
+		ArrayList<ItemStack> li = new ArrayList<>();
+		net.minecraft.world.level.block.entity.BlockEntity raw = builder.getOptionalParameter(
+				net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY);
 		ItemStack is = this.getItem().get().getDefaultInstance();
-		is.getOrCreateTag().putLong("nrg", e);
+		final long e = (raw instanceof BatteryTile te) ? te.getStoredEnergy() : 0L;
+		reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", e));
 		li.add(is);
 		return li;
 	}

@@ -213,15 +213,15 @@ public class BlockEntityMotor extends ElectricalReceiver implements Screwdrivera
 	public void readSyncTag(CompoundTag NBT) {
 		super.readSyncTag(NBT);
 
-		facing = dirs[NBT.getInt("face")];
+		facing = dirs[NBT.getIntOr("face", 0)];
 
-		omega = NBT.getInt("omg");
-		torque = NBT.getInt("tq");
-		power = NBT.getLong("pwr");
+		omega = NBT.getIntOr("omg", 0);
+		torque = NBT.getIntOr("tq", 0);
+		power = NBT.getLongOr("pwr", 0L);
 
-		maxAmp = NBT.getInt("amp");
+		maxAmp = NBT.getIntOr("amp", 0);
 
-		iotick = NBT.getInt("io");
+		iotick = NBT.getIntOr("io", 0);
 	}
 
 	@Override
@@ -272,7 +272,7 @@ public class BlockEntityMotor extends ElectricalReceiver implements Screwdrivera
 
 	@Override
 	public BlockPos getEmittingPos(BlockPos pos) {
-		return new BlockPos(pos.getX()+ this.getFacing().getOpposite().getStepX(), pos.getY()+this.getFacing().getOpposite().getStepY(), pos.getY()+this.getFacing().getOpposite().getStepZ());
+		return new BlockPos(pos.getX()+ this.getFacing().getOpposite().getStepX(), pos.getY()+this.getFacing().getOpposite().getStepY(), pos.getZ()+this.getFacing().getOpposite().getStepZ());
 	}
 
 	@Override
@@ -307,7 +307,7 @@ public class BlockEntityMotor extends ElectricalReceiver implements Screwdrivera
 	@Override
 	public void setDataFromItemStackTag(CompoundTag NBT) {
 		if (NBT != null && NBT.contains("amp"))
-			maxAmp = NBT.getInt("amp");
+			maxAmp = NBT.getIntOr("amp", 0);
 	}
 
 	@Override
@@ -323,7 +323,7 @@ public class BlockEntityMotor extends ElectricalReceiver implements Screwdrivera
 	public ArrayList<String> getDisplayTags(CompoundTag NBT) {
 		ArrayList<String> li = new ArrayList<>();
 		if (NBT != null && NBT.contains("amp")) {
-			int amp = NBT.getInt("amp");
+			int amp = NBT.getIntOr("amp", 0);
 			li.add(String.format("Contains a %dx amplifier", amp));
 		}
 		return li;

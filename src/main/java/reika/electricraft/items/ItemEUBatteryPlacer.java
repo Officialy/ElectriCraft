@@ -33,7 +33,7 @@
 //		li.add(new ItemStack(item));
 //
 //		ItemStack is = new ItemStack(item);
-//		is.getOrCreateTag().putLong("nrg", (long)BlockEntityEUBattery.CAPACITY);
+//		reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", (long))BlockEntityEUBattery.CAPACITY);
 //		li.add(is);
 //	}
 //
@@ -46,7 +46,7 @@
 //	public void appendHoverText(ItemStack is,  Level p_41422_, List<Component> li, TooltipFlag p_41424_) {
 //		long e = 0;
 //		if (is.stackTagCompound != null) {
-//			e = is.stackTagCompound.getLong("nrg");
+//			e = is.stackTagCompound.getLongOr("nrg", 0L);
 //		}
 //		double max = BlockEntityEUBattery.CAPACITY;
 //		String sg = ReikaEngLibrary.getSIPrefix(e);

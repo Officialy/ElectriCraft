@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "electricraft:block/meter",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "electricraft:block/meter"
+    },
+    "facing=south": {
+      "model": "electricraft:block/meter",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "electricraft:block/meter",
+      "y": 270
+    }
+  }
+}

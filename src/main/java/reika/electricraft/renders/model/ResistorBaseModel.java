@@ -3,6 +3,7 @@ package reika.electricraft.renders.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -10,8 +11,8 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import reika.electricraft.base.BlockEntityResistorBase;
 import reika.rotarycraft.base.RotaryModelBase;
@@ -23,7 +24,7 @@ import static reika.electricraft.ElectriCraft.MODID;
 
 public abstract class ResistorBaseModel extends RotaryModelBase {
 
-    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(MODID, "textures/resistor.png");
+    public static final Identifier TEXTURE_LOCATION = Identifier.fromNamespaceAndPath(MODID, "textures/resistor.png");
 
     private final ModelPart shape1;
     private final ModelPart shape2a;
@@ -32,11 +33,10 @@ public abstract class ResistorBaseModel extends RotaryModelBase {
     private final ModelPart shape3;
     private final ModelPart shape3b;
     private final ModelPart shape3c;
-    private final ModelPart root;
+    // 1.21.5: Model.root already exists
 
     public ResistorBaseModel(ModelPart modelPart) {
-        super(RenderType::entityCutout);
-        this.root = modelPart;
+        super(modelPart, RenderTypes::entityCutout);
 
         this.shape1 = modelPart.getChild("shape1");
         this.shape2a = modelPart.getChild("shape2a");
@@ -103,31 +103,26 @@ public abstract class ResistorBaseModel extends RotaryModelBase {
 
         return LayerDefinition.create(definition, 128, 128);
     }
-
-    @Override
-    public void renderToBuffer(PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        root.render(stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-    }
-
+    // 1.21.5: Model.renderToBuffer is now final; 8-arg override removed.
     protected abstract List<ResistorBand> getBands();
 
     @Override
     public final void renderAll(PoseStack stack, VertexConsumer tex, int light, BlockEntity te, ArrayList<?> li, float phi, float theta) {
-        shape1.render(stack, tex, 0, 0); //todo ints
-        shape2a.render(stack, tex, 0, 0); //todo ints
-        shape2.render(stack, tex, 0, 0); //todo ints
-        shape3a.render(stack, tex, 0, 0); //todo ints
-        shape3.render(stack, tex, 0, 0); //todo ints
-        shape3b.render(stack, tex, 0, 0); //todo ints
-        shape3c.render(stack, tex, 0, 0); //todo ints
+        shape1.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
+        shape2a.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
+        shape2.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
+        shape3a.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
+        shape3.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
+        shape3b.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
+        shape3c.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
 
         List<ResistorBand> bands = this.getBands();
         for (int i = 0; i < bands.size(); i++) {
             ResistorBand rb = bands.get(i);
             rb.color = (BlockEntityResistorBase.ColorBand) li.get(i);
-            rb.color.renderColor.setGLColorBlend();
-            rb.partA.render(stack, tex, 0,0); //todo both ints
-            rb.partB.render(stack, tex, 0,0);
+            // 1.21.5: setGLColorBlend (fixed-function) gone; color now passed to .render(...).
+            rb.partA.render(stack, tex, 0,0, 0xFFFFFFFF); //todo both ints
+            rb.partB.render(stack, tex, 0,0, 0xFFFFFFFF);
         }
     }
 
@@ -149,3 +144,4 @@ public abstract class ResistorBaseModel extends RotaryModelBase {
     }
 
 }
+

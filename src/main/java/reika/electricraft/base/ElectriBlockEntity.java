@@ -80,7 +80,7 @@ public abstract class ElectriBlockEntity extends BlockEntityBase implements Tran
 	protected void readSyncTag(CompoundTag NBT)
 	{
 		super.readSyncTag(NBT);
-		isFlipped = NBT.getBoolean("flip");
+		isFlipped = NBT.getBooleanOr("flip", false);
 	}
 
 	public boolean isThisTE(Block id, int meta) {

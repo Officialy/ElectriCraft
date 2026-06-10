@@ -101,8 +101,8 @@ public class BlockEntityFuse extends BlockEntityWireComponent implements WireFus
 	public void readSyncTag(CompoundTag NBT) {
 		super.readSyncTag(NBT);
 
-		overloaded = NBT.getBoolean("overload");
-		currentLimit = NBT.getInt("limit");
+		overloaded = NBT.getBooleanOr("overload", false);
+		currentLimit = NBT.getIntOr("limit", 0);
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class BlockEntityFuse extends BlockEntityWireComponent implements WireFus
 	@Override
 	public void setDataFromItemStackTag(CompoundTag NBT) {
 		if (NBT != null) {
-			currentLimit = NBT.getInt("currentlim");
+			currentLimit = NBT.getIntOr("currentlim", 0);
 		}
 	}
 
@@ -143,7 +143,7 @@ public class BlockEntityFuse extends BlockEntityWireComponent implements WireFus
 	public ArrayList<String> getDisplayTags(CompoundTag NBT) {
 		ArrayList<String> li = new ArrayList<>();
 		if (NBT != null) {
-			li.add("Current Limit: "+NBT.getInt("currentlim")+"A");
+			li.add("Current Limit: "+NBT.getIntOr("currentlim", 0)+"A");
 		}
 		return li;
 	}

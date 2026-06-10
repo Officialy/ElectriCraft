@@ -70,7 +70,7 @@ public abstract class BlockEntityWireComponent extends WiringTile implements Scr
 	{
 		super.readSyncTag(NBT);
 
-		this.setFacing(dirs[NBT.getInt("face")]);
+		this.setFacing(dirs[NBT.getIntOr("face", 0)]);
 	}
 
 	@Override

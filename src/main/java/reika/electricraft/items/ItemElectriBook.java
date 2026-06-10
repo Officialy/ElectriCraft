@@ -10,15 +10,12 @@
 package reika.electricraft.items;
 
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-
-
 import net.minecraft.world.level.Level;
-import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriItemBase;
 
+// 1.21.5: InteractionResultHolder was removed; Item#use now returns InteractionResult.
 public class ItemElectriBook extends ElectriItemBase {
 
     public ItemElectriBook(Properties properties) {
@@ -26,9 +23,7 @@ public class ItemElectriBook extends ElectriItemBase {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player ep, InteractionHand p_41434_) {
-//        ep.openMenu(ElectriCraft.instance, 10, level, 0, 0, 0);
-        return InteractionResultHolder.pass(this.getDefaultInstance());
+    public InteractionResult use(Level level, Player ep, InteractionHand hand) {
+        return InteractionResult.PASS;
     }
-
 }

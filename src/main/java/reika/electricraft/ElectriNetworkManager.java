@@ -13,18 +13,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 
-<<<<<<< Updated upstream:ElectriNetworkManager.java
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-=======
-import net.minecraft.world.entity.vehicle.MinecartCommandBlock;
 import net.minecraft.world.level.Level;
-import net.neoforged.event.TickEvent;
 import reika.dragonapi.auxiliary.trackers.TickRegistry;
 import reika.electricraft.auxiliary.ElectriNetworkEvent.ElectriNetworkRepathEvent;
 import reika.electricraft.auxiliary.ElectriNetworkEvent.ElectriNetworkTickEvent;
->>>>>>> Stashed changes:src/main/java/reika.electricraft/ElectriNetworkManager.java
 
+// 1.21.5: net.neoforged.neoforge.event.TickEvent and its inner Phase enum are gone;
+// DragonAPI's TickRegistry now hosts its own Phase enum and dispatches ServerTickEvent.Pre/Post.
 public class ElectriNetworkManager implements TickRegistry.TickHandler {
 
 	public static final ElectriNetworkManager instance = new ElectriNetworkManager();
@@ -38,10 +33,9 @@ public class ElectriNetworkManager implements TickRegistry.TickHandler {
 
 	@Override
 	public void tick(TickRegistry.TickType type, Object... tickData) {
-		TickEvent.Phase phase = (TickEvent.Phase) tickData[0];
-		Level world = null;//todo DimensionManager.getWorld(0);
-		//ReikaJavaLibrary.pConsole(networks.size()+":"+networks);
-		if (phase == TickEvent.Phase.START) {
+		TickRegistry.Phase phase = (TickRegistry.Phase) tickData[0];
+		Level world = null;//todo plumb the current server level through; DimensionManager.getWorld(0) is gone in 1.21.5
+		if (phase == TickRegistry.Phase.START) {
 			if (!discard.isEmpty()) {
 				networks.removeAll(discard);
 				discard.clear();
@@ -53,7 +47,7 @@ public class ElectriNetworkManager implements TickRegistry.TickHandler {
 				}
 			}
 		}
-		else if (phase == TickEvent.Phase.END) {
+		else if (phase == TickRegistry.Phase.END) {
 			if (world != null) {
 				ElectriNetworkRepathEvent evt = new ElectriNetworkRepathEvent(world);
 				for (NetworkObject net : networks) {
@@ -69,8 +63,8 @@ public class ElectriNetworkManager implements TickRegistry.TickHandler {
 	}
 
 	@Override
-	public boolean canFire(TickEvent.Phase p) {
-		return p == TickEvent.Phase.START || p == TickEvent.Phase.END;
+	public boolean canFire(TickRegistry.Phase p) {
+		return p == TickRegistry.Phase.START || p == TickRegistry.Phase.END;
 	}
 
 	@Override
@@ -87,3 +81,4 @@ public class ElectriNetworkManager implements TickRegistry.TickHandler {
 	}
 
 }
+

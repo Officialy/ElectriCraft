@@ -30,6 +30,7 @@ public abstract class NetworkBlockEntity extends ElectriBlockEntity implements N
     }
 
     public void updateEntity(Level world, BlockPos pos) {
+        /* 26.1-lifecycle */ super.updateEntity(); // 26.1: drive BlockEntityBase lifecycle (ticksExisted++, onFirstTick → recompute/sync).
         if ((this.getTicksExisted() == 0 || network == null) && !world.isClientSide()) {
             this.findAndJoinNetwork(world, pos);
             //ReikaJavaLibrary.pConsole(network, Dist.DEDICATED_SERVER);

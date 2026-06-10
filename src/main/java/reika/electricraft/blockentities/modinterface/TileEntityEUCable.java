@@ -11,7 +11,7 @@
 //
 //import net.minecraft.world.level.block.entity.BlockEntity;
 //
-//import net.neoforged.common.NeoForge;
+//import net.neoforged.neoforge.common.NeoForge;
 //
 //
 //import Reika.ChromatiCraft.API.Interfaces.WorldRift;

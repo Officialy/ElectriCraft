@@ -12,16 +12,16 @@ package reika.electricraft;
 import java.io.File;
 import java.net.URL;
 
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.eventbus.api.IEventBus;
-import net.neoforged.eventbus.api.SubscribeEvent;
-import net.neoforged.fml.DistExecutor;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reika.dragonapi.DragonAPI;
@@ -43,29 +43,21 @@ public class ElectriCraft extends DragonAPIMod {
 
     public static ElectriCraft instance;
 
-//    public static final Block[] blocks = new Block[ElectriBlocks.blockList.length];
-//    public static final Item[] items = new Item[ElectriItems.itemList.length];
-	public static ElectriConfig config;
+    public static ElectriConfig config;
 
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public ElectriCraft() {
+    public ElectriCraft(final IEventBus modEventBus, final ModContainer modContainer) {
         instance = this;
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         this.startTiming(LoadProfiler.LoadPhase.PRELOAD);
 
         modEventBus.addListener(this::commonSetup);
-//		this.verifyInstallation();
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            // Client setup
+
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             ElectriModelLayers.init(modEventBus);
-        });
-//		proxy.registerSounds();
-//		this.addBlocks();
-//		this.addItems();
-//		((EnumOreBlock)ElectriBlocks.ORE.get()).register();
-//    todo   ElectriTiles.loadMappings();
+        }
+
         ElectriBlocks.BLOCKS.register(modEventBus);
         ElectriBlocks.ITEMS.register(modEventBus);
 
@@ -74,27 +66,12 @@ public class ElectriCraft extends DragonAPIMod {
 
         ReikaPacketHelper.registerPacketHandler(instance, packetChannel, new ElectriPacketCore());
 
-//		CreativeTabSorter.instance.registerCreativeTabAfter(tabElectri, RotaryCraft.ROTARY);
-
-//        InterModComms.sendTo("zzzzzcustomconfigs", "blacklist-mod-as-output", this.getModContainer().getModId());
+        // Register this mod instance on the game bus so non-static @SubscribeEvent handlers (cancelFramez) fire.
+        NeoForge.EVENT_BUS.register(this);
 
         this.basicSetup();
         this.finishTiming();
     }
-
-/*	private static void addBlocks() {
-		ReikaRegistryHelper.instantiateAndRegisterBlocks(instance, ElectriBlocks.blockList, blocks);
-		for (int i = 0; i < ElectriTiles.teList.length; i++) {
-			GameRegistry.registerBlockEntity(ElectriTiles.teList[i].getTEClass(), "Electri"+ElectriTiles.teList[i].getName());
-			ReikaJavaLibrary.initClass(ElectriTiles.teList[i].getTEClass());
-		}
-	}*/
-
-/*    protected HashMap<String, String> getDependencies() {
-        HashMap map = new HashMap();
-        map.put("RotaryCraft", RotaryCraft.currentVersion);
-        return map;
-    }*/
 
     public void commonSetup(FMLCommonSetupEvent event) {
         this.startTiming(LoadProfiler.LoadPhase.LOAD);
@@ -102,71 +79,11 @@ public class ElectriCraft extends DragonAPIMod {
         config = new ElectriConfig(instance, ElectriOptions.optionList, null);
         config.loadSubfolderedConfigFile();
         config.initProps();
-//        proxy.registerRenderers();
-//        RetroGenController.instance.addHybridGenerator(ElectriOreGenerator.instance, 0, ElectriOptions.RETROGEN.getState());
-
-//        ItemStackRepository.instance.registerClass(this, ElectriStacks.class);
 
         TickRegistry.instance.registerTickHandler(ElectriNetworkManager.instance);
         LuaMethod.registerMethods("reika.electricraft.auxiliary.lua");
 
-//        IntegrityChecker.instance.addMod(instance, ElectriBlocks.blockList, ElectriItems.itemList);
-
-//        NetworkRegistry.INSTANCE.registerGuiHandler(this, new ElectriGuiHandler());
-
-//	todo	if (RotaryConfig.COMMON.HANDBOOK.get())
-//			PlayerFirstTimeTracker.addTracker(new ElectriBookTracker());
-
-//		ElectriRecipes.addRecipes();
-
-		/*if (ModList.NEI.isLoaded()) {
-			for (ElectriBlocks block : ElectriBlocks.blockList)
-				if (block != ElectriBlocks.ORE) {
-					NEI_DragonAPI_Config.hideBlock(block.get());
-				}
-		}*/
-
-//     todo   if (FMLLoader.getDist() == Dist.CLIENT)
-//            ElectriDescriptions.loadData();
-
-//		PackModificationTracker.instance.addMod(this, config);
-
         InterModComms.sendTo("Randomod", "blacklist", () -> this.getModContainer().getModId());
-
-        //ReikaEEHelper.blacklistRegistry(ElectriBlocks.blockList);
-        //ReikaEEHelper.blacklistRegistry(ElectriItems.itemList);
-
-	/*	SensitiveItemRegistry.instance.registerItem(this, ElectriItems.PLACER.get(), true);
-		SensitiveItemRegistry.instance.registerItem(this, ElectriItems.BATTERY.get(), true);
-		SensitiveItemRegistry.instance.registerItem(this, ElectriItems.RFBATTERY.get(), true);
-
-		SensitiveItemRegistry.instance.registerItem(this, WireType.SUPERCONDUCTOR.getCraftedProduct(), true);
-		SensitiveItemRegistry.instance.registerItem(this, WireType.SUPERCONDUCTOR.getCraftedInsulatedProduct(), true);*/
-
-/*      for (int i = 0; i < ElectriTiles.teList.length; i++) {
-			ElectriTiles m = ElectriTiles.teList[i];
-			if (ModList.CHROMATICRAFT.isLoaded()) {
-				AcceleratorBlacklist.addBlacklist(m.getTEClass(), m.getName(), BlacklistReason.EXPLOIT);
-			}
-			TimeTorchHelper.blacklistBlockEntity(m.getTEClass());
-		}*/
-
-//		ElectriRecipes.addPostLoadRecipes();
-
-		/*if (ModList.THAUMCRAFT.isLoaded()) {
-			for (int i = 0; i < ElectriOres.oreList.length; i++) {
-				ElectriOres ore = ElectriOres.oreList[i];
-				ItemStack block = ore.getOreBlock();
-				ItemStack drop = ore.getProduct();
-				//ReikaThaumHelper.addAspects(block, Aspect.STONE, 1);
-			}
-
-			ReikaThaumHelper.addAspects(ElectriOres.PLATINUM.getOreBlock(), Aspect.GREED, 6, Aspect.METAL, 2);
-			ReikaThaumHelper.addAspects(ElectriOres.NICKEL.getOreBlock(), Aspect.METAL, 1);
-
-			ReikaThaumHelper.addAspects(ElectriOres.PLATINUM.getProduct(), Aspect.GREED, 6, Aspect.METAL, 2);
-			ReikaThaumHelper.addAspects(ElectriOres.NICKEL.getProduct(), Aspect.METAL, 2);
-		}*/
 
         this.finishTiming();
     }
@@ -177,25 +94,6 @@ public class ElectriCraft extends DragonAPIMod {
             evt.setCanceled(true);
         }
     }
-
-/*	@SubscribeEvent
-//	@SideOnly(Dist.CLIENT)
-	public void loadTextures(TextureStitchEvent.Pre evt) {
-		if (evt.map.getTextureType() == 0) {
-			for (int i = 0; i < BatteryType.batteryList.length; i++) {
-				BatteryType type = BatteryType.batteryList[i];
-				type.loadIcon(evt.map);
-			}
-		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	@ModDependent(ModList.BLOODMAGIC)
-	@ClassDependent("WayofTime.alchemicalWizardry.api.event.TeleposeEvent")
-	public void noTelepose(TeleposeEvent evt) {
-		if (!this.isMovable(evt.getInitialTile()) || !this.isMovable(evt.getFinalTile()))
-			evt.setCanceled(true);
-	}*/
 
     private boolean isMovable(BlockEntity te) {
         return !(te instanceof NetworkBlockEntity);
@@ -236,3 +134,6 @@ public class ElectriCraft extends DragonAPIMod {
         return null;//todo config.getConfigFolder();
     }
 }
+
+
+

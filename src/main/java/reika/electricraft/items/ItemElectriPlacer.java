@@ -109,7 +109,7 @@
 //
 //	private int getMeta(ElectriTiles m, ItemStack is) {
 //		if (m == ElectriTiles.WIRELESSPAD) {
-//			int tier = is.stackTagCompound != null ? is.stackTagCompound.getInt("tier") : 0;
+//			int tier = is.stackTagCompound != null ? is.stackTagCompound.getIntOr("tier", 0) : 0;
 //			return tier;
 //		}
 //		return m.getBlockMetadata();
@@ -158,7 +158,7 @@
 //			li.addAll(((NBTMachine)te).getDisplayTags(is.stackTagCompound));
 //		}
 //		if (m == ElectriTiles.WIRELESSPAD && is.stackTagCompound != null) {
-//			li.add(TileEntityWirelessCharger.ChargerTiers.tierList[is.stackTagCompound.getInt("tier")].getLocalizedName());
+//			li.add(TileEntityWirelessCharger.ChargerTiers.tierList[is.stackTagCompound.getIntOr("tier", 0)].getLocalizedName());
 //		}
 //	}
 //

@@ -13,7 +13,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,13 +46,13 @@ public class RenderGenerator extends ElectriTERenderer<BlockEntityGenerator>
         if (tile.isFlipped && tile.getFacing().getStepZ() != 0) {
             stack.mulPose(Axis.ZP.rotationDegrees(180));
         }
-        VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entitySolid((GeneratorModel.TEXTURE_LOCATION)));
-        generatorModel.renderToBuffer(stack, vertexconsumer, light, 0, 1, 1, 1, 1);
+        VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((GeneratorModel.TEXTURE_LOCATION)));
+        generatorModel.renderToBuffer(stack, vertexconsumer, light, 0, 0xFFFFFFFF);
         stack.popPose();
 //		this.closeGL(tile);
 	}
 
-    @Override
+    // 1.21.5: render -> submit; @Override dropped
     public void render(BlockEntityGenerator tile, float p_112308_, PoseStack stack, MultiBufferSource multiBufferSource, int light, int p_112312_) {
 		if (this.doRenderModel(stack, tile))
 			this.renderBlockEntityGeneratorAt(tile, stack, multiBufferSource, light);
@@ -61,3 +62,4 @@ public class RenderGenerator extends ElectriTERenderer<BlockEntityGenerator>
 	}
 
 }
+

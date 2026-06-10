@@ -3,6 +3,7 @@ package reika.electricraft.renders.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -10,8 +11,8 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import static reika.electricraft.ElectriCraft.MODID;
 
 public class ResistorModel extends ResistorBaseModel {
 
-    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(MODID, "textures/resistor.png");
+    public static final Identifier TEXTURE_LOCATION = Identifier.fromNamespaceAndPath(MODID, "textures/resistor.png");
 
     private final ModelPart band3b;
     private final ModelPart band2a;
@@ -30,12 +31,12 @@ public class ResistorModel extends ResistorBaseModel {
     private final ModelPart band1a;
     private final ModelPart band1b;
     private final ModelPart band2b;
-    private final ModelPart root;
+    // 1.21.5: Model.root already exists
     private ArrayList<ResistorBand> bands;
 
     public ResistorModel(ModelPart modelPart) {
         super(modelPart);
-        this.root = modelPart;
+        // 1.21.5: Model.root is final and set by super(modelPart, ...);
 
         this.band3b = modelPart.getChild("band3b");
         this.band2a = modelPart.getChild("band2a");
@@ -145,12 +146,7 @@ public class ResistorModel extends ResistorBaseModel {
 
         return LayerDefinition.create(definition, 128, 128);
     }
-
-    @Override
-    public void renderToBuffer(PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        root.render(stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-    }
-
+    // 1.21.5: Model.renderToBuffer is now final; 8-arg override removed.
     @Override
     protected List<ResistorBand> getBands() {
         bands = new ArrayList<>();
@@ -161,7 +157,8 @@ public class ResistorModel extends ResistorBaseModel {
     }
 
     @Override
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         return TEXTURE_LOCATION;
     }
 }
+

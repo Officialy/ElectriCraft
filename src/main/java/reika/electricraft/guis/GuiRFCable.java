@@ -104,8 +104,8 @@
 //			int n = ReikaMathLibrary.intpow2(10, this.getPower(i));
 //			String sl = String.format("+%d%s", (int)ReikaMathLibrary.getThousandBase(n), ReikaEngLibrary.getSIPrefix(n));
 //			String sr = String.format("-%d%s", (int)ReikaMathLibrary.getThousandBase(n), ReikaEngLibrary.getSIPrefix(n));
-//			font.drawString(sl, dx2-w-font.width(sl), dy2, 0);
-//			font.drawString(sr, dx2+w+24, dy2, 0);
+//			font.text(sl, dx2-w-font.width(sl), dy2, 0);
+//			font.text(sr, dx2+w+24, dy2, 0);
 //		}
 //
 //

@@ -24,8 +24,8 @@ import reika.electricraft.registry.ElectriOres;
 public class BlockElectriOre extends DropExperienceBlock {
 
 	public BlockElectriOre(Properties properties) {
-		super(properties);
-//		this.setCreativeTab(ElectriCraft.tabElectri);
+		// 1.21.5: DropExperienceBlock now requires (IntProvider, Properties).
+		super(net.minecraft.util.valueproviders.ConstantInt.of(0), properties);
 	}
 
 	@Override

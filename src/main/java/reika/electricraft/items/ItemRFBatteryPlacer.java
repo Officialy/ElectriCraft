@@ -32,10 +32,11 @@ public class ItemRFBatteryPlacer extends ItemBatteryPlacer {
 		super(properties);
 	}
 
-	public void getSubItems(Item item, CreativeModeTab tab, List li) {
+	public void getSubItems(Item item, CreativeModeTab tab, List<ItemStack> li) {
 		li.add(new ItemStack(item));
 		ItemStack is = new ItemStack(item);
-		is.getOrCreateTag().putLong("nrg", BlockEntityRFBattery.CAPACITY);
+		// 1.21.5: getOrCreateTag/setTag removed; persist via CUSTOM_DATA helper.
+		reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", BlockEntityRFBattery.CAPACITY));
 		li.add(is);
 	}
 
@@ -44,18 +45,19 @@ public class ItemRFBatteryPlacer extends ItemBatteryPlacer {
 		return ElectriBlocks.RFBATTERY.get();
 	}
 
-
+	// 1.21.5: Item.appendHoverText now takes (ItemStack, TooltipContext, TooltipDisplay, Consumer<Component>, TooltipFlag).
 	@Override
-	public void appendHoverText(ItemStack is,  Level p_41422_, List<Component> li, TooltipFlag p_41424_) {
+	public void appendHoverText(ItemStack is, net.minecraft.world.item.Item.TooltipContext ctx, net.minecraft.world.item.component.TooltipDisplay display, java.util.function.Consumer<Component> li, TooltipFlag flag) {
 		long e = 0;
-		if (is.getTag() != null) {
-			e = is.getTag().getLong("nrg");
+		net.minecraft.nbt.CompoundTag tag = reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is);
+		if (tag != null) {
+			e = tag.getLongOr("nrg", 0L);
 		}
 		long max = BlockEntityRFBattery.CAPACITY;
 		String sg = ReikaEngLibrary.getSIPrefix(e);
 		String sg2 = ReikaEngLibrary.getSIPrefix(max);
 		double b = ReikaMathLibrary.getThousandBase(e);
 		double b2 = ReikaMathLibrary.getThousandBase(max);
-		li.add(Component.literal(String.format("Stored Energy: %.2f %sRF/%.2f %sRF", b, sg, b2, sg2)));
+		li.accept(Component.literal(String.format("Stored Energy: %.2f %sRF/%.2f %sRF", b, sg, b2, sg2)));
 	}
 }

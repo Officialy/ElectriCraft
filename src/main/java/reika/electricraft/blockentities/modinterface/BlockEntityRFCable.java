@@ -15,7 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import reika.dragonapi.interfaces.blockentity.BreakAction;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriCable;
@@ -48,7 +48,8 @@ public class BlockEntityRFCable extends ElectriCable implements IEnergyStorage, 
 
 	@Override
 	public void updateEntity(Level world, BlockPos pos) {
-		if ((this.getTicksExisted() == 0 || network == null) && !world.isClientSide) {
+	    /* 26.1-lifecycle */ super.updateEntity(); // 26.1: drive BlockEntityBase lifecycle (ticksExisted++, onFirstTick → recompute/sync).
+		if ((this.getTicksExisted() == 0 || network == null) && !world.isClientSide()) {
 			this.findAndJoinNetwork(world, pos);
 			//ReikaJavaLibrary.pConsole(network, Dist.DEDICATED_SERVER);
 		}
@@ -166,7 +167,7 @@ public class BlockEntityRFCable extends ElectriCable implements IEnergyStorage, 
 		super.readSyncTag(NBT);
 
 		if (NBT.contains("limit"))
-			this.setRFLimit(NBT.getInt("limit"));
+			this.setRFLimit(NBT.getIntOr("limit", 0));
 	}
 
 	@Override

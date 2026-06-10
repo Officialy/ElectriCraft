@@ -9,30 +9,52 @@
  ******************************************************************************/
 package reika.electricraft.registry;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
-import net.neoforged.registries.DeferredRegister;
-import net.neoforged.registries.ForgeRegistries;
-import net.neoforged.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriItemBase;
 import reika.electricraft.items.ItemBatteryPlacer;
 import reika.electricraft.items.ItemElectriBook;
 import reika.electricraft.items.ItemEnergyCrystal;
 import reika.electricraft.items.ItemRFBatteryPlacer;
-import reika.rotarycraft.RotaryCraft;
 
+import java.util.function.Supplier;
+
+// 1.21.5: typed DeferredRegister.Items and DeferredItem replace ForgeRegistries/RegistryObject.
 public class ElectriItems {
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ElectriCraft.MODID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ElectriCraft.MODID);
 
-    //	public static final RegistryObject<Item> PLACER= ITEMS.register(0, false, "placer", ItemElectriPlacer),
-    public static final RegistryObject<Item> INGOTS = ITEMS.register("electriingots", () -> new ElectriItemBase(new Item.Properties()));
-    //	public static final RegistryObject<Item> WIRE= ITEMS.register(1, true, "machine.wire", ItemWirePlacer(new Item.Properties()));
-    public static final RegistryObject<Item> BATTERY = ITEMS.register("battery", () -> new ItemBatteryPlacer(new Item.Properties()));
-    public static final RegistryObject<Item> CRAFTING = ITEMS.register("crafting", () -> new ElectriItemBase(new Item.Properties()));
-    public static final RegistryObject<Item> CRYSTAL = ITEMS.register("electricrystal", () -> new ItemEnergyCrystal(new Item.Properties()));
-    public static final RegistryObject<Item> RFBATTERY = ITEMS.register("rfbattery", () -> new ItemRFBatteryPlacer(new Item.Properties()));
-    public static final RegistryObject<Item> BOOK = ITEMS.register("electribook", () -> new ItemElectriBook(new Item.Properties()));
+    // 1.21.5: Item.Properties needs setId() before Item.<init>. Threadlocal-driven helper.
+    private static final ThreadLocal<ResourceKey<Item>> CURRENT_ITEM_KEY = new ThreadLocal<>();
+
+    public static Item.Properties itemProperties() {
+        Item.Properties p = new Item.Properties();
+        ResourceKey<Item> k = CURRENT_ITEM_KEY.get();
+        if (k != null) p.setId(k);
+        return p;
+    }
+
+    private static <I extends Item> DeferredItem<I> reg(String name, Supplier<I> factory) {
+        return ITEMS.register(name, rl -> {
+            CURRENT_ITEM_KEY.set(ResourceKey.create(Registries.ITEM, rl));
+            try {
+                return factory.get();
+            } finally {
+                CURRENT_ITEM_KEY.remove();
+            }
+        });
+    }
+
+    public static final DeferredItem<Item> INGOTS = reg("electriingots", () -> new ElectriItemBase(itemProperties()));
+    public static final DeferredItem<Item> BATTERY = reg("battery", () -> new ItemBatteryPlacer(itemProperties()));
+    public static final DeferredItem<Item> CRAFTING = reg("crafting", () -> new ElectriItemBase(itemProperties()));
+    public static final DeferredItem<Item> CRYSTAL = reg("electricrystal", () -> new ItemEnergyCrystal(itemProperties()));
+    public static final DeferredItem<Item> RFBATTERY = reg("rfbattery", () -> new ItemRFBatteryPlacer(itemProperties()));
+    public static final DeferredItem<Item> BOOK = reg("electribook", () -> new ItemElectriBook(itemProperties()));
 //	public static final RegistryObject<Item> EUBATTERY(5, false, "machine.eubattery", ItemEUBatteryPlacer);
 
 

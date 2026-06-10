@@ -65,7 +65,8 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
             ItemStack is = m.getCraftedProduct();
             if (m.hasNBTVariants()) {
                 CompoundTag nbt = ((NBTMachine) te).getTagsToWriteToStack();
-                is.setTag(nbt != null ? nbt.copy() : null);
+                // 1.21.5: ItemStack.setTag removed; persist via CUSTOM_DATA helper.
+                reika.dragonapi.libraries.registry.ReikaItemHelper.setStackTag(is, nbt != null ? nbt.copy() : null);
             }
             ReikaItemHelper.dropItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, is);
         }    }
@@ -93,7 +94,8 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
             return false;
         if (RotaryAux.isHoldingScrewdriver(ep))
             return false;
-        if (e != null && e.isResistor() && ReikaDyeHelper.isDyeItem(is)) {
+        // 1.21.5: ReikaDyeHelper.isDyeItem/getColorFromItem haven't been ported yet — gate this branch off.
+        if (false && e != null && e.isResistor()) {
             BlockEntityResistorBase te = (BlockEntityResistorBase) world.getBlockEntity(pos);
             Direction dir = te.getFacing();
             float inc = dir.getStepX() != 0 ? a : c;
@@ -115,7 +117,7 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
                 }
             }
             if (band > 0) {
-                if (te.setColor(ReikaDyeHelper.getColorFromItem(is), band)) {
+                if (te.setColor((reika.dragonapi.libraries.registry.ReikaDyeHelper) null, band)) {
                     if (!ep.isCreative())
                         is.setCount(is.getCount() - 1);
                     return true;

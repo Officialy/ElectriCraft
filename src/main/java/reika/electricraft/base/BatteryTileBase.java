@@ -35,8 +35,8 @@ public abstract class BatteryTileBase extends ElectriBlockEntity implements Batt
 
 	public final void setEnergyFromNBT(ItemStack is) {
 		if (is.getItem() == this.getPlacerItem()) {
-			if (is.getTag() != null)
-				this.setEnergy(is.getTag().getLong("nrg"));
+			if (reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(is))
+				this.setEnergy(reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is).getLongOr("nrg", 0L));
 			else
 				this.setEnergy(0);
 		}

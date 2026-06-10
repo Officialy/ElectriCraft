@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import reika.electricraft.base.BatteryBlock;
 import reika.electricraft.blockentities.BlockEntityTransformer;
@@ -49,7 +49,7 @@ public class BlockRFBattery extends BatteryBlock {
 	}
 
 	@Override
-	public RegistryObject<Item> getItem() {
+	public DeferredHolder<Item, ? extends Item> getItem() {
 		return ElectriItems.RFBATTERY;
 	}
 

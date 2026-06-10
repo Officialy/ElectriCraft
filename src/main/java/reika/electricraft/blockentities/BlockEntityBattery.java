@@ -146,7 +146,7 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 	{
 		super.readSyncTag(NBT);
 
-		energy = NBT.getLong("e");
+		energy = NBT.getLongOr("e", 0L);
 	}
 
 	@Override
@@ -171,8 +171,8 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 
 	public void setEnergyFromNBT(ItemStack is) {
 		if (is.getItem() == ElectriItems.BATTERY.get()) {
-			if (is.getTag() != null)
-				energy = is.getTag().getLong("nrg")*20L;
+			if (reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(is))
+				energy = reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is).getLongOr("nrg", 0L)*20L;
 			else
 				energy = 0;
 		}

@@ -59,8 +59,8 @@ public abstract class WiringTile extends NetworkBlockEntity {
 	{
 		super.readSyncTag(NBT);
 
-		voltage = NBT.getInt("v");
-		current = NBT.getInt("a");
+		voltage = NBT.getIntOr("v", 0);
+		current = NBT.getIntOr("a", 0);
 	}
 
 	@Override

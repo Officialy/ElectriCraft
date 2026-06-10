@@ -129,9 +129,9 @@
 //
 //		String[] s = trans.getRatioForDisplay().split(":");
 //		if (!input.isFocused())
-//			font.drawString(s[0], dx-53, dy-15, 0xffffff);
+//			font.text(s[0], dx-53, dy-15, 0xffffff);
 //		if (!input2.isFocused())
-//			font.drawString(s[1], dx+2, dy-15, 0xffffff);
+//			font.text(s[1], dx+2, dy-15, 0xffffff);
 //
 //		ReikaGuiAPI.instance.drawCenteredStringNoShadow(stack, font, ":", dx-9, dy-15, 4210752);
 //		ReikaGuiAPI.instance.drawCenteredStringNoShadow(stack, font, String.format("Efficiency: %.2f%%", 100*trans.getEfficiency()), dx-10, dy+6, 4210752);

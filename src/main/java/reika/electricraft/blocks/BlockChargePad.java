@@ -74,14 +74,14 @@ public class BlockChargePad extends Block implements EntityBlock {
     public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder builder) {
         ArrayList li = new ArrayList<>();
         ItemStack is = ElectriTiles.WIRELESSPAD.getCraftedProduct();
-        is.getOrCreateTag().putInt("tier", 1); //todo tier
+        reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", 1)); //todo tier
         li.add(is);
         return li;
     }
 
     public ItemStack getPickBlock(BlockHitResult target, Level world, BlockPos pos) {
         ItemStack is = ElectriTiles.WIRELESSPAD.getCraftedProduct();
-        is.getOrCreateTag().putInt("tier", 1); //todo tier level
+        reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", 1)); //todo tier level
         return is;
     }
 

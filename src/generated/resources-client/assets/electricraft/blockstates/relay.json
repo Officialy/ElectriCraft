@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "electricraft:block/relay",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "electricraft:block/relay"
+    },
+    "facing=south": {
+      "model": "electricraft:block/relay",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "electricraft:block/relay",
+      "y": 270
+    }
+  }
+}
