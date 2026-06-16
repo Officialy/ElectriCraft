@@ -51,7 +51,9 @@ import reika.rotarycraft.registry.SoundRegistry;
 
 public class BlockEntityMotor extends ElectricalReceiver implements Screwdriverable, ShaftPowerEmitter, ConversionTile, NBTMachine, PowerSourceTracker, ShaftMerger {
 
-	private static final int soundtime = (int)(EngineType.DC.getSoundLength()*2.04F);
+	// 73 = elecengine.ogg duration in ticks (was EngineType.getSoundLength(), removed when
+	// RotaryCraft engines moved to client-side looping sounds)
+	private static final int soundtime = (int)(73*2.04F);
 	private final StepTimer soundTimer = new StepTimer(soundtime);
 
 	protected int omega;
