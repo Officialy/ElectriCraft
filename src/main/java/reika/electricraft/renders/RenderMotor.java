@@ -13,7 +13,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import org.joml.Vector3f;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -40,7 +39,7 @@ public class RenderMotor extends ElectriTERenderer<BlockEntityMotor> {
         elecMotorModel = new ElecMotorModel(context.bakeLayer(ElectriModelLayers.MOTOR));
     }
 
-    public void renderBlockEntityMotorAt(BlockEntityMotor tile, PoseStack stack, MultiBufferSource bufferSource, int light) {
+    public void renderBlockEntityMotorAt(BlockEntityMotor tile, PoseStack stack, VertexConsumer bufferSource, int light) {
 //        this.setupGL(tile, par2, par4, par6);
 //        this.bindTextureByName("/Reika/ElectriCraft/Textures/elecmotortex.png");
 
@@ -60,14 +59,14 @@ public class RenderMotor extends ElectriTERenderer<BlockEntityMotor> {
         }
         int num = 5;
 //        var14.renderAll(tile, ReikaJavaLibrary.makeListFrom(num, tile.getFinColor(), tile.getPower() > 0), tile.phi, 0);
-        VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((Identifier.fromNamespaceAndPath(ElectriCraft.MODID,"textures/elecmotortex.png"))));
+        VertexConsumer vertexconsumer = bufferSource;
         elecMotorModel.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         stack.popPose();
 //        this.closeGL(tile);
     }
 
 	// 1.21.5: render -> submit; @Override dropped
-    public void render(BlockEntityMotor tile, float p_112308_, PoseStack stack, MultiBufferSource multiBufferSource, int light, int p_112312_) {
+    public void render(BlockEntityMotor tile, float p_112308_, PoseStack stack, VertexConsumer multiBufferSource, int light, int p_112312_) {
         if (this.doRenderModel(stack, tile))
             this.renderBlockEntityMotorAt(tile, stack, multiBufferSource, light);
         if (tile.isInWorld()) {// && MinecraftForgeClient.getRenderPass() == 1) {

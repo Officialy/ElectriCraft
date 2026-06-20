@@ -13,7 +13,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -39,7 +38,7 @@ public class RenderTransformer extends ElectriTERenderer<BlockEntityTransformer>
 	public RenderTransformer(BlockEntityRendererProvider.Context context) {
 		transformer = new TransformerModel(context.bakeLayer(ElectriModelLayers.TRANSFORMER));
 	}
-	public void renderBlockEntityTransformerAt(BlockEntityTransformer tile, PoseStack stack, MultiBufferSource bufferSource, int light)
+	public void renderBlockEntityTransformerAt(BlockEntityTransformer tile, PoseStack stack, VertexConsumer bufferSource, int light)
 	{
 		Level level = tile.getLevel();
 		boolean flag = level != null;
@@ -51,14 +50,14 @@ public class RenderTransformer extends ElectriTERenderer<BlockEntityTransformer>
 		stack.mulPose(Axis.YP.rotationDegrees(-f));
 		stack.mulPose(Axis.ZP.rotationDegrees(180));
 
-		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((TransformerModel.TEXTURE_LOCATION)));
+		VertexConsumer vertexconsumer = bufferSource;
 		transformer.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		stack.popPose();
 //		var14.renderAll(tile, ReikaJavaLibrary.makeListFrom(tile.getN1(), tile.getN2()), tile.phi, 0);
 	}
 
 	// 1.21.5: render -> submit; @Override dropped
-	public void render(BlockEntityTransformer tile, float p_112308_, PoseStack stack, MultiBufferSource multiBufferSource, int light, int p_112312_) {
+	public void render(BlockEntityTransformer tile, float p_112308_, PoseStack stack, VertexConsumer multiBufferSource, int light, int p_112312_) {
 		BlockEntityTransformer te = tile;
 		if (this.doRenderModel(stack, te))
 			this.renderBlockEntityTransformerAt(te, stack, multiBufferSource, light);

@@ -98,7 +98,7 @@ public enum WireType {
 		ItemStack is2 = ReikaItemHelper.getSizedItemStack(this.getCraftedInsulatedProduct(), amt);
 		ArrayList<ItemStack> li = this.getAllValidCraftingIngots();
 		for (ItemStack in : li) {
-			Object[] obj2 = {"WIW", "WIW", "WIW", 'W', Blocks.WHITE_WOOL, 'I', in};
+			Object[] obj2 = {"WIW", "WIW", "WIW", 'W', Blocks.WOOL.white(), 'I', in};
 			Object[] obj = {"I", "I", "I", 'I', in};
 			WorktableRecipes.getInstance().addRecipe(is, RecipeLevel.CORE, obj);
 			WorktableRecipes.getInstance().addRecipe(is2, RecipeLevel.CORE, obj2);

@@ -13,7 +13,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import org.joml.Vector3f;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -39,7 +38,7 @@ public class RenderPreciseResistor extends ElectriTERenderer<BlockEntityResistor
         resistorModel = new PreciseResistorModel(context.bakeLayer(ElectriModelLayers.PRECISE_RESISTOR));
     }
 
-    public final void renderBlockEntityResistorAt(BlockEntityResistorBase tile, PoseStack stack, MultiBufferSource bufferSource, int light) {
+    public final void renderBlockEntityResistorAt(BlockEntityResistorBase tile, PoseStack stack, VertexConsumer bufferSource, int light) {
         Level level = tile.getLevel();
         boolean flag = level != null;
         BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.PRECISE_RESISTOR.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
@@ -52,14 +51,14 @@ public class RenderPreciseResistor extends ElectriTERenderer<BlockEntityResistor
 
 //		stack.mulPose(var11, 0.0F, 1.0F, 0.0F);
 		BlockEntityResistorBase.ColorBand[] colors = tile.getColorBands();
-        VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((PreciseResistorModel.TEXTURE_LOCATION)));
+        VertexConsumer vertexconsumer = bufferSource;
 		resistorModel.renderAll(stack, vertexconsumer, light, tile, ReikaJavaLibrary.makeListFrom(colors), tile.phi, 0);
         stack.popPose();
 //        resistorModel.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
     }
 
     // 1.21.5: render -> submit; @Override dropped
-    public void render(BlockEntityResistorBase tile, float p_112308_, PoseStack stack, MultiBufferSource bufferSource, int light, int p_112312_) {
+    public void render(BlockEntityResistorBase tile, float p_112308_, PoseStack stack, VertexConsumer bufferSource, int light, int p_112312_) {
         if (this.doRenderModel(stack, tile))
             this.renderBlockEntityResistorAt(tile, stack, bufferSource, light);
         if (tile.isInWorld()) {// && MinecraftForgeClient.getRenderPass() == 1) {

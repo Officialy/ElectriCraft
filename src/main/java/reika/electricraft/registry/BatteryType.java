@@ -53,7 +53,7 @@ public enum BatteryType {
 	public void addCrafting() {
 		ItemStack is = this.getCraftedProduct();
 		ItemStack in = ElectriItems.CRYSTAL.get().getDefaultInstance();//todo .getStackOfMetadata(this.ordinal());
-		Object[] obj = {"ScS", "WCW", "SPS", 'W', Blocks.WHITE_WOOL /*todo wool color?*/, 'c', this.getTopMaterial(), 'C', in, 'P', this.getBottomMaterial(), 'S', RotaryItems.HSLA_STEEL_INGOT.get()};
+		Object[] obj = {"ScS", "WCW", "SPS", 'W', Blocks.WOOL.white() /*todo wool color?*/, 'c', this.getTopMaterial(), 'C', in, 'P', this.getBottomMaterial(), 'S', RotaryItems.HSLA_STEEL_INGOT.get()};
 		/*todo ShapedRecipe ir = new ShapedRecipe(is, obj);
 		WorktableRecipes.getInstance().addRecipe(ir, RecipeLevel.CORE);
 		if (ConfigRegistry.TABLEMACHINES.getState()) {

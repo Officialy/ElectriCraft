@@ -13,7 +13,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import org.joml.Vector3f;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -37,7 +36,7 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 	public RenderRelay(BlockEntityRendererProvider.Context context) {
 		relay = new RelayModel(context.bakeLayer(ElectriModelLayers.RELAY));
 	}
-	public void renderBlockEntityRelayAt(BlockEntityRelay tile, PoseStack stack, MultiBufferSource bufferSource, int light)
+	public void renderBlockEntityRelayAt(BlockEntityRelay tile, PoseStack stack, VertexConsumer bufferSource, int light)
 	{
 		Level level = tile.getLevel();
 		boolean flag = level != null;
@@ -49,7 +48,7 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 		stack.mulPose(Axis.YP.rotationDegrees(-f));
 		stack.mulPose(Axis.ZP.rotationDegrees(180));
 
-		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((RelayModel.TEXTURE_LOCATION)));
+		VertexConsumer vertexconsumer = bufferSource;
 		relay.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		stack.popPose();
 //		stack.mulPose(var11, 0.0F, 1.0F, 0.0F);
@@ -57,7 +56,7 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 	}
 
     // 1.21.5: render -> submit; @Override dropped
-    public void render(BlockEntityRelay tile, float p_112308_, PoseStack stack, MultiBufferSource bufferSource, int light, int p_112312_) {
+    public void render(BlockEntityRelay tile, float p_112308_, PoseStack stack, VertexConsumer bufferSource, int light, int p_112312_) {
 		if (this.doRenderModel(stack, tile))
 			this.renderBlockEntityRelayAt(tile, stack, bufferSource, light);
 		if (( tile).isInWorld()) {// && MinecraftForgeClient.getRenderPass() == 1) {

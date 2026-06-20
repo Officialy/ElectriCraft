@@ -10,7 +10,7 @@
 package reika.electricraft.renders;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriCable;
@@ -19,7 +19,7 @@ import reika.electricraft.base.ElectriTERenderer;
 public class RenderCable extends ElectriTERenderer<ElectriCable> {
 
     // 1.21.5: render -> submit; @Override dropped
-    public void render(ElectriCable tile, float p_112308_, PoseStack stack, MultiBufferSource p_112310_, int p_112311_, int p_112312_) {
+    public void render(ElectriCable tile, float p_112308_, PoseStack stack, VertexConsumer p_112310_, int p_112311_, int p_112312_) {
         ElectriCable te = tile;
         if (tile.hasLevel()) {
 

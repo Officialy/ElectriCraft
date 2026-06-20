@@ -12,7 +12,6 @@ package reika.electricraft.renders;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -34,7 +33,7 @@ public class RenderGenerator extends ElectriTERenderer<BlockEntityGenerator>
     public RenderGenerator(BlockEntityRendererProvider.Context context) {
         generatorModel = new GeneratorModel(context.bakeLayer(ElectriModelLayers.GENERATOR));
     }
-	public void renderBlockEntityGeneratorAt(BlockEntityGenerator tile, PoseStack stack, MultiBufferSource bufferSource, int light)
+	public void renderBlockEntityGeneratorAt(BlockEntityGenerator tile, PoseStack stack, VertexConsumer bufferSource, int light)
 	{
         BlockState blockstate = tile.getLevel() != null ? tile.getBlockState() : ElectriBlocks.GENERATOR.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
         float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
@@ -46,14 +45,14 @@ public class RenderGenerator extends ElectriTERenderer<BlockEntityGenerator>
         if (tile.isFlipped && tile.getFacing().getStepZ() != 0) {
             stack.mulPose(Axis.ZP.rotationDegrees(180));
         }
-        VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((GeneratorModel.TEXTURE_LOCATION)));
+        VertexConsumer vertexconsumer = bufferSource;
         generatorModel.renderToBuffer(stack, vertexconsumer, light, 0, 0xFFFFFFFF);
         stack.popPose();
 //		this.closeGL(tile);
 	}
 
     // 1.21.5: render -> submit; @Override dropped
-    public void render(BlockEntityGenerator tile, float p_112308_, PoseStack stack, MultiBufferSource multiBufferSource, int light, int p_112312_) {
+    public void render(BlockEntityGenerator tile, float p_112308_, PoseStack stack, VertexConsumer multiBufferSource, int light, int p_112312_) {
 		if (this.doRenderModel(stack, tile))
 			this.renderBlockEntityGeneratorAt(tile, stack, multiBufferSource, light);
 		if (tile.isInWorld()){// && MinecraftForgeClient.getRenderPass() == 1) {

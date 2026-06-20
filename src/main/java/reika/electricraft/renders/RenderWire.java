@@ -10,7 +10,7 @@
 package reika.electricraft.renders;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.blockentities.BlockEntityWire;
@@ -20,7 +20,7 @@ public class RenderWire extends ElectriTERenderer<BlockEntityWire> {
 	public RenderWire(BlockEntityRendererProvider.Context context) {
 	}
 	// 1.21.5: render -> submit; @Override dropped
-	public void render(BlockEntityWire te, float p_112308_, PoseStack stack, MultiBufferSource bufferSource, int light, int p_112312_) {
+	public void render(BlockEntityWire te, float p_112308_, PoseStack stack, VertexConsumer bufferSource, int light, int p_112312_) {
 		if (te.hasLevel()) {
 
 		}

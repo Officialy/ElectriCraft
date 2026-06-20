@@ -104,7 +104,7 @@ public class ElectriRecipes {
 		if (PowerTypes.RF.isLoaded()) {
 			ElectriTiles.CABLE.addSizedCrafting(DifficultyEffects.PIPECRAFT.getInt(), "RDR", "BGB", "RER", 'D', Items.diamond, 'R', Blocks.REDSTONE_BLOCK, 'G', Blocks.gold_block, 'E', Items.ender_pearl, 'B', BlockRegistry.BLASTGLASS.get());
 
-			Object[] obj = {"ScS", "WCW", "tPt", 't', RotaryItems.TUNGSTEN_ALLOY_INGOT, 'W', Blocks.WHITE_WOOL, 'c', RotaryItems.redgoldingot, 'C', ElectriItems.CRYSTAL.getStackOfMetadata(BatteryType.batteryList.length), 'P', RotaryItems.BEDROCK_ALLOY_INGOT, 'S', RotaryItems.HSLA_STEEL_INGOT};
+			Object[] obj = {"ScS", "WCW", "tPt", 't', RotaryItems.TUNGSTEN_ALLOY_INGOT, 'W', Blocks.WOOL.white(), 'c', RotaryItems.redgoldingot, 'C', ElectriItems.CRYSTAL.getStackOfMetadata(BatteryType.batteryList.length), 'P', RotaryItems.BEDROCK_ALLOY_INGOT, 'S', RotaryItems.HSLA_STEEL_INGOT};
 			ShapedRecipe ir2 = new ShapedRecipe(ElectriTiles.RFBATTERY.getCraftedProduct(), obj);
 			WorktableRecipes.getInstance().addRecipe(ir2, RecipeLevel.CORE);
 			if (ConfigRegistry.TABLEMACHINES.getState()) {

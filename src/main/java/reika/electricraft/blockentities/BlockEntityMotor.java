@@ -160,7 +160,7 @@ public class BlockEntityMotor extends ElectricalReceiver implements Screwdrivera
 	}
 
 	private float getSoundVolume(Level world, BlockPos pos) {
-		if (world.getBlockState(pos.below()).getBlock() == Blocks.WHITE_WOOL && world.getBlockState(pos.above()).getBlock() == Blocks.WHITE_WOOL)
+		if (world.getBlockState(pos.below()).getBlock() == Blocks.WOOL.white() && world.getBlockState(pos.above()).getBlock() == Blocks.WOOL.white())
 			return 0.1F;
 		Direction dir = this.getFacing();
 		Direction dir2 = dir.getOpposite();
@@ -171,7 +171,7 @@ public class BlockEntityMotor extends ElectricalReceiver implements Screwdrivera
 				int dy = pos.getY()+side.getStepY();
 				int dz = pos.getZ()+side.getStepZ();
 				Block id = world.getBlockState(new BlockPos(dx, dy, dz)).getBlock();
-				if (id != Blocks.WHITE_WOOL)
+				if (id != Blocks.WOOL.white())
 					return 0.36F;
 			}
 		}

@@ -14,7 +14,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import org.joml.Vector3f;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -43,7 +42,7 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
         modelFuse = new FuseModel(context.bakeLayer(ElectriModelLayers.FUSE));
     }
 
-    public void renderBlockEntityFuseAt(BlockEntityFuse tile, PoseStack stack, MultiBufferSource bufferSource, int light) {
+    public void renderBlockEntityFuseAt(BlockEntityFuse tile, PoseStack stack, VertexConsumer bufferSource, int light) {
 //		this.setupGL(tile, par2, par4, par6);
 //		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         stack.pushPose();
@@ -78,7 +77,7 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
 //		stack.mulPose(var11, 0.0F, 1.0F, 0.0F);
         stack.translate(0, -0.1875, 0);
 //		modelFuse.renderAll(tile, null, tile.phi);
-        VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid(s));
+        VertexConsumer vertexconsumer = bufferSource;
         modelFuse.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 
         stack.popPose();
@@ -86,7 +85,7 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
     }
 
     // 1.21.5: render -> submit; @Override dropped
-    public void render(BlockEntityFuse tile, float p_112308_, PoseStack stack, MultiBufferSource bufferSource, int light, int p_112312_) {
+    public void render(BlockEntityFuse tile, float p_112308_, PoseStack stack, VertexConsumer bufferSource, int light, int p_112312_) {
 
         {
             //if (this.doRenderModel((BlockEntityFuse)tile))

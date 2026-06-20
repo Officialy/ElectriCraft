@@ -14,7 +14,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -44,7 +43,7 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
         meterModel = new MeterModel(context.bakeLayer(ElectriModelLayers.METER));
     }
 
-    public void renderBlockEntityMeterAt(BlockEntityMeter tile, PoseStack stack, MultiBufferSource bufferSource, int light) {
+    public void renderBlockEntityMeterAt(BlockEntityMeter tile, PoseStack stack, VertexConsumer bufferSource, int light) {
 
         Level level = tile.getLevel();
         boolean flag = level != null;
@@ -59,7 +58,7 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
 //		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 //		this.setupGL(tile, par2, par4, par6);
 
-        VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderTypes.entitySolid((MeterModel.TEXTURE_LOCATION)));
+        VertexConsumer vertexconsumer = bufferSource;
         meterModel.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         stack.popPose();
         if (tile.isInWorld())
@@ -68,7 +67,7 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
 //		this.closeGL(tile);
     }
 
-    private void renderText(BlockEntityMeter tile, PoseStack stack, MultiBufferSource buffer) {
+    private void renderText(BlockEntityMeter tile, PoseStack stack, VertexConsumer buffer) {
         Font f = this.getFontRenderer();
         String s1 = "Voltage:";
         String s2 = "Current:";
@@ -100,11 +99,10 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
         int dx = -30;
         int dy = -30;
 
-        f.drawInBatch(s1, dx, dy, 0xffffff, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 15728880);
-        f.drawInBatch(s1b, dx, dy + 10, 0xffffff, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 15728880);
-
-        f.drawInBatch(s2, dx, dy + 30, 0xffffff, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 15728880);
-        f.drawInBatch(s2b, dx, dy + 40, 0xffffff, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 15728880);
+        drawText(f, s1, dx, dy, stack, buffer);
+        drawText(f, s1b, dx, dy + 10, stack, buffer);
+        drawText(f, s2, dx, dy + 30, stack, buffer);
+        drawText(f, s2b, dx, dy + 40, stack, buffer);
 
         stack.popPose();
 //		RenderSystem.depthMask(true);
@@ -112,8 +110,20 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
 //		GL11.glEnable(GL11.GL_LIGHTING);
     }
 
+    // 26.2: Font.drawInBatch was removed; render text straight to a VertexConsumer via prepareText +
+    // a GlyphVisitor (the manual text pipeline, since BERs no longer get a MultiBufferSource).
+    private static void drawText(Font f, String s, float x, float y, PoseStack stack, VertexConsumer buffer) {
+        final org.joml.Matrix4f mat = new org.joml.Matrix4f(stack.last().pose());
+        f.prepareText(s, x, y, 0xFFFFFFFF, false, 0).visit(new Font.GlyphVisitor() {
+            @Override
+            public void acceptRenderable(net.minecraft.client.gui.font.TextRenderable renderable) {
+                renderable.render(mat, buffer, 15728880, false);
+            }
+        });
+    }
+
     // 1.21.5: render -> submit; @Override dropped
-    public void render(BlockEntityMeter tile, float p_112308_, PoseStack stack, MultiBufferSource bufferSource, int light, int p_112312_) {
+    public void render(BlockEntityMeter tile, float p_112308_, PoseStack stack, VertexConsumer bufferSource, int light, int p_112312_) {
         if (this.doRenderModel(stack, tile))
             this.renderBlockEntityMeterAt(tile, stack, bufferSource, light);
         if (tile.isInWorld()) {// && MinecraftForgeClient.getRenderPass() == 1) {
