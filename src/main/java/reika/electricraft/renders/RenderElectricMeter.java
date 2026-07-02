@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.font.TextRenderable;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -23,6 +24,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Matrix4f;
 import reika.dragonapi.libraries.rendering.ReikaRenderHelper;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriTERenderer;
@@ -113,10 +115,10 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
     // 26.2: Font.drawInBatch was removed; render text straight to a VertexConsumer via prepareText +
     // a GlyphVisitor (the manual text pipeline, since BERs no longer get a MultiBufferSource).
     private static void drawText(Font f, String s, float x, float y, PoseStack stack, VertexConsumer buffer) {
-        final org.joml.Matrix4f mat = new org.joml.Matrix4f(stack.last().pose());
+        final Matrix4f mat = new Matrix4f(stack.last().pose());
         f.prepareText(s, x, y, 0xFFFFFFFF, false, 0).visit(new Font.GlyphVisitor() {
             @Override
-            public void acceptRenderable(net.minecraft.client.gui.font.TextRenderable renderable) {
+            public void acceptRenderable(TextRenderable renderable) {
                 renderable.render(mat, buffer, 15728880, false);
             }
         });

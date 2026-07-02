@@ -13,10 +13,11 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.Identifier;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.util.Unit;
 
 import static reika.electricraft.ElectriCraft.MODID;
 
-public class TransformerModel extends Model<net.minecraft.util.Unit>
+public class TransformerModel extends Model<Unit>
 {
     
     public static final Identifier TEXTURE_LOCATION = Identifier.fromNamespaceAndPath(MODID, "textures/transformertex.png");

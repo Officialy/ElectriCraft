@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.auxiliary.BatteryTracker;
 import reika.electricraft.auxiliary.interfaces.BatteryTile;
 
@@ -35,8 +36,8 @@ public abstract class BatteryTileBase extends ElectriBlockEntity implements Batt
 
 	public final void setEnergyFromNBT(ItemStack is) {
 		if (is.getItem() == this.getPlacerItem()) {
-			if (reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(is))
-				this.setEnergy(reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is).getLongOr("nrg", 0L));
+			if (ReikaItemHelper.hasStackTag(is))
+				this.setEnergy(ReikaItemHelper.getStackTag(is).getLongOr("nrg", 0L));
 			else
 				this.setEnergy(0);
 		}

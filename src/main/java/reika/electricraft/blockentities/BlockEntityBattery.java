@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import reika.dragonapi.libraries.level.ReikaWorldHelper;
 import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
 import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
+import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.auxiliary.BatteryTracker;
 import reika.electricraft.auxiliary.interfaces.BatteryTile;
 import reika.electricraft.auxiliary.interfaces.WireEmitter;
@@ -171,8 +172,8 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 
 	public void setEnergyFromNBT(ItemStack is) {
 		if (is.getItem() == ElectriItems.BATTERY.get()) {
-			if (reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(is))
-				energy = reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is).getLongOr("nrg", 0L)*20L;
+			if (ReikaItemHelper.hasStackTag(is))
+				energy = ReikaItemHelper.getStackTag(is).getLongOr("nrg", 0L)*20L;
 			else
 				energy = 0;
 		}

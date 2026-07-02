@@ -12,6 +12,7 @@ package reika.electricraft.blocks;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.item.ItemStack;
 
 
@@ -25,7 +26,7 @@ public class BlockElectriOre extends DropExperienceBlock {
 
 	public BlockElectriOre(Properties properties) {
 		// 1.21.5: DropExperienceBlock now requires (IntProvider, Properties).
-		super(net.minecraft.util.valueproviders.ConstantInt.of(0), properties);
+		super(ConstantInt.of(0), properties);
 	}
 
 	@Override

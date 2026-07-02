@@ -66,7 +66,7 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
             if (m.hasNBTVariants()) {
                 CompoundTag nbt = ((NBTMachine) te).getTagsToWriteToStack();
                 // 1.21.5: ItemStack.setTag removed; persist via CUSTOM_DATA helper.
-                reika.dragonapi.libraries.registry.ReikaItemHelper.setStackTag(is, nbt != null ? nbt.copy() : null);
+                ReikaItemHelper.setStackTag(is, nbt != null ? nbt.copy() : null);
             }
             ReikaItemHelper.dropItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, is);
         }    }
@@ -117,7 +117,7 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
                 }
             }
             if (band > 0) {
-                if (te.setColor((reika.dragonapi.libraries.registry.ReikaDyeHelper) null, band)) {
+                if (te.setColor((ReikaDyeHelper) null, band)) {
                     if (!ep.isCreative())
                         is.setCount(is.getCount() - 1);
                     return true;

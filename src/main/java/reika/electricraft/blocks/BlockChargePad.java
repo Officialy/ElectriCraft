@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 
+import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.blockentities.BlockEntityGenerator;
 import reika.electricraft.registry.ElectriTiles;
 import reika.electricraft.blockentities.BlockEntityWirelessCharger;
@@ -74,14 +75,14 @@ public class BlockChargePad extends Block implements EntityBlock {
     public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder builder) {
         ArrayList li = new ArrayList<>();
         ItemStack is = ElectriTiles.WIRELESSPAD.getCraftedProduct();
-        reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", 1)); //todo tier
+        ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", 1)); //todo tier
         li.add(is);
         return li;
     }
 
     public ItemStack getPickBlock(BlockHitResult target, Level world, BlockPos pos) {
         ItemStack is = ElectriTiles.WIRELESSPAD.getCraftedProduct();
-        reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", 1)); //todo tier level
+        ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", 1)); //todo tier level
         return is;
     }
 

@@ -26,12 +26,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriBlock;
 import reika.electricraft.registry.ElectriBlocks;
 import reika.electricraft.registry.ElectriItems;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -72,7 +75,7 @@ public class ElectriModelProvider extends ModelProvider {
                     "Failed to reflectively access BlockModelGenerators sinks — vanilla shape changed?", e);
         }
 
-        java.util.Set<Item> blockItemsHandled = new java.util.HashSet<>();
+        Set<Item> blockItemsHandled = new HashSet<>();
 
         // BLOCKS
         for (var holder : ElectriBlocks.BLOCKS.getEntries()) {
@@ -113,7 +116,7 @@ public class ElectriModelProvider extends ModelProvider {
 
     /** Y-rotation dispatch matching vanilla furnace orientation (N=0°, E=90°, S=180°, W=270°). */
     private static PropertyDispatch<VariantMutator> horizontalFacingDispatch(
-            net.minecraft.world.level.block.state.properties.EnumProperty<Direction> property) {
+            EnumProperty<Direction> property) {
         return PropertyDispatch.modify(property)
                 .select(Direction.NORTH, BlockModelGenerators.NOP)
                 .select(Direction.EAST, BlockModelGenerators.Y_ROT_90)

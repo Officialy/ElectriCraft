@@ -30,11 +30,13 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
 import reika.dragonapi.libraries.java.ReikaJavaLibrary;
 import reika.dragonapi.libraries.ReikaEntityHelper;
+import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.base.ElectriBlock;
 import reika.electricraft.blockentities.modinterface.BlockEntityRFCable;
 import reika.electricraft.network.WireNetwork;
@@ -90,8 +92,8 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 		// Defensive fallback: if BE entry missing, drop the default copper-insulated wire so
 		// the user doesn't lose the block entirely.
 		ArrayList<ItemStack> li = new ArrayList<>();
-		net.minecraft.world.level.block.entity.BlockEntity raw = context.getOptionalParameter(
-				net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY);
+		BlockEntity raw = context.getOptionalParameter(
+				LootContextParams.BLOCK_ENTITY);
 		ItemStack is;
 		boolean isSuperconductor;
 		if (raw instanceof BlockEntityWire te) {
@@ -102,9 +104,9 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 			isSuperconductor = false;
 		}
 		if (isSuperconductor) {
-			reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
+			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
 			final int cap = ((Fillable) is.getItem()).getCapacity(is);
-			reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", cap));
+			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", cap));
 		}
 		li.add(is);
 		return li;
@@ -175,8 +177,8 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 		BlockEntityWire te = (BlockEntityWire)world.getBlockEntity(new BlockPos(x, y, z));
 		ItemStack is = te.insulated ? te.getWireType().getCraftedInsulatedProduct() : te.getWireType().getCraftedProduct();
 		if (te.getWireType() == WireType.SUPERCONDUCTOR) {
-			reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
-			reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", 25));
+			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
+			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", 25));
 		}
 		return is;
 	}

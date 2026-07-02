@@ -13,10 +13,11 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.Identifier;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.util.Unit;
 
 import static reika.electricraft.ElectriCraft.MODID;
 
-public class FuseModel extends Model<net.minecraft.util.Unit>
+public class FuseModel extends Model<Unit>
 {
     private final ModelPart shape1a;
     private final ModelPart shape3;

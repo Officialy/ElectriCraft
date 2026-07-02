@@ -20,8 +20,10 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 
+import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.base.NetworkBlock;
 import reika.electricraft.blockentities.BlockEntityFuse;
 import reika.electricraft.registry.ElectriItems;
@@ -52,11 +54,11 @@ public class BlockElectricBattery extends NetworkBlock {// implements IWailaData
         // crash when broken. Use the loot-context BLOCK_ENTITY param which vanilla passes
         // through automatically for block-break drops.
         ArrayList<ItemStack> li = new ArrayList<>();
-        net.minecraft.world.level.block.entity.BlockEntity raw = context.getOptionalParameter(
-                net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY);
+        BlockEntity raw = context.getOptionalParameter(
+                LootContextParams.BLOCK_ENTITY);
         final long e = (raw instanceof BlockEntityBattery te) ? te.getStoredEnergy() : 0L;
         ItemStack is = ElectriItems.BATTERY.get().getDefaultInstance();
-        reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", e));
+        ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", e));
         li.add(is);
         return li;
     }

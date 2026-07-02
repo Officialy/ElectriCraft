@@ -14,10 +14,13 @@ import java.util.List;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import reika.dragonapi.base.BlockTEBase;
+import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.auxiliary.interfaces.BatteryTile;
 import reika.electricraft.registry.ElectriTiles;
 
@@ -42,11 +45,11 @@ public abstract class BatteryBlock extends BlockTEBase{
 		// instead. Falls back gracefully if the BE entry isn't set (shouldn't happen for a
 		// block-broken loot context, but defensive).
 		ArrayList<ItemStack> li = new ArrayList<>();
-		net.minecraft.world.level.block.entity.BlockEntity raw = builder.getOptionalParameter(
-				net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY);
+		BlockEntity raw = builder.getOptionalParameter(
+				LootContextParams.BLOCK_ENTITY);
 		ItemStack is = this.getItem().get().getDefaultInstance();
 		final long e = (raw instanceof BatteryTile te) ? te.getStoredEnergy() : 0L;
-		reika.dragonapi.libraries.registry.ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", e));
+		ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", e));
 		li.add(is);
 		return li;
 	}

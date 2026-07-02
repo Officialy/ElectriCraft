@@ -10,8 +10,10 @@
 package reika.electricraft.items;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -31,6 +34,7 @@ import reika.dragonapi.base.BlockEntityBase;
 import reika.dragonapi.libraries.level.ReikaWorldHelper;
 import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
 import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
+import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.auxiliary.interfaces.BatteryTile;
 import reika.electricraft.registry.BatteryType;
 import reika.electricraft.registry.ElectriBlocks;
@@ -102,9 +106,9 @@ public class ItemBatteryPlacer extends Item {
 
     // 1.21.5: Item.appendHoverText now takes (ItemStack, TooltipContext, TooltipDisplay, Consumer<Component>, TooltipFlag).
     @Override
-    public void appendHoverText(ItemStack is, net.minecraft.world.item.Item.TooltipContext ctx, net.minecraft.world.item.component.TooltipDisplay display, java.util.function.Consumer<Component> li, TooltipFlag flag) {
+    public void appendHoverText(ItemStack is, Item.TooltipContext ctx, TooltipDisplay display, Consumer<Component> li, TooltipFlag flag) {
         long e = 0;
-        net.minecraft.nbt.CompoundTag tag = reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(is);
+        CompoundTag tag = ReikaItemHelper.getStackTag(is);
         if (tag != null) {
             e = tag.getLongOr("nrg", 0L);
         }
