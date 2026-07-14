@@ -224,13 +224,16 @@ public final class WireNetwork implements NetworkObject {
 
 	@SubscribeEvent
 	public void onAddWorld(LevelEvent.Load evt) {
-//	todo	if (dimIDs.contains(evt.getLevel().dimensionId))
-//			loadedDimIDs.add(evt.getLevel().dimensionId);
+		if (evt.getLevel() instanceof Level lvl && dimIDs.contains(lvl.dimension()))
+			loadedDimIDs.add(lvl.dimension());
 	}
 
 	@SubscribeEvent
 	public void onRemoveWorld(LevelEvent.Unload evt) {
-//	todo	loadedDimIDs.remove(evt.getLevel().dimensionId);
+		//Without this removal the set never empties, so stale networks (holding dead BE refs)
+		//survived into the next world loaded in the same session.
+		if (evt.getLevel() instanceof Level lvl)
+			loadedDimIDs.remove(lvl.dimension());
 		if (loadedDimIDs.isEmpty())
 			this.clear(true);
 	}

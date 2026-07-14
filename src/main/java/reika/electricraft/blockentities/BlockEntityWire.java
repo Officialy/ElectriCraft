@@ -113,8 +113,16 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 		return true;//connections[dir.ordinal()];
 	}
 
+	//1.7.10 stored the type as block metadata; the port stores it on the BE, copied from the
+	//item's "wtype" tag at placement. Default TIN (=old wireList[1] hardcode) for legacy saves.
+	private WireType type = WireType.TIN;
+
 	public WireType getWireType() {
-		return WireType.wireList[1]; //todo old meta wire type
+		return type;
+	}
+
+	public void setWireType(WireType t) {
+		type = t != null ? t : WireType.TIN;
 	}
 
 	@Override
@@ -124,6 +132,8 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 		connections = ReikaArrayHelper.booleanFromByteBitflags(NBT.getByteOr("conn", (byte)0), 6);
 
 		insulated = NBT.getBooleanOr("insul", false);
+
+		type = WireType.wireList[NBT.getIntOr("wtype", WireType.TIN.ordinal()) % WireType.wireList.length];
 
 		shouldMelt = NBT.getBooleanOr("melt", false);
 	}
@@ -135,6 +145,8 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 		NBT.putByte("conn", ReikaArrayHelper.booleanToByteBitflags(connections));
 
 		NBT.putBoolean("insul", insulated);
+
+		NBT.putInt("wtype", type.ordinal());
 
 		NBT.putBoolean("melt", shouldMelt);
 	}

@@ -69,6 +69,17 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 		return new BlockEntityWire(pPos, pState);
 	}
 
+	@Override
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, net.minecraft.world.entity.LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(world, pos, state, placer, stack);
+		//The single wire item carries its type/insulation in stack tags (was item metadata in 1.7.10).
+		if (world.getBlockEntity(pos) instanceof BlockEntityWire te && ReikaItemHelper.hasStackTag(stack)) {
+			var tag = ReikaItemHelper.getStackTag(stack);
+			te.setWireType(WireType.wireList[tag.getIntOr("wtype", WireType.TIN.ordinal()) % WireType.wireList.length]);
+			te.insulated = tag.getBooleanOr("insul", false);
+		}
+	}
+
 /*	@Override
 	public boolean removedByPlayer(Level world, Player player, int x, int y, int z, boolean harv)
 	{
@@ -105,7 +116,8 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 		}
 		if (isSuperconductor) {
 			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
-			final int cap = ((Fillable) is.getItem()).getCapacity(is);
+			//The wire item is a plain BlockItem now, not the old Fillable placer — don't cast.
+			final int cap = is.getItem() instanceof Fillable f ? f.getCapacity(is) : 25;
 			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", cap));
 		}
 		li.add(is);

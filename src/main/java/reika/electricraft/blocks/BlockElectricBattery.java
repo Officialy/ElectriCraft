@@ -57,8 +57,12 @@ public class BlockElectricBattery extends NetworkBlock {// implements IWailaData
         BlockEntity raw = context.getOptionalParameter(
                 LootContextParams.BLOCK_ENTITY);
         final long e = (raw instanceof BlockEntityBattery te) ? te.getStoredEnergy() : 0L;
+        final int type = (raw instanceof BlockEntityBattery te) ? te.getBatteryType().ordinal() : 0;
         ItemStack is = ElectriItems.BATTERY.get().getDefaultInstance();
-        ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", e));
+        ReikaItemHelper.updateStackTag(is, __T__ -> {
+            __T__.putLong("nrg", e);
+            __T__.putInt("btype", type); //tier survives the break/replace cycle
+        });
         li.add(is);
         return li;
     }

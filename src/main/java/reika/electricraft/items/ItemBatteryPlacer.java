@@ -50,20 +50,11 @@ public class ItemBatteryPlacer extends Item {
         var pos = context.getClickedPos();
         var world = context.getLevel();
         var side = context.getClickedFace();
-        if (!ReikaWorldHelper.softBlocks(world, pos) && ReikaWorldHelper.getMapColor(world, pos) != MapColor.WATER && ReikaWorldHelper.getMapColor(world, pos) != MapColor.FIRE) {  //todo was lava
-           /*todo if (side == 0)
-                --y;
-            if (side == 1)
-                ++y;
-            if (side == 2)
-                --z;
-            if (side == 3)
-                ++z;
-            if (side == 4)
-                --x;
-            if (side == 5)
-                ++x;*/
-            if (!ReikaWorldHelper.softBlocks(world, pos) && ReikaWorldHelper.getMapColor(world, pos) != MapColor.WATER && ReikaWorldHelper.getMapColor(world, pos) != MapColor.FIRE) //todo was lava
+        //Legacy flow: if the clicked block is solid, place against the clicked face instead of
+        //overwriting it (the offset was todo'd out, so placing on the ground ate the ground block).
+        if (!ReikaWorldHelper.softBlocks(world, pos) && ReikaWorldHelper.getMapColor(world, pos) != MapColor.WATER && ReikaWorldHelper.getMapColor(world, pos) != MapColor.FIRE) {
+            pos = pos.relative(side);
+            if (!ReikaWorldHelper.softBlocks(world, pos) && ReikaWorldHelper.getMapColor(world, pos) != MapColor.WATER && ReikaWorldHelper.getMapColor(world, pos) != MapColor.FIRE)
                 return InteractionResult.FAIL;
         }
         if (!this.checkValidBounds(context.getItemInHand(), context.getPlayer(), world, pos))
@@ -108,11 +99,12 @@ public class ItemBatteryPlacer extends Item {
     @Override
     public void appendHoverText(ItemStack is, Item.TooltipContext ctx, TooltipDisplay display, Consumer<Component> li, TooltipFlag flag) {
         long e = 0;
+        BatteryType bat = BatteryType.REDSTONE;
         CompoundTag tag = ReikaItemHelper.getStackTag(is);
         if (tag != null) {
             e = tag.getLongOr("nrg", 0L);
+            bat = BatteryType.batteryList[tag.getIntOr("btype", 0) % BatteryType.batteryList.length];
         }
-        BatteryType bat = BatteryType.batteryList[1];
         long max = bat.maxCapacity;
         String sg = ReikaEngLibrary.getSIPrefix(e);
         String sg2 = ReikaEngLibrary.getSIPrefix(max);

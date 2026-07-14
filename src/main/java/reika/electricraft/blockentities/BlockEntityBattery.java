@@ -108,8 +108,16 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 		return this.getBatteryType().maxCapacity;
 	}
 
+	//1.7.10 stored the tier as block metadata; the port stores it on the BE, set at placement
+	//from the placer item's "btype" tag and persisted with the sync data.
+	private BatteryType type = BatteryType.REDSTONE;
+
 	public BatteryType getBatteryType() {
-		return BatteryType.batteryList[1]; //todo battery type old meta code
+		return type;
+	}
+
+	public void setBatteryType(BatteryType t) {
+		type = t != null ? t : BatteryType.REDSTONE;
 	}
 
 	public String getDisplayEnergy() {
@@ -140,6 +148,7 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 		super.writeSyncTag(NBT);
 
 		NBT.putLong("e", energy);
+		NBT.putInt("btype", type.ordinal());
 	}
 
 	@Override
@@ -148,6 +157,7 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 		super.readSyncTag(NBT);
 
 		energy = NBT.getLongOr("e", 0L);
+		type = BatteryType.batteryList[NBT.getIntOr("btype", 0) % BatteryType.batteryList.length];
 	}
 
 	@Override
@@ -172,10 +182,14 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 
 	public void setEnergyFromNBT(ItemStack is) {
 		if (is.getItem() == ElectriItems.BATTERY.get()) {
-			if (ReikaItemHelper.hasStackTag(is))
-				energy = ReikaItemHelper.getStackTag(is).getLongOr("nrg", 0L)*20L;
-			else
+			if (ReikaItemHelper.hasStackTag(is)) {
+				CompoundTag tag = ReikaItemHelper.getStackTag(is);
+				energy = tag.getLongOr("nrg", 0L)*20L;
+				this.setBatteryType(BatteryType.batteryList[tag.getIntOr("btype", 0) % BatteryType.batteryList.length]);
+			}
+			else {
 				energy = 0;
+			}
 		}
 		else {
 			energy = 0;
