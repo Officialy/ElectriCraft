@@ -43,7 +43,17 @@ import reika.rotarycraft.registry.RotaryFluids;
 
 import java.util.ArrayList;
 
-public class BlockEntityTransformer extends NetworkBlockEntity implements WireEmitter, WireReceiver, Screwdriverable, TemperatureTE, IFluidHandler, PipeConnector, Overloadable {
+public class BlockEntityTransformer extends NetworkBlockEntity implements WireEmitter, WireReceiver, Screwdriverable, TemperatureTE, IFluidHandler, PipeConnector, Overloadable, net.minecraft.world.MenuProvider {
+
+	@Override
+	public net.minecraft.network.chat.Component getDisplayName() {
+		return net.minecraft.network.chat.Component.literal("Transformer");
+	}
+
+	@Override
+	public net.minecraft.world.inventory.AbstractContainerMenu createMenu(int windowId, net.minecraft.world.entity.player.Inventory inv, net.minecraft.world.entity.player.Player player) {
+		return new reika.rotarycraft.gui.container.machine.BlankContainer<>(reika.electricraft.registry.ElectriMenus.TRANSFORMER.get(), windowId, inv, this);
+	}
 
 	private int Vin = 0;
 	private int Ain = 0;

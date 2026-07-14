@@ -28,15 +28,16 @@ public class BlockRFCable extends BlockElectriCable {
 		super(par2Material);
 	}
 
-/*	@Override
-	public boolean onBlockActivated(Level world, int x, int y, int z, Player ep, int s, float a, float b, float c) {
-		ItemStack is = ep.getCurrentEquippedItem();
-		if (!ReikaItemHelper.matchStacks(is, ElectriTiles.CABLE.getCraftedProduct())) {
-			ep.openMenu(ElectriCraft.instance, 0, world, x, y, z);
-			return true;
+	@Override
+	protected net.minecraft.world.InteractionResult useWithoutItem(BlockState state, net.minecraft.world.level.Level level, BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.phys.BlockHitResult hit) {
+		//Bare right-click opens the throughput-limit screen (1.7.10 GUI).
+		if (level.getBlockEntity(pos) instanceof BlockEntityRFCable te) {
+			if (!level.isClientSide() && player instanceof net.minecraft.server.level.ServerPlayer sp)
+				sp.openMenu(te, pos);
+			return net.minecraft.world.InteractionResult.SUCCESS;
 		}
-		return false;
-	}*/
+		return net.minecraft.world.InteractionResult.PASS;
+	}
 
 	@Override
 	public void destroy(LevelAccessor world, BlockPos pos, BlockState state) {

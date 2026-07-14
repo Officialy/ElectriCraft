@@ -53,5 +53,15 @@ public class BlockElectricTransformer extends BlockElectricMachine {// implement
         return new BlockEntityTransformer(pPos, pState);
     }
 
+    @Override
+    protected net.minecraft.world.InteractionResult useWithoutItem(net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.phys.BlockHitResult hit) {
+        //Bare right-click opens the ratio screen (1.7.10 GUI); a screwdriver rotates it instead.
+        if (level.getBlockEntity(pos) instanceof BlockEntityTransformer te) {
+            if (!level.isClientSide() && player instanceof net.minecraft.server.level.ServerPlayer sp)
+                sp.openMenu(te, pos);
+            return net.minecraft.world.InteractionResult.SUCCESS;
+        }
+        return net.minecraft.world.InteractionResult.PASS;
+    }
 
 }

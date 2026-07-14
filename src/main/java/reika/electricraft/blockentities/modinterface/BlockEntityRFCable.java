@@ -26,7 +26,18 @@ import reika.electricraft.registry.ElectriTiles;
 
 import java.util.ArrayList;
 
-public class BlockEntityRFCable extends ElectriCable implements BreakAction {
+public class BlockEntityRFCable extends ElectriCable implements BreakAction, net.minecraft.world.MenuProvider {
+
+	@Override
+	public net.minecraft.network.chat.Component getDisplayName() {
+		return net.minecraft.network.chat.Component.literal("RF Cable");
+	}
+
+	@Override
+	public net.minecraft.world.inventory.AbstractContainerMenu createMenu(int windowId, net.minecraft.world.entity.player.Inventory inv, net.minecraft.world.entity.player.Player player) {
+		return new reika.rotarycraft.gui.container.machine.BlankContainer<>(reika.electricraft.registry.ElectriMenus.RF_CABLE.get(), windowId, inv, this);
+	}
+
 
 	protected RFNetwork network;
 	private int RFlimit;

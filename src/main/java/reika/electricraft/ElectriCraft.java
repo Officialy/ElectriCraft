@@ -56,6 +56,7 @@ public class ElectriCraft extends DragonAPIMod {
 
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
             ElectriModelLayers.init(modEventBus);
+            modEventBus.addListener(this::registerScreens);
         }
 
         ElectriBlocks.BLOCKS.register(modEventBus);
@@ -65,6 +66,7 @@ public class ElectriCraft extends DragonAPIMod {
         reika.electricraft.registry.ElectriTabs.init(modEventBus);
         ElectriBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         modEventBus.addListener(ElectriBlockEntities::registerCapabilities);
+        reika.electricraft.registry.ElectriMenus.init(modEventBus);
 
         ReikaPacketHelper.registerPacketHandler(instance, packetChannel, new ElectriPacketCore());
 
@@ -73,6 +75,11 @@ public class ElectriCraft extends DragonAPIMod {
 
         this.basicSetup();
         this.finishTiming();
+    }
+
+    private void registerScreens(final net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {
+        event.register(reika.electricraft.registry.ElectriMenus.TRANSFORMER.get(), reika.electricraft.guis.GuiTransformer::new);
+        event.register(reika.electricraft.registry.ElectriMenus.RF_CABLE.get(), reika.electricraft.guis.GuiRFCable::new);
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
