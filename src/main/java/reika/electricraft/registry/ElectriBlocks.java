@@ -30,7 +30,9 @@ public class ElectriBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ElectriCraft.MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ElectriCraft.MODID);
 
-    public static final DeferredBlock<Block> WIRE = register("wire", () -> new BlockWire(blockProperties().mapColor(MapColor.METAL).strength(0.05F, 2F).sound(SoundType.WOOL).noOcclusion()));
+    public static final DeferredBlock<Block> WIRE = registerWithItem("wire",
+            () -> new BlockWire(blockProperties().mapColor(MapColor.METAL).strength(0.05F, 2F).sound(SoundType.WOOL).noOcclusion()),
+            (block, props) -> new reika.electricraft.items.ItemWire(block, props));
     public static final DeferredBlock<Block> GENERATOR = register("converter", () -> new BlockElectricGenerator(blockProperties().mapColor(MapColor.METAL).noOcclusion()));
     public static final DeferredBlock<Block> MOTOR = register("motor", () -> new BlockElectricMotor(blockProperties().mapColor(MapColor.METAL).noOcclusion()));
     public static final DeferredBlock<Block> METER = register("meter", () -> new BlockElectricMeter(blockProperties().mapColor(MapColor.METAL).noOcclusion()));
@@ -76,6 +78,23 @@ public class ElectriBlocks {
         ResourceKey<Block> k = CURRENT_BLOCK_KEY.get();
         if (k != null) p.setId(k);
         return p;
+    }
+
+    private static <BLOCK extends Block> DeferredBlock<BLOCK> registerWithItem(final String name, final Supplier<BLOCK> blockFactory,
+            final java.util.function.BiFunction<BLOCK, net.minecraft.world.item.Item.Properties, ? extends net.minecraft.world.item.BlockItem> itemFactory) {
+        DeferredBlock<BLOCK> block = BLOCKS.register(name, rl -> {
+            CURRENT_BLOCK_KEY.set(ResourceKey.create(Registries.BLOCK, rl));
+            try {
+                return blockFactory.get();
+            } finally {
+                CURRENT_BLOCK_KEY.remove();
+            }
+        });
+        ITEMS.register(name, rl -> itemFactory.apply(block.get(),
+                new net.minecraft.world.item.Item.Properties()
+                        .setId(ResourceKey.create(Registries.ITEM, rl))
+                        .useBlockDescriptionPrefix()));
+        return block;
     }
 
     private static <BLOCK extends Block> DeferredBlock<BLOCK> register(final String name, final Supplier<BLOCK> blockFactory) {

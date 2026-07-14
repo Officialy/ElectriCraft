@@ -46,6 +46,16 @@ public class ItemBatteryPlacer extends Item {
     }
 
     @Override
+    public Component getName(ItemStack stack) {
+        BatteryType tier = BatteryType.REDSTONE;
+        CompoundTag tag = ReikaItemHelper.getStackTag(stack);
+        if (tag != null)
+            tier = BatteryType.batteryList[tag.getIntOr("btype", 0) % BatteryType.batteryList.length];
+        String n = tier.name().charAt(0) + tier.name().substring(1).toLowerCase(java.util.Locale.ROOT);
+        return Component.literal(n + " Battery");
+    }
+
+    @Override
     public InteractionResult useOn(UseOnContext context) {
         var pos = context.getClickedPos();
         var world = context.getLevel();
