@@ -57,6 +57,7 @@ public class ElectriCraft extends DragonAPIMod {
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
             ElectriModelLayers.init(modEventBus);
             modEventBus.addListener(this::registerScreens);
+            modEventBus.addListener(this::addClientReloadListeners);
         }
 
         ElectriBlocks.BLOCKS.register(modEventBus);
@@ -75,6 +76,11 @@ public class ElectriCraft extends DragonAPIMod {
 
         this.basicSetup();
         this.finishTiming();
+    }
+
+    private void addClientReloadListeners(final net.neoforged.neoforge.client.event.AddClientReloadListenersEvent event) {
+        event.addListener(net.minecraft.resources.Identifier.fromNamespaceAndPath(MODID, "handbook_descriptions"),
+                new reika.electricraft.auxiliary.ElectriDescriptions.ReloadListener());
     }
 
     private void registerScreens(final net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {

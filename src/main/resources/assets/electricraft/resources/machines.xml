@@ -24,10 +24,11 @@
 			The motor converts electric power back into shaft power using the inverse of the ratios seen in the generator. Like the generator, the motor is usually lossless; putting power into a generator and then directly into a motor yields the original torque and speed values. The one exception is that motors can only connect to a finite number of power sources; exceeding this wastes power and generates heat.
 		</desc>
 		<note>
-			Source limits:
+			Source limits (use 1 ingot to upgrade):
 			Default: 1
 			Inductive upgrade: 2
 			Tungsten upgrade: 4
+			Bedrock upgrade: 1000
 		</note>
 	</motor>
 	<wire>
@@ -112,14 +113,14 @@
 			The bar on the side is a fill bar with logarithmic scaling
 		</note>
 	</eubattery>
-	<cable>
+	<rf_cable>
 		<desc>
 			The RF Transfer cable is a specialized wire for transferring RF energy. It can transmit an unlimited amount of RF per tick, with the actual maximum of the network being fully customizable.
 		</desc>
 		<note>
 			
 		</note>
-	</cable>
+	</rf_cable>
 	<eusplit>
 		<desc>
 			The EU splitter is designed to take extremely large EU power sources, such as turbine generators, and split them into smaller, more managable current (EU/t) levels to avoid melting the more delicate wires like the glass fiber cable.
