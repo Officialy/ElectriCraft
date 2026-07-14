@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "A": "rotarycraft:hsla_steel_ingot",
+    "C": "minecraft:redstone",
+    "E": "minecraft:ender_pearl",
+    "P": "rotarycraft:hsla_steel_plate",
+    "R": "rotarycraft:silicon",
+    "S": "minecraft:glass"
+  },
+  "pattern": [
+    "AEA",
+    "SCS",
+    "PRP"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "tier": 0
+      }
+    },
+    "id": "electricraft:electrichargepad"
+  }
+}

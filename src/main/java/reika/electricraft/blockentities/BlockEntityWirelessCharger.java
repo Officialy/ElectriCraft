@@ -16,7 +16,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import reika.electricraft.base.ElectriBlock;
 import reika.electricraft.base.ElectriBlockEntity;
 import reika.electricraft.registry.ElectriBlockEntities;
@@ -25,7 +26,7 @@ import reika.electricraft.registry.ElectriTiles;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class BlockEntityWirelessCharger extends ElectriBlockEntity implements IEnergyStorage {
+public class BlockEntityWirelessCharger extends ElectriBlockEntity {
 	public BlockEntityWirelessCharger(BlockPos pos, BlockState state) {
 		super(ElectriBlockEntities.WIRELESS_CHARGER.get(), pos, state);
 	}
@@ -44,17 +45,23 @@ public class BlockEntityWirelessCharger extends ElectriBlockEntity implements IE
 		};
 	}
 
-	private IEnergyStorage getBlockEntity() {
+	private EnergyHandler getTargetHandler() {
+		//Bridges FE two blocks ahead of the facing; modern machines only expose capabilities.
 		Direction dir = this.getFacing();
-		int x = worldPosition.getX()+dir.getStepX()*2;
-		int y = worldPosition.getY()+dir.getStepY()*2;
-		int z = worldPosition.getZ()+dir.getStepZ()*2;
-		BlockEntity te = level.getBlockEntity(new BlockPos(x, y, z));
-		return te instanceof IEnergyStorage ? (IEnergyStorage)te : null;
+		BlockPos target = worldPosition.relative(dir, 2);
+		return level == null ? null : level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.Energy.BLOCK, target, dir.getOpposite());
 	}
 
+	//1.7.10 stored the tier as block metadata; the port stores it on the BE, set at placement
+	//from the item's "tier" stack tag.
+	private int tier;
+
 	public ChargerTiers getTier() {
-		return ChargerTiers.tierList[1]; //todo tiers
+		return ChargerTiers.tierList[tier % ChargerTiers.tierList.length];
+	}
+
+	public void setTier(int t) {
+		tier = Math.floorMod(t, ChargerTiers.tierList.length);
 	}
 
 	@Override
@@ -77,55 +84,56 @@ public class BlockEntityWirelessCharger extends ElectriBlockEntity implements IE
 	protected void writeSyncTag(CompoundTag NBT) {
 		super.writeSyncTag(NBT);
 
-		//NBT.putInt("dir", this.getFacing().ordinal());
+		NBT.putInt("tier", tier);
 	}
 
 	@Override
 	protected void readSyncTag(CompoundTag NBT) {
 		super.readSyncTag(NBT);
 
-		//facing = dirs[NBT.getIntOr("facing", 0)];
+		tier = NBT.getIntOr("tier", 0);
 	}
 
-	//todo this
 	public boolean canConnectEnergy(Direction from) {
-		return from != this.getFacing();
+		return from != this.getFacing(); //legacy: no connection on the beam face
 	}
 
-	@Override
-	public boolean canExtract() {
-		return true;
-	}
+	/**
+	 * The FE face of the pad: relays inserted energy to the block two ahead of the facing, taxed
+	 * by tier efficiency and capped by tier throughput. Fully transactional — the relayed insert
+	 * happens inside the caller's transaction.
+	 */
+	private final EnergyHandler energyView = new EnergyHandler() {
+		@Override
+		public long getAmountAsLong() {
+			EnergyHandler target = getTargetHandler();
+			return target != null ? target.getAmountAsLong() : 0;
+		}
 
-	@Override
-	public boolean canReceive() {
-		return true;
-	}
+		@Override
+		public long getCapacityAsLong() {
+			EnergyHandler target = getTargetHandler();
+			return target != null ? target.getCapacityAsLong() : 0;
+		}
 
-	@Override
-	public int receiveEnergy(int maxReceive, boolean simulate) {
-		IEnergyStorage ier = this.getBlockEntity();
-		float f = this.getTier().efficiency;
-		maxReceive = Math.min(maxReceive, this.getTier().maxThroughput);
-		return ier != null ? (int)(ier.receiveEnergy((int)(maxReceive*f), simulate)/f) : 0; //this.getFacing().getOpposite(),  was first argument
-	}
+		@Override
+		public int insert(int amt, TransactionContext tx) {
+			EnergyHandler target = getTargetHandler();
+			if (target == null)
+				return 0;
+			float f = getTier().efficiency;
+			amt = Math.min(amt, getTier().maxThroughput);
+			return (int)(target.insert((int)(amt * f), tx) / f);
+		}
 
-	@Override
-	public int extractEnergy(int maxExtract, boolean simulate) {
-		return 0;
-	}
+		@Override
+		public int extract(int amt, TransactionContext tx) {
+			return 0;
+		}
+	};
 
-
-	@Override
-	public int getEnergyStored() {
-		IEnergyStorage ier = this.getBlockEntity();
-		return ier != null ? ier.getEnergyStored() : 0;
-	}
-
-	@Override
-	public int getMaxEnergyStored() {
-		IEnergyStorage ier = this.getBlockEntity();
-		return ier != null ? ier.getMaxEnergyStored() : 0;
+	public EnergyHandler getEnergyView() {
+		return energyView;
 	}
 
 	@Override

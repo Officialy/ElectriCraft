@@ -69,6 +69,8 @@ public class ElectriItems {
     public static final DeferredItem<Item> CRYSTAL_ENDER = reg("energy_crystal_ender", () -> new ItemEnergyCrystal(itemProperties()));
     public static final DeferredItem<Item> CRYSTAL_DIAMOND = reg("energy_crystal_diamond", () -> new ItemEnergyCrystal(itemProperties()));
     public static final DeferredItem<Item> CRYSTAL_STAR = reg("energy_crystal_star", () -> new ItemEnergyCrystal(itemProperties()));
+    //The beyond-STAR tier from 1.7.10's RF interop chain (crystal metadata 6).
+    public static final DeferredItem<Item> CRYSTAL_RF = reg("energy_crystal_rf", () -> new ItemEnergyCrystal(itemProperties()));
 
     public static final DeferredItem<Item> BATTERY = reg("battery", () -> new ItemBatteryPlacer(itemProperties()));
     public static final DeferredItem<Item> RFBATTERY = reg("rfbattery", () -> new ItemRFBatteryPlacer(itemProperties()));

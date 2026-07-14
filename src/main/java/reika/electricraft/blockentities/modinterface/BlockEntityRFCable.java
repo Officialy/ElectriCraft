@@ -15,7 +15,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import reika.dragonapi.interfaces.blockentity.BreakAction;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriCable;
@@ -25,7 +26,7 @@ import reika.electricraft.registry.ElectriTiles;
 
 import java.util.ArrayList;
 
-public class BlockEntityRFCable extends ElectriCable implements IEnergyStorage, BreakAction {
+public class BlockEntityRFCable extends ElectriCable implements BreakAction {
 
 	protected RFNetwork network;
 	private int RFlimit;
@@ -66,20 +67,19 @@ public class BlockEntityRFCable extends ElectriCable implements IEnergyStorage, 
 			Direction dir = dirs[i];
 			if (this.isChunkLoadedOnSide(dir)) {
 				BlockEntity te = this.getAdjacentBlockEntity(dir);
-				if (te instanceof BlockEntityRFCable) {
-					//ReikaJavaLibrary.pConsole(te, Dist.DEDICATED_SERVER);
-					BlockEntityRFCable n = (BlockEntityRFCable)te;
+				if (te instanceof BlockEntityRFCable n) {
 					RFNetwork w = n.network;
 					if (w != null) {
-						//ReikaJavaLibrary.pConsole(dir+":"+te, Dist.DEDICATED_SERVER);
 						w.merge(network);
 					}
 				}
-				else if (te instanceof IEnergyStorage) {
-					//ReikaJavaLibrary.pConsole(te, Dist.DEDICATED_SERVER);
-					IEnergyStorage n = (IEnergyStorage)te;
-					if (n.canReceive())
-						network.addConnection(n, dir.getOpposite());
+				else {
+					//Modern FE machines expose the block energy capability rather than
+					//implementing IEnergyStorage on the BE.
+					BlockPos adj = pos.relative(dir);
+					EnergyHandler cap = world.getCapability(Capabilities.Energy.BLOCK, adj, dir.getOpposite());
+					if (cap != null)
+						network.addConnection(world, adj, dir.getOpposite());
 				}
 			}
 		}
@@ -131,34 +131,34 @@ public class BlockEntityRFCable extends ElectriCable implements IEnergyStorage, 
 
 	}
 
-	@Override
-	public int receiveEnergy(int maxReceive, boolean simulate) {
-		return network != null ? network.addEnergy(maxReceive, simulate) : 0;
-	}
+	/**
+	 * The FE face of the cable: inserts feed the shared network buffer (legacy: receive-only;
+	 * the network pushes out itself on its tick).
+	 */
+	private final EnergyHandler energyView = new EnergyHandler() {
+		@Override
+		public long getAmountAsLong() {
+			return network != null ? network.getBufferedEnergy() : 0;
+		}
 
-	@Override
-	public int extractEnergy(int maxExtract, boolean simulate) {
-		return network != null ? network.drainEnergy(maxExtract, simulate) : 0;
-	}
+		@Override
+		public long getCapacityAsLong() {
+			return network != null ? network.getIOLimit() : 0;
+		}
 
-	@Override
-	public boolean canReceive() {
-		return true;
-	}
+		@Override
+		public int insert(int amt, net.neoforged.neoforge.transfer.transaction.TransactionContext tx) {
+			return network != null ? network.insertEnergy(amt, tx) : 0;
+		}
 
-	@Override
-	public int getEnergyStored() {
-		return 0;
-	}
+		@Override
+		public int extract(int amt, net.neoforged.neoforge.transfer.transaction.TransactionContext tx) {
+			return 0; //legacy canExtract() == false
+		}
+	};
 
-	@Override
-	public int getMaxEnergyStored() {
-		return Integer.MAX_VALUE;
-	}
-
-	@Override
-	public boolean canExtract() {
-		return false;
+	public EnergyHandler getEnergyView() {
+		return energyView;
 	}
 
 	@Override
@@ -180,17 +180,21 @@ public class BlockEntityRFCable extends ElectriCable implements IEnergyStorage, 
 
 	@Override
 	protected boolean connectsToTile(BlockEntity te, Direction dir) {
-		return (te instanceof IEnergyStorage && ((IEnergyStorage)te).canReceive());// || te instanceof WorldRift;
+		if (te == null || te.getLevel() == null)
+			return false;
+		if (te instanceof BlockEntityRFCable)
+			return true;
+		EnergyHandler cap = te.getLevel().getCapability(Capabilities.Energy.BLOCK, te.getBlockPos(), dir.getOpposite());
+		return cap != null;
 	}
 
 	@Override
 	protected void onNetworkUpdate(Level world, int x, int y, int z, Direction dir) {
 		if (network != null) {
-			BlockEntity te = this.getAdjacentBlockEntity(dir);
-			if (te instanceof IEnergyStorage ih) {
-				if (ih.canReceive()) {
-					network.addConnection(ih, dir.getOpposite());
-				}
+			BlockPos adj = worldPosition.relative(dir);
+			EnergyHandler cap = world.getCapability(Capabilities.Energy.BLOCK, adj, dir.getOpposite());
+			if (cap != null) {
+				network.addConnection(world, adj, dir.getOpposite());
 			}
 		}
 	}

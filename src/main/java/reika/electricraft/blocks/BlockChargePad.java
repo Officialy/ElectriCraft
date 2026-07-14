@@ -43,6 +43,16 @@ public class BlockChargePad extends Block implements EntityBlock {
         super(properties);
     }
 
+    @Override
+    public void setPlacedBy(net.minecraft.world.level.Level world, net.minecraft.core.BlockPos pos, net.minecraft.world.level.block.state.BlockState state, net.minecraft.world.entity.LivingEntity placer, net.minecraft.world.item.ItemStack stack) {
+        super.setPlacedBy(world, pos, state, placer, stack);
+        //The charge pad item carries its tier in the "tier" stack tag (was block metadata in 1.7.10).
+        if (world.getBlockEntity(pos) instanceof reika.electricraft.blockentities.BlockEntityWirelessCharger te
+                && reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(stack)) {
+            te.setTier(reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(stack).getIntOr("tier", 0));
+        }
+    }
+
     
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

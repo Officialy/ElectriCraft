@@ -16,8 +16,14 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import reika.dragonapi.instantiable.data.immutable.WorldLocation;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.ElectriNetworkManager;
@@ -143,14 +149,21 @@ public class RFNetwork implements NetworkObject {
         this.clear(true);
     }
 
-    public void addConnection(IEnergyStorage ih, Direction dir) {
-        if (ih instanceof BlockEntityRFCable)
+    /**
+     * Registers an FE endpoint at the given position; {@code face} is the face of that block the
+     * cable touches. The handler is resolved lazily through the block energy capability each
+     * interaction (1.7.10 held the RF-API tile directly; modern FE machines only expose
+     * capabilities, so instanceof checks would connect to nothing).
+     */
+    public void addConnection(Level world, BlockPos pos, Direction face) {
+        if (world.getBlockEntity(pos) instanceof BlockEntityRFCable)
             return;
-        EnergyInteraction has = this.getInteractionFor(ih);
+        WorldLocation loc = new WorldLocation(world, pos);
+        EnergyInteraction has = endpoints.get(loc);
         if (has == null) {
-            endpoints.put(new WorldLocation((BlockEntity) ih), new EnergyInteraction(ih, dir));
+            endpoints.put(loc, new EnergyInteraction(loc, face));
         } else {
-            has.addSide(dir);
+            has.addSide(face);
         }
     }
 
@@ -158,7 +171,7 @@ public class RFNetwork implements NetworkObject {
         if (n != this) {
             ArrayList<BlockEntityRFCable> li = new ArrayList<>(n.cables);
             for (EnergyInteraction ei : n.endpoints.values()) {
-                EnergyInteraction has = this.getInteractionFor(ei.getTile());
+                EnergyInteraction has = endpoints.get(ei.location);
                 if (has == null) {
                     endpoints.put(ei.location, ei);
                 } else {
@@ -173,10 +186,6 @@ public class RFNetwork implements NetworkObject {
                 this.setIOLimit(Math.min(n.getIOLimit(), this.getIOLimit()));
         }
         this.updateWires();
-    }
-
-    private EnergyInteraction getInteractionFor(IEnergyStorage tile) {
-        return endpoints.get(new WorldLocation((BlockEntity) tile));
     }
 
     private void updateWires() {
@@ -203,38 +212,54 @@ public class RFNetwork implements NetworkObject {
         return cables.size() + ": " + endpoints;
     }
 
-    public int drainEnergy(int maxReceive, boolean simulate) {
-        maxReceive = Math.min(maxReceive, this.getIOLimit());
-        int drain = Math.min(maxReceive, energy);
-        if (!simulate)
-            energy -= drain;
-        return drain;
-    }
+    //Journals the shared buffer so inserts made inside another mod's aborted transaction revert.
+    private final SnapshotJournal<Integer> energyJournal = new SnapshotJournal<>() {
+        @Override
+        protected Integer createSnapshot() {
+            return energy;
+        }
 
-    public int addEnergy(int maxAdd, boolean simulate) {
-        //ReikaJavaLibrary.pConsole(this.getIOLimit()+"/"+energy, Dist.DEDICATED_SERVER);
+        @Override
+        protected void revertToSnapshot(Integer snapshot) {
+            energy = snapshot;
+        }
+    };
+
+    public int insertEnergy(int maxAdd, TransactionContext tx) {
         if (energy >= this.getIOLimit())
             return 0;
         maxAdd = Math.min(this.getIOLimit(), maxAdd);
-        if (!simulate)
+        if (maxAdd > 0) {
+            energyJournal.updateSnapshots(tx);
             energy += maxAdd;
+        }
         return maxAdd;
+    }
+
+    public int extractEnergy(int maxDrain, TransactionContext tx) {
+        maxDrain = Math.min(maxDrain, this.getIOLimit());
+        int drain = Math.min(maxDrain, energy);
+        if (drain > 0) {
+            energyJournal.updateSnapshots(tx);
+            energy -= drain;
+        }
+        return drain;
+    }
+
+    public int getBufferedEnergy() {
+        return energy;
     }
 
     private static class EnergyInteraction {
 
         private final WorldLocation location;
         private final ArrayList<Direction> sides = new ArrayList<>();
-        private final boolean canExtract;
-        private final boolean canReceive;
 
-        private EnergyInteraction(IEnergyStorage ih, Direction... dirs) {
-            location = new WorldLocation((BlockEntity) ih);
+        private EnergyInteraction(WorldLocation loc, Direction... dirs) {
+            location = loc;
             for (Direction dir : dirs) {
                 this.addSide(dir);
             }
-            canExtract = ih.canExtract();
-            canReceive = ih.canReceive();
         }
 
         public boolean isInsertible() {
@@ -243,10 +268,6 @@ public class RFNetwork implements NetworkObject {
 
         public boolean isCollectible() {
             return this.getTotalCollectible() > 0;
-        }
-
-        public boolean contains(IEnergyStorage tile) {
-            return tile == this.getTile();
         }
 
         public void addSide(Direction dir) {
@@ -259,68 +280,84 @@ public class RFNetwork implements NetworkObject {
                 this.addSide(ei.sides.get(i));
             }
         }
-        public int collectEnergy(int max) {
-            if (!canExtract)
-                return 0;
-            int total = 0;
-            IEnergyStorage tile = this.getTile();
-            if (tile.canReceive()) {
-                int collect = max - total;
-                total += tile.extractEnergy(collect, false);
-            }
 
+        /** The FE handler exposed on the given face, or null. */
+        private EnergyHandler getCap(Direction side) {
+            Level world = location.getWorld();
+            return world == null ? null : world.getCapability(Capabilities.Energy.BLOCK, location.pos, side);
+        }
+
+        public int collectEnergy(int max) {
+            int total = 0;
+            try (Transaction tx = Transaction.openRoot()) {
+                for (Direction side : sides) {
+                    if (total >= max)
+                        break;
+                    EnergyHandler cap = this.getCap(side);
+                    if (cap != null) {
+                        total += cap.extract(max - total, tx);
+                    }
+                }
+                tx.commit();
+            }
             return total;
         }
 
         public int addEnergy(int max) {
-            if (!canReceive)
-                return 0;
             int total = 0;
-            IEnergyStorage tile = this.getTile();
-            if (tile.canReceive()) {
-                int add = max - total;
-                total += (tile).receiveEnergy(add, false);
+            try (Transaction tx = Transaction.openRoot()) {
+                for (Direction side : sides) {
+                    if (total >= max)
+                        break;
+                    EnergyHandler cap = this.getCap(side);
+                    if (cap != null) {
+                        total += cap.insert(max - total, tx);
+                    }
+                }
+                tx.commit();
             }
-
             return total;
         }
 
         public int getTotalCollectible() {
-            if (!canExtract)
-                return 0;
             int total = 0;
-            IEnergyStorage tile = this.getTile();
-            if (tile.canReceive()) {
-                total += (tile).extractEnergy(Integer.MAX_VALUE, true);
-
+            try (Transaction tx = Transaction.openRoot()) { //never committed: pure simulation
+                for (Direction side : sides) {
+                    EnergyHandler cap = this.getCap(side);
+                    if (cap != null) {
+                        total += cap.extract(Integer.MAX_VALUE, tx);
+                    }
+                }
             }
             return total;
         }
 
         public int getTotalInsertible() {
-            if (!canReceive)
-                return 0;
             int total = 0;
-            IEnergyStorage tile = this.getTile();
-            if (tile.canReceive()) {
-                total += (tile).receiveEnergy(Integer.MAX_VALUE, true);
+            try (Transaction tx = Transaction.openRoot()) { //never committed: pure simulation
+                for (Direction side : sides) {
+                    EnergyHandler cap = this.getCap(side);
+                    if (cap != null) {
+                        total += cap.insert(Integer.MAX_VALUE, tx);
+                    }
+                }
             }
-
             return total;
         }
 
         @Override
         public String toString() {
-            return this.getTile().toString();
+            return location.toString();
         }
 
         public boolean valid() {
-            return this.getTile() != null;
-        }
-
-        private IEnergyStorage getTile() {
-            BlockEntity te = location.getBlockEntity();
-            return te instanceof IEnergyStorage ? (IEnergyStorage) te : null;
+            if (location.getWorld() == null)
+                return false;
+            for (Direction side : sides) {
+                if (this.getCap(side) != null)
+                    return true;
+            }
+            return false;
         }
 
         @Override

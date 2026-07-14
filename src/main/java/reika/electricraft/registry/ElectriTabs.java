@@ -11,6 +11,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.blockentities.BlockEntityFuse;
+import reika.electricraft.blockentities.BlockEntityWirelessCharger;
 
 /**
  * The ElectriCraft creative tab. Metadata-era variants (wire types, battery tiers, fuse limits)
@@ -54,7 +55,12 @@ public final class ElectriTabs {
                         output.accept(ElectriBlocks.TRANSFORMER.get());
                         output.accept(ElectriBlocks.RF_CABLE.get());
                         output.accept(ElectriBlocks.RFBATTERY.get());
-                        output.accept(ElectriBlocks.WIRELESS_CHARGER.get());
+                        for (int i = 0; i < BlockEntityWirelessCharger.ChargerTiers.tierList.length; i++) {
+                            ItemStack is = new ItemStack(ElectriBlocks.WIRELESS_CHARGER.get());
+                            final int t = i;
+                            ReikaItemHelper.updateStackTag(is, tag -> tag.putInt("tier", t));
+                            output.accept(is);
+                        }
                         output.accept(ElectriItems.TIN_INGOT.get());
                         output.accept(ElectriItems.SILVER_INGOT.get());
                         output.accept(ElectriItems.NICKEL_INGOT.get());
@@ -75,6 +81,7 @@ public final class ElectriTabs {
                         for (BatteryType tier : BatteryType.batteryList) {
                             output.accept(ElectriItems.getCrystal(tier).get());
                         }
+                        output.accept(ElectriItems.CRYSTAL_RF.get());
                         output.accept(ElectriItems.BOOK.get());
                     })
                     .build());

@@ -17,7 +17,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
 import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
 import reika.electricraft.base.BatteryTileBase;
@@ -27,7 +31,7 @@ import reika.electricraft.registry.ElectriTiles;
 
 import java.util.ArrayList;
 
-public class BlockEntityRFBattery extends BatteryTileBase implements IEnergyStorage {
+public class BlockEntityRFBattery extends BatteryTileBase implements EnergyHandler {
 
 	private long energy;
 	public static final long CAPACITY = 60000000000000L;//1099511627775L;//;
@@ -74,58 +78,60 @@ public class BlockEntityRFBattery extends BatteryTileBase implements IEnergyStor
 		if (!world.isClientSide() && this.hasRedstoneSignal()) {
 			int exp = (int)Math.min(energy, Integer.MAX_VALUE);
 			if (exp > 0) {
-				BlockEntity te = this.getAdjacentBlockEntity(Direction.UP);
-				if (te instanceof IEnergyStorage) {
-					if (((IEnergyStorage)te).canReceive()) {
-						if (te instanceof IEnergyStorage ier) {
-							int added = ier.receiveEnergy(exp, false);
-							energy -= added;
-						}
-						else if (te instanceof IEnergyStorage ieh) {
-							int added = ieh.receiveEnergy(exp, false);
-							energy -= added;
-						}
+				//Push up through the block energy capability (the legacy RF-API instanceof
+				//branches connected to nothing on modern FE machines).
+				EnergyHandler cap = world.getCapability(Capabilities.Energy.BLOCK, pos.above(), Direction.DOWN);
+				if (cap != null) {
+					try (Transaction tx = Transaction.openRoot()) {
+						energyJournal.updateSnapshots(tx);
+						energy -= cap.insert(exp, tx);
+						tx.commit();
 					}
 				}
 			}
 		}
 	}
+	//Journals the buffer so mutations inside an aborted transaction revert.
+	private final SnapshotJournal<Long> energyJournal = new SnapshotJournal<>() {
+		@Override
+		protected Long createSnapshot() {
+			return energy;
+		}
+
+		@Override
+		protected void revertToSnapshot(Long snapshot) {
+			energy = snapshot;
+		}
+	};
+
 	@Override
-	public boolean canReceive() {
-		return true;
+	public long getAmountAsLong() {
+		return energy;
 	}
 
 	@Override
-	public int receiveEnergy(int amt, boolean simulate) {
-		long ret = /*todo dir != Direction.UP ? */Math.min(amt, CAPACITY-energy);//todo : 0;
-		if (ret > 0 && !simulate) {
+	public long getCapacityAsLong() {
+		return CAPACITY;
+	}
+
+	@Override
+	public int insert(int amt, TransactionContext tx) {
+		int ret = (int)Math.min(amt, CAPACITY - energy);
+		if (ret > 0) {
+			energyJournal.updateSnapshots(tx);
 			energy += ret;
 		}
-		return (int)ret;
+		return Math.max(ret, 0);
 	}
 
 	@Override
-	public int extractEnergy(int amt, boolean simulate) {
-		long ret = /*todo dir == Direction.UP ? */Math.min(amt, energy);//todo : 0;
-		if (ret > 0 && !simulate) {
+	public int extract(int amt, TransactionContext tx) {
+		int ret = (int)Math.min(amt, Math.min(energy, Integer.MAX_VALUE));
+		if (ret > 0) {
+			energyJournal.updateSnapshots(tx);
 			energy -= ret;
 		}
-		return (int)ret;
-	}
-
-	@Override
-	public boolean canExtract() {
-		return true;
-	}
-
-	@Override
-	public int getEnergyStored() {
-		return energy == this.getMaxEnergy() ? Integer.MAX_VALUE : (int)Math.min(energy, Integer.MAX_VALUE-1);
-	}
-
-	@Override
-	public int getMaxEnergyStored() {
-		return Integer.MAX_VALUE;
+		return Math.max(ret, 0);
 	}
 
 	@Override

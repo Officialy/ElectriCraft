@@ -15,8 +15,9 @@ public class ElectriBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityBattery>> BATTERY = BLOCK_ENTITIES.register("battery", () ->
             new BlockEntityType<>(BlockEntityBattery::new, ElectriBlocks.BATTERY.get()));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityBattery>> RF_BATTERY = BLOCK_ENTITIES.register("rf_battery", () ->
-            new BlockEntityType<>(BlockEntityBattery::new, ElectriBlocks.RFBATTERY.get()));
+    //Was wrongly constructing BlockEntityBattery (the EC battery) — the RF battery got the wrong BE.
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<reika.electricraft.blockentities.modinterface.BlockEntityRFBattery>> RF_BATTERY = BLOCK_ENTITIES.register("rf_battery", () ->
+            new BlockEntityType<>(reika.electricraft.blockentities.modinterface.BlockEntityRFBattery::new, ElectriBlocks.RFBATTERY.get()));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityRFCable>> RF_CABLE = BLOCK_ENTITIES.register("rf_cable", () ->
             new BlockEntityType<>(BlockEntityRFCable::new, ElectriBlocks.RF_CABLE.get()));
@@ -40,4 +41,43 @@ public class ElectriBlockEntities {
             new BlockEntityType<>(BlockEntityWire::new, ElectriBlocks.WIRE.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityWirelessCharger>> WIRELESS_CHARGER = BLOCK_ENTITIES.register("wireless_charger", () ->
             new BlockEntityType<>(BlockEntityWirelessCharger::new, ElectriBlocks.WIRELESS_CHARGER.get()));
+
+    /**
+     * Exposes the FE-speaking blocks through the standard NeoForge block energy capability
+     * (the 26.2 transfer-API EnergyHandler) so other mods' cables and machines can connect —
+     * they never instanceof-check BEs. The RF battery is sided like 1.7.10: receives on every
+     * face but the top, emits only on the top. The charge pad refuses its beam face.
+     */
+    public static void registerCapabilities(net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.Energy.BLOCK, RF_CABLE.get(),
+                (be, side) -> be.getEnergyView());
+        event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.Energy.BLOCK, RF_BATTERY.get(),
+                (be, side) -> side == null ? be : new SidedRFBatteryView(be, side));
+        event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.Energy.BLOCK, WIRELESS_CHARGER.get(),
+                (be, side) -> side == null || be.canConnectEnergy(side.getOpposite()) ? be.getEnergyView() : null);
+    }
+
+    /** Receive-anywhere-but-top / extract-only-top view of the RF battery (legacy sidedness). */
+    private record SidedRFBatteryView(reika.electricraft.blockentities.modinterface.BlockEntityRFBattery be,
+                                      net.minecraft.core.Direction side) implements net.neoforged.neoforge.transfer.energy.EnergyHandler {
+        @Override
+        public long getAmountAsLong() {
+            return be.getAmountAsLong();
+        }
+
+        @Override
+        public long getCapacityAsLong() {
+            return be.getCapacityAsLong();
+        }
+
+        @Override
+        public int insert(int amt, net.neoforged.neoforge.transfer.transaction.TransactionContext tx) {
+            return side == net.minecraft.core.Direction.UP ? 0 : be.insert(amt, tx);
+        }
+
+        @Override
+        public int extract(int amt, net.neoforged.neoforge.transfer.transaction.TransactionContext tx) {
+            return side == net.minecraft.core.Direction.UP ? be.extract(amt, tx) : 0;
+        }
+    }
 }

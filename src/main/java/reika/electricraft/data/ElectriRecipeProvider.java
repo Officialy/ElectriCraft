@@ -75,6 +75,7 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
             batteries();
             crystals();
             machines();
+            rfInterop();
         }
 
         private void oreSmelting() {
@@ -278,12 +279,12 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                     .unlockedBy("has_plate", has(RotaryItems.HSLA_PLATE.get()))
                     .save(out, key("resistor"));
 
-            //Legacy: "SsS","wCw","SbS" (S steel, s screen, w silver wire, C circuit board, b plate).
-            //The wire ingredient matches any wire (component-sensitive ingredients not used).
+            //Legacy: "SsS","wCw","SbS" (S steel, s screen, w SILVER wire, C circuit board, b plate).
+            //The silver wire is matched by its wtype component (1.7.10 matched the silver metadata).
             shaped(RecipeCategory.REDSTONE, ElectriBlocks.METER.get())
                     .define('S', RotaryItems.HSLA_STEEL_INGOT.get())
                     .define('s', RotaryItems.SCREEN.get())
-                    .define('w', ElectriBlocks.WIRE.get())
+                    .define('w', net.neoforged.neoforge.common.crafting.DataComponentIngredient.of(false, wire(WireType.SILVER, false, 1)))
                     .define('C', RotaryItems.CIRCUIT_BOARD.get())
                     .define('b', RotaryItems.HSLA_PLATE.get())
                     .pattern("SsS").pattern("wCw").pattern("SbS")
@@ -346,6 +347,52 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                     .pattern("RDR").pattern("BGB").pattern("RER")
                     .unlockedBy("has_glass", has(RotaryBlocks.BLASTGLASS.get()))
                     .save(out, key("rf_cable"));
+        }
+
+        private void rfInterop() {
+            //Legacy post-load (RF native now): star crystal ringed by redstone blocks -> RF crystal.
+            shaped(RecipeCategory.MISC, ElectriItems.CRYSTAL_RF.get())
+                    .define('R', Blocks.REDSTONE_BLOCK)
+                    .define('C', ElectriItems.CRYSTAL_STAR.get())
+                    .pattern("RRR").pattern("RCR").pattern("RRR")
+                    .unlockedBy("has_crystal", has(ElectriItems.CRYSTAL_STAR.get()))
+                    .save(out, key("crystal_rf"));
+
+            //Legacy RF battery: "ScS","WCW","tPt" (t raw tungsten, c inductive, C RF crystal, P bedrock ingot).
+            shaped(RecipeCategory.REDSTONE, ElectriBlocks.RFBATTERY.get())
+                    .define('S', RotaryItems.HSLA_STEEL_INGOT.get())
+                    .define('c', RotaryItems.INDUCTIVE_INGOT.get())
+                    .define('W', net.minecraft.tags.ItemTags.WOOL)
+                    .define('C', ElectriItems.CRYSTAL_RF.get())
+                    .define('t', RotaryItems.TUNGSTEN_INGOT.get())
+                    .define('P', RotaryItems.BEDROCK_ALLOY_INGOT.get())
+                    .pattern("ScS").pattern("WCW").pattern("tPt")
+                    .unlockedBy("has_crystal", has(ElectriItems.CRYSTAL_RF.get()))
+                    .save(out, key("rf_battery"));
+
+            //Legacy charge pads: "AEA","SCS","PRP" per tier (A steel, E ender pearl, P plate,
+            //R silicon, S glass->blast glass, C redstone/gold/diamond/inductive). The 5th
+            //SUPERCONDUCTING tier needed Thermal's enderium and stays unported.
+            ItemLike[] sides = {Blocks.GLASS, Blocks.GLASS, Blocks.GLASS, RotaryBlocks.BLASTGLASS.get()};
+            ItemLike[] cores = {Items.REDSTONE, Items.GOLD_INGOT, Items.DIAMOND, RotaryItems.INDUCTIVE_INGOT.get()};
+            String[] tierNames = {"basic", "improved", "advanced", "hightech"};
+            for (int i = 0; i < tierNames.length; i++) {
+                CompoundTag nbt = new CompoundTag();
+                nbt.putInt("tier", i);
+                DataComponentPatch patch = DataComponentPatch.builder()
+                        .set(DataComponents.CUSTOM_DATA, CustomData.of(nbt))
+                        .build();
+                shaped(RecipeCategory.REDSTONE, new ItemStackTemplate(ElectriBlocks.WIRELESS_CHARGER.get().asItem(), 1, patch))
+                        .define('A', RotaryItems.HSLA_STEEL_INGOT.get())
+                        .define('E', Items.ENDER_PEARL)
+                        .define('P', RotaryItems.HSLA_PLATE.get())
+                        .define('R', RotaryItems.SILICON.get())
+                        .define('S', sides[i])
+                        .define('C', cores[i])
+                        .pattern("AEA").pattern("SCS").pattern("PRP")
+                        .unlockedBy("has_silicon", has(RotaryItems.SILICON.get()))
+                        .save(out, key("charge_pad_" + tierNames[i]));
+            }
         }
 
         private void grind(String name, ItemLike input, ItemStackTemplate output) {

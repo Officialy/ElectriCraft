@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "electricraft:energy_crystal_rf",
+    "P": "rotarycraft:bedrock_alloy_ingot",
+    "S": "rotarycraft:hsla_steel_ingot",
+    "W": "#minecraft:wool",
+    "c": "rotarycraft:inductive_ingot",
+    "t": "rotarycraft:tungsten_ingot"
+  },
+  "pattern": [
+    "ScS",
+    "WCW",
+    "tPt"
+  ],
+  "result": {
+    "id": "electricraft:electrirfbattery"
+  }
+}
