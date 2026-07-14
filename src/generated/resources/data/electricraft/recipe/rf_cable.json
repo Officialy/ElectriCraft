@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "B": "rotarycraft:blastglass",
+    "D": "minecraft:diamond",
+    "E": "minecraft:ender_pearl",
+    "G": "minecraft:gold_block",
+    "R": "minecraft:redstone_block"
+  },
+  "pattern": [
+    "RDR",
+    "BGB",
+    "RER"
+  ],
+  "result": {
+    "count": 4,
+    "id": "electricraft:rfcable"
+  }
+}

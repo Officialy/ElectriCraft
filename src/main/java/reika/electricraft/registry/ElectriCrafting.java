@@ -36,7 +36,12 @@ public enum ElectriCrafting {
 	}
 
 	public ItemStack getItem() {
-		return ElectriItems.CRAFTING.get().getDefaultInstance();//.getStackOfMetadata(this.ordinal());
+		return switch (this) { //was one metadata item in 1.7.10
+			case BLUEDUST -> ElectriItems.BLUE_DUST.get().getDefaultInstance();
+			case DIAMONDDUST -> ElectriItems.DIAMOND_DUST.get().getDefaultInstance();
+			case QUARTZDUST -> ElectriItems.QUARTZ_DUST.get().getDefaultInstance();
+			case CRYSTALDUST -> ElectriItems.CRYSTAL_DUST.get().getDefaultInstance();
+		};
 	}
 
 	public boolean hasOreName() {

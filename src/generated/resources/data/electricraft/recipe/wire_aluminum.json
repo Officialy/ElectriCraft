@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "I": "electricraft:aluminum_ingot"
+  },
+  "pattern": [
+    "I",
+    "I",
+    "I"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "wtype": 3
+      }
+    },
+    "count": 4,
+    "id": "electricraft:wire"
+  }
+}

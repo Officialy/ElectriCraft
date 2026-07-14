@@ -62,6 +62,7 @@ public class ElectriCraft extends DragonAPIMod {
         ElectriBlocks.ITEMS.register(modEventBus);
 
         ElectriItems.ITEMS.register(modEventBus);
+        reika.electricraft.registry.ElectriTabs.init(modEventBus);
         ElectriBlockEntities.BLOCK_ENTITIES.register(modEventBus);
 
         ReikaPacketHelper.registerPacketHandler(instance, packetChannel, new ElectriPacketCore());

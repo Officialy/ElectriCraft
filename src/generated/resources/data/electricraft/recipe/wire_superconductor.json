@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "G": "rotarycraft:blastglass",
+    "I": "rotarycraft:hsla_steel_ingot",
+    "R": "minecraft:redstone",
+    "S": "electricraft:silver_ingot",
+    "g": "minecraft:gold_ingot",
+    "t": "rotarycraft:tungsten_ingot"
+  },
+  "pattern": [
+    "IGI",
+    "SRS",
+    "tgt"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "wtype": 8
+      }
+    },
+    "count": 4,
+    "id": "electricraft:wire"
+  }
+}

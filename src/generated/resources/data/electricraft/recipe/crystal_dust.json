@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "electricraft:blue_dust",
+    "electricraft:diamond_dust",
+    "electricraft:quartz_dust",
+    "minecraft:glowstone_dust",
+    "minecraft:redstone",
+    "minecraft:redstone",
+    "minecraft:redstone",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "count": 2,
+    "id": "electricraft:crystal_dust"
+  }
+}

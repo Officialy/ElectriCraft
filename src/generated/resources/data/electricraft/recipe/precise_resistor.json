@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "P": "rotarycraft:hsla_steel_plate",
+    "R": "electricraft:resistor",
+    "a": "rotarycraft:aluminum_alloy_ingot",
+    "t": "rotarycraft:tungsten_alloy_spring"
+  },
+  "pattern": [
+    "aaa",
+    "tRt",
+    "PPP"
+  ],
+  "result": {
+    "id": "electricraft:precise_resistor"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "rotarycraft:circuit_board",
+    "S": "rotarycraft:hsla_steel_ingot",
+    "b": "rotarycraft:hsla_steel_plate",
+    "s": "rotarycraft:screen",
+    "w": "electricraft:wire"
+  },
+  "pattern": [
+    "SsS",
+    "wCw",
+    "SbS"
+  ],
+  "result": {
+    "id": "electricraft:meter"
+  }
+}

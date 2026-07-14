@@ -22,17 +22,19 @@ import reika.rotarycraft.registry.RotaryItems;
 
 public enum WireType {
 
-	STEEL(			16, 				64, RotaryItems.HSLA_STEEL_INGOT.get().getDefaultInstance()),
-	TIN(			64, 				32, ElectriStacks.tinIngot, ModOreList.TIN),
-	NICKEL(			256, 				16, ElectriStacks.nickelIngot, ModOreList.NICKEL),
-	ALUMINUM(		1024, 				8, 	ElectriStacks.aluminumIngot, ModOreList.ALUMINUM),
-	COPPER(			4096, 				2, 	ElectriStacks.copperIngot, ModOreList.COPPER),
-	SILVER(			32768, 				1, 	ElectriStacks.silverIngot, ModOreList.SILVER),
-	GOLD(			65536, 				4, 	new ItemStack(Items.GOLD_INGOT)),
-	PLATINUM(		131072, 			16, ElectriStacks.platinumIngot, ModOreList.PLATINUM),
+	//Materials are suppliers: this enum classloads during datagen/registration, when building a
+	//live ItemStack crashes ("Components not bound yet").
+	STEEL(			16, 				64, () -> RotaryItems.HSLA_STEEL_INGOT.get().getDefaultInstance()),
+	TIN(			64, 				32, () -> ElectriStacks.tinIngot, ModOreList.TIN),
+	NICKEL(			256, 				16, () -> ElectriStacks.nickelIngot, ModOreList.NICKEL),
+	ALUMINUM(		1024, 				8, 	() -> ElectriStacks.aluminumIngot, ModOreList.ALUMINUM),
+	COPPER(			4096, 				2, 	() -> ElectriStacks.copperIngot, ModOreList.COPPER),
+	SILVER(			32768, 				1, 	() -> ElectriStacks.silverIngot, ModOreList.SILVER),
+	GOLD(			65536, 				4, 	() -> new ItemStack(Items.GOLD_INGOT)),
+	PLATINUM(		131072, 			16, () -> ElectriStacks.platinumIngot, ModOreList.PLATINUM),
 	SUPERCONDUCTOR(	Integer.MAX_VALUE, 	0, 	null);
 
-	private final ItemStack material;
+	private final java.util.function.Supplier<ItemStack> material;
 	private final String[] oreTypes;
 
 	public final int maxCurrent;
@@ -42,9 +44,7 @@ public enum WireType {
 
 	public static final WireType[] wireList = values();
 
-	WireType(int max, int res, ItemStack mat, ModOreList... ores) {
-		if (mat != null && mat.getItem() == null)
-			throw new IllegalArgumentException("Null wire item!");
+	WireType(int max, int res, java.util.function.Supplier<ItemStack> mat, ModOreList... ores) {
 		material = mat;
 		resistance = res;
 		maxCurrent = max;
@@ -86,7 +86,7 @@ public enum WireType {
 
 	private ArrayList<ItemStack> getAllValidCraftingIngots() {
 		ArrayList<ItemStack> li = new ArrayList<>();
-		li.add(material);
+		li.add(material.get());
 		for (String s : oreTypes) {
 			ArrayList<ItemStack> li2 = null;//OreDictionary.getOres(s);
 			for (ItemStack is2 : li2) {

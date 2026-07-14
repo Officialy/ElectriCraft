@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "I": "rotarycraft:hsla_steel_ingot"
+  },
+  "pattern": [
+    "I",
+    "I",
+    "I"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "wtype": 0
+      }
+    },
+    "count": 4,
+    "id": "electricraft:wire"
+  }
+}

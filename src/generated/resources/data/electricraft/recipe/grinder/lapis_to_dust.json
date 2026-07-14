@@ -1,0 +1,7 @@
+{
+  "type": "rotarycraft:grinder",
+  "input": "minecraft:lapis_lazuli",
+  "output": {
+    "id": "electricraft:blue_dust"
+  }
+}

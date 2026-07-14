@@ -49,12 +49,41 @@ public class ElectriItems {
         });
     }
 
-    public static final DeferredItem<Item> INGOTS = reg("electriingots", () -> new ElectriItemBase(itemProperties()));
+    //1.7.10 packed the material items into three metadata items (electriingots/crafting/
+    //electricrystal); the port registers them individually, modern-convention style.
+    public static final DeferredItem<Item> TIN_INGOT = reg("tin_ingot", () -> new ElectriItemBase(itemProperties()));
+    public static final DeferredItem<Item> SILVER_INGOT = reg("silver_ingot", () -> new ElectriItemBase(itemProperties()));
+    public static final DeferredItem<Item> NICKEL_INGOT = reg("nickel_ingot", () -> new ElectriItemBase(itemProperties()));
+    public static final DeferredItem<Item> ALUMINUM_INGOT = reg("aluminum_ingot", () -> new ElectriItemBase(itemProperties()));
+    public static final DeferredItem<Item> PLATINUM_INGOT = reg("platinum_ingot", () -> new ElectriItemBase(itemProperties()));
+
+    public static final DeferredItem<Item> BLUE_DUST = reg("blue_dust", () -> new ElectriItemBase(itemProperties()));
+    public static final DeferredItem<Item> DIAMOND_DUST = reg("diamond_dust", () -> new ElectriItemBase(itemProperties()));
+    public static final DeferredItem<Item> QUARTZ_DUST = reg("quartz_dust", () -> new ElectriItemBase(itemProperties()));
+    public static final DeferredItem<Item> CRYSTAL_DUST = reg("crystal_dust", () -> new ElectriItemBase(itemProperties()));
+
+    //One energy crystal per battery tier (BatteryType order).
+    public static final DeferredItem<Item> CRYSTAL_REDSTONE = reg("energy_crystal_redstone", () -> new ItemEnergyCrystal(itemProperties()));
+    public static final DeferredItem<Item> CRYSTAL_GLOWSTONE = reg("energy_crystal_glowstone", () -> new ItemEnergyCrystal(itemProperties()));
+    public static final DeferredItem<Item> CRYSTAL_LAPIS = reg("energy_crystal_lapis", () -> new ItemEnergyCrystal(itemProperties()));
+    public static final DeferredItem<Item> CRYSTAL_ENDER = reg("energy_crystal_ender", () -> new ItemEnergyCrystal(itemProperties()));
+    public static final DeferredItem<Item> CRYSTAL_DIAMOND = reg("energy_crystal_diamond", () -> new ItemEnergyCrystal(itemProperties()));
+    public static final DeferredItem<Item> CRYSTAL_STAR = reg("energy_crystal_star", () -> new ItemEnergyCrystal(itemProperties()));
+
     public static final DeferredItem<Item> BATTERY = reg("battery", () -> new ItemBatteryPlacer(itemProperties()));
-    public static final DeferredItem<Item> CRAFTING = reg("crafting", () -> new ElectriItemBase(itemProperties()));
-    public static final DeferredItem<Item> CRYSTAL = reg("electricrystal", () -> new ItemEnergyCrystal(itemProperties()));
     public static final DeferredItem<Item> RFBATTERY = reg("rfbattery", () -> new ItemRFBatteryPlacer(itemProperties()));
     public static final DeferredItem<Item> BOOK = reg("electribook", () -> new ItemElectriBook(itemProperties()));
+
+    public static DeferredItem<Item> getCrystal(BatteryType tier) {
+        return switch (tier) {
+            case REDSTONE -> CRYSTAL_REDSTONE;
+            case GLOWSTONE -> CRYSTAL_GLOWSTONE;
+            case LAPIS -> CRYSTAL_LAPIS;
+            case ENDER -> CRYSTAL_ENDER;
+            case DIAMOND -> CRYSTAL_DIAMOND;
+            case STAR -> CRYSTAL_STAR;
+        };
+    }
 //	public static final RegistryObject<Item> EUBATTERY(5, false, "machine.eubattery", ItemEUBatteryPlacer);
 
 

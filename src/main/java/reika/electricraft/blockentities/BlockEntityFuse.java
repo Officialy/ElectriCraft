@@ -114,6 +114,10 @@ public class BlockEntityFuse extends BlockEntityWireComponent implements WireFus
 		NBT.putInt("limit", currentLimit);
 	}
 
+	public void setCurrentLimit(int limit) {
+		currentLimit = limit;
+	}
+
 	@Override
 	public CompoundTag getTagsToWriteToStack() {
 		CompoundTag tag = new CompoundTag();

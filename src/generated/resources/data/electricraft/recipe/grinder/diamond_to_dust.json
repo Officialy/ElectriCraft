@@ -1,0 +1,7 @@
+{
+  "type": "rotarycraft:grinder",
+  "input": "minecraft:diamond",
+  "output": {
+    "id": "electricraft:diamond_dust"
+  }
+}

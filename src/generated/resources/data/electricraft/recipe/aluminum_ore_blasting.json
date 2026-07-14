@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0.4,
+  "ingredient": "electricraft:aluminum_ore",
+  "result": {
+    "id": "electricraft:aluminum_ingot"
+  }
+}

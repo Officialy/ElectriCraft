@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "electricraft:energy_crystal_redstone",
+    "I": "minecraft:glowstone",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "RCR",
+    "CIC",
+    "RCR"
+  ],
+  "result": {
+    "id": "electricraft:energy_crystal_glowstone"
+  }
+}

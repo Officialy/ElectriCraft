@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "B": "rotarycraft:hsla_steel_plate",
+    "C": "rotarycraft:hsla_steel_shaft_core",
+    "c": "minecraft:copper_ingot",
+    "g": "rotarycraft:gold_coil",
+    "s": "electricraft:silver_ingot"
+  },
+  "pattern": [
+    "scs",
+    "gCg",
+    "BcB"
+  ],
+  "result": {
+    "id": "electricraft:motor"
+  }
+}

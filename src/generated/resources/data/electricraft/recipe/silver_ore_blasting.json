@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0.8,
+  "ingredient": "electricraft:silver_ore",
+  "result": {
+    "id": "electricraft:silver_ingot"
+  }
+}

@@ -41,6 +41,27 @@ public class ElectriBlocks {
     public static final DeferredBlock<Block> RELAY = register("relay", () -> new BlockElectricRelay(blockProperties().mapColor(MapColor.METAL).noOcclusion()));
 
     public static final DeferredBlock<Block> ORE = register("electriore", () -> new BlockElectriOre(blockProperties().mapColor(MapColor.METAL).strength(2, 5)));
+
+    //Per-ore blocks (1.7.10 packed all six ores into ELECTRIORE metadata; copper is vanilla now).
+    //Deepslate variants exist for the ores whose remapped Y-range dips below y=0.
+    public static final DeferredBlock<Block> TIN_ORE = registerOre("tin_ore");
+    public static final DeferredBlock<Block> SILVER_ORE = registerOre("silver_ore");
+    public static final DeferredBlock<Block> NICKEL_ORE = registerOre("nickel_ore");
+    public static final DeferredBlock<Block> ALUMINUM_ORE = registerOre("aluminum_ore");
+    public static final DeferredBlock<Block> PLATINUM_ORE = registerOre("platinum_ore");
+    public static final DeferredBlock<Block> DEEPSLATE_SILVER_ORE = registerOre("deepslate_silver_ore");
+    public static final DeferredBlock<Block> DEEPSLATE_NICKEL_ORE = registerOre("deepslate_nickel_ore");
+    public static final DeferredBlock<Block> DEEPSLATE_PLATINUM_ORE = registerOre("deepslate_platinum_ore");
+
+    private static DeferredBlock<Block> registerOre(String name) {
+        boolean deepslate = name.startsWith("deepslate");
+        return register(name, () -> new net.minecraft.world.level.block.DropExperienceBlock(
+                net.minecraft.util.valueproviders.UniformInt.of(0, 0),
+                blockProperties().mapColor(deepslate ? MapColor.DEEPSLATE : MapColor.STONE)
+                        .strength(deepslate ? 4.5F : 3F, 3F)
+                        .requiresCorrectToolForDrops()
+                        .sound(deepslate ? SoundType.DEEPSLATE : SoundType.STONE)));
+    }
     public static final DeferredBlock<Block> BATTERY = register("electribattery", () -> new BlockElectricBattery(blockProperties().mapColor(MapColor.METAL).strength(2, 10).noOcclusion()));
     public static final DeferredBlock<Block> RF_CABLE = register("rfcable", () -> new BlockRFCable(blockProperties().mapColor(MapColor.METAL)));
     public static final DeferredBlock<Block> RFBATTERY = register("electrirfbattery", () -> new BlockRFBattery(blockProperties().mapColor(MapColor.METAL).strength(2, 10)));

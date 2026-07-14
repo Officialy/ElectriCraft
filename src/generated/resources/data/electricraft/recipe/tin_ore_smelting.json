@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:smelting",
+  "experience": 0.2,
+  "ingredient": "electricraft:tin_ore",
+  "result": {
+    "id": "electricraft:tin_ingot"
+  }
+}

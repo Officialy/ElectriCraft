@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "G": "minecraft:glass",
+    "P": "rotarycraft:hsla_steel_plate"
+  },
+  "pattern": [
+    " G ",
+    "GCG",
+    "PPP"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "currentlim": 1024
+      }
+    },
+    "count": 8,
+    "id": "electricraft:fuse"
+  }
+}

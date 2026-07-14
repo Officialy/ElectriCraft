@@ -29,5 +29,6 @@ public final class ElectriDataProviders {
         // vanilla loot-table validator stops failing with "Missing loottable". Recipes / tags
         // still TODO.
         event.createProvider(ElectriLootProvider::new);
+        event.createProvider(ElectriRecipeProvider::new);
     }
 }

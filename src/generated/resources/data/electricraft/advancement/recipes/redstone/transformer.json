@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_inductive": {
+      "conditions": {
+        "items": [
+          {
+            "items": "rotarycraft:inductive_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "electricraft:transformer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_inductive"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "electricraft:transformer"
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+package reika.electricraft.registry;
+
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import reika.dragonapi.libraries.registry.ReikaItemHelper;
+import reika.electricraft.ElectriCraft;
+import reika.electricraft.blockentities.BlockEntityFuse;
+
+/**
+ * The ElectriCraft creative tab. Metadata-era variants (wire types, battery tiers, fuse limits)
+ * are listed as tagged stacks of their single item, matching the stack-tag convention the
+ * blocks read at placement.
+ */
+public final class ElectriTabs {
+
+    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ElectriCraft.MODID);
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN = TABS.register("electricraft",
+            () -> CreativeModeTab.builder()
+                    .title(Component.translatable("tab.electricraft"))
+                    .icon(() -> WireType.COPPER.getCraftedProduct())
+                    .displayItems((params, output) -> {
+                        for (WireType type : WireType.wireList) {
+                            output.accept(type.getCraftedProduct());
+                            output.accept(type.getCraftedInsulatedProduct());
+                        }
+                        for (BatteryType tier : BatteryType.batteryList) {
+                            ItemStack is = new ItemStack(ElectriItems.BATTERY.get());
+                            int ord = tier.ordinal();
+                            ReikaItemHelper.updateStackTag(is, tag -> {
+                                tag.putInt("btype", ord);
+                                tag.putLong("nrg", 0L);
+                            });
+                            output.accept(is);
+                        }
+                        for (int i = 0; i < BlockEntityFuse.TIERS.length; i++) {
+                            ItemStack is = new ItemStack(ElectriBlocks.FUSE.get());
+                            final int lim = BlockEntityFuse.TIERS[i];
+                            ReikaItemHelper.updateStackTag(is, tag -> tag.putInt("currentlim", lim));
+                            output.accept(is);
+                        }
+                        output.accept(ElectriBlocks.GENERATOR.get());
+                        output.accept(ElectriBlocks.MOTOR.get());
+                        output.accept(ElectriBlocks.RELAY.get());
+                        output.accept(ElectriBlocks.RESISTOR.get());
+                        output.accept(ElectriBlocks.PRECISE_RESISTOR.get());
+                        output.accept(ElectriBlocks.METER.get());
+                        output.accept(ElectriBlocks.TRANSFORMER.get());
+                        output.accept(ElectriBlocks.RF_CABLE.get());
+                        output.accept(ElectriBlocks.RFBATTERY.get());
+                        output.accept(ElectriBlocks.WIRELESS_CHARGER.get());
+                        output.accept(ElectriItems.TIN_INGOT.get());
+                        output.accept(ElectriItems.SILVER_INGOT.get());
+                        output.accept(ElectriItems.NICKEL_INGOT.get());
+                        output.accept(ElectriItems.ALUMINUM_INGOT.get());
+                        output.accept(ElectriItems.PLATINUM_INGOT.get());
+                        output.accept(ElectriBlocks.TIN_ORE.get());
+                        output.accept(ElectriBlocks.SILVER_ORE.get());
+                        output.accept(ElectriBlocks.NICKEL_ORE.get());
+                        output.accept(ElectriBlocks.ALUMINUM_ORE.get());
+                        output.accept(ElectriBlocks.PLATINUM_ORE.get());
+                        output.accept(ElectriBlocks.DEEPSLATE_SILVER_ORE.get());
+                        output.accept(ElectriBlocks.DEEPSLATE_NICKEL_ORE.get());
+                        output.accept(ElectriBlocks.DEEPSLATE_PLATINUM_ORE.get());
+                        output.accept(ElectriItems.BLUE_DUST.get());
+                        output.accept(ElectriItems.DIAMOND_DUST.get());
+                        output.accept(ElectriItems.QUARTZ_DUST.get());
+                        output.accept(ElectriItems.CRYSTAL_DUST.get());
+                        for (BatteryType tier : BatteryType.batteryList) {
+                            output.accept(ElectriItems.getCrystal(tier).get());
+                        }
+                        output.accept(ElectriItems.BOOK.get());
+                    })
+                    .build());
+
+    public static void init(IEventBus bus) {
+        TABS.register(bus);
+    }
+
+    private ElectriTabs() {}
+
+}

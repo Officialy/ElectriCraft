@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "I": "rotarycraft:inductive_ingot",
+    "S": "rotarycraft:hsla_steel_plate"
+  },
+  "pattern": [
+    "SSS",
+    "I I",
+    "SSS"
+  ],
+  "result": {
+    "id": "electricraft:transformer"
+  }
+}

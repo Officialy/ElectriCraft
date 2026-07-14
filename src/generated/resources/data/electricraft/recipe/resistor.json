@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "rotarycraft:coal_dust",
+    "P": "rotarycraft:hsla_steel_plate",
+    "S": "rotarycraft:hsla_steel_ingot"
+  },
+  "pattern": [
+    "SCS",
+    "PCP"
+  ],
+  "result": {
+    "count": 4,
+    "id": "electricraft:resistor"
+  }
+}

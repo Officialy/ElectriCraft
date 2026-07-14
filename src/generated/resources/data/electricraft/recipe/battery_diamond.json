@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "electricraft:energy_crystal_diamond",
+    "P": "rotarycraft:tungsten_alloy_ingot",
+    "S": "rotarycraft:hsla_steel_ingot",
+    "W": "#minecraft:wool",
+    "c": "rotarycraft:inductive_ingot"
+  },
+  "pattern": [
+    "ScS",
+    "WCW",
+    "SPS"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "btype": 4
+      }
+    },
+    "id": "electricraft:battery"
+  }
+}

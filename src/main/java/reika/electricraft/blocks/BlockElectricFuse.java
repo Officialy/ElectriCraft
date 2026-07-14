@@ -49,6 +49,16 @@ public class BlockElectricFuse extends BlockElectricMachine {// implements IWail
     }
 
     @Override
+    public void setPlacedBy(net.minecraft.world.level.Level world, BlockPos pos, BlockState state, net.minecraft.world.entity.LivingEntity placer, net.minecraft.world.item.ItemStack stack) {
+        super.setPlacedBy(world, pos, state, placer, stack);
+        //The fuse item carries its amp limit in the "currentlim" stack tag (1.7.10 stack NBT).
+        if (world.getBlockEntity(pos) instanceof reika.electricraft.blockentities.BlockEntityFuse te
+                && reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(stack)) {
+            te.setCurrentLimit(reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(stack).getIntOr("currentlim", reika.electricraft.blockentities.BlockEntityFuse.TIERS[0]));
+        }
+    }
+
+    @Override
     public  BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new BlockEntityFuse(pPos, pState);
     }

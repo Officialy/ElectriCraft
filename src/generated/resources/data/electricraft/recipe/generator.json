@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "G": "rotarycraft:generator",
+    "g": "minecraft:copper_ingot",
+    "i": "rotarycraft:impeller",
+    "n": "electricraft:nickel_ingot",
+    "p": "rotarycraft:hsla_steel_plate",
+    "s": "rotarycraft:hsla_steel_ingot",
+    "t": "electricraft:tin_ingot"
+  },
+  "pattern": [
+    "gts",
+    "iGn",
+    "ppp"
+  ],
+  "result": {
+    "id": "electricraft:converter"
+  }
+}

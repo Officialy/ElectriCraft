@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "electricraft:energy_crystal_glowstone",
+    "P": "rotarycraft:hsla_steel_plate",
+    "S": "rotarycraft:hsla_steel_ingot",
+    "W": "#minecraft:wool",
+    "c": "electricraft:silver_ingot"
+  },
+  "pattern": [
+    "ScS",
+    "WCW",
+    "SPS"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "btype": 1
+      }
+    },
+    "id": "electricraft:battery"
+  }
+}

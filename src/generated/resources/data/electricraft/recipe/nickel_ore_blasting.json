@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0.3,
+  "ingredient": "electricraft:nickel_ore",
+  "result": {
+    "id": "electricraft:nickel_ingot"
+  }
+}

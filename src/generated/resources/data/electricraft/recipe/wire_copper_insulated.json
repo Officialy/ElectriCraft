@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "I": "minecraft:copper_ingot",
+    "W": "#minecraft:wool"
+  },
+  "pattern": [
+    "WIW",
+    "WIW",
+    "WIW"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "insul": 1,
+        "wtype": 4
+      }
+    },
+    "count": 4,
+    "id": "electricraft:wire"
+  }
+}

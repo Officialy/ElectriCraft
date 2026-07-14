@@ -96,7 +96,25 @@ public enum ElectriOres implements OreEnum {
     }
 
     public Block getBlock() {
-        return ElectriBlocks.ORE.get();
+        return switch (this) { //was ELECTRIORE metadata in 1.7.10; copper is vanilla now
+            case COPPER -> net.minecraft.world.level.block.Blocks.COPPER_ORE;
+            case TIN -> ElectriBlocks.TIN_ORE.get();
+            case SILVER -> ElectriBlocks.SILVER_ORE.get();
+            case NICKEL -> ElectriBlocks.NICKEL_ORE.get();
+            case ALUMINUM -> ElectriBlocks.ALUMINUM_ORE.get();
+            case PLATINUM -> ElectriBlocks.PLATINUM_ORE.get();
+        };
+    }
+
+    /** Deepslate variant for ores whose range dips below y=0; null when none exists. */
+    public Block getDeepslateBlock() {
+        return switch (this) {
+            case COPPER -> net.minecraft.world.level.block.Blocks.DEEPSLATE_COPPER_ORE;
+            case SILVER -> ElectriBlocks.DEEPSLATE_SILVER_ORE.get();
+            case NICKEL -> ElectriBlocks.DEEPSLATE_NICKEL_ORE.get();
+            case PLATINUM -> ElectriBlocks.DEEPSLATE_PLATINUM_ORE.get();
+            default -> null;
+        };
     }
 
     @Override
@@ -114,7 +132,14 @@ public enum ElectriOres implements OreEnum {
     }
 
     public ItemStack getProduct() {
-        return ElectriItems.INGOTS.get().getDefaultInstance();//getStackOfMetadata(this.ordinal());
+        return switch (this) { //was one metadata item in 1.7.10; copper is vanilla now
+            case COPPER -> new ItemStack(net.minecraft.world.item.Items.COPPER_INGOT);
+            case TIN -> ElectriItems.TIN_INGOT.get().getDefaultInstance();
+            case SILVER -> ElectriItems.SILVER_INGOT.get().getDefaultInstance();
+            case NICKEL -> ElectriItems.NICKEL_INGOT.get().getDefaultInstance();
+            case ALUMINUM -> ElectriItems.ALUMINUM_INGOT.get().getDefaultInstance();
+            case PLATINUM -> ElectriItems.PLATINUM_INGOT.get().getDefaultInstance();
+        };
     }
 
     public List<ItemStack> getOreDrop() {

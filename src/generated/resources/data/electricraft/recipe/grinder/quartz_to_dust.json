@@ -1,0 +1,7 @@
+{
+  "type": "rotarycraft:grinder",
+  "input": "minecraft:quartz",
+  "output": {
+    "id": "electricraft:quartz_dust"
+  }
+}
