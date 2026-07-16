@@ -13,6 +13,7 @@ import net.minecraft.client.data.models.model.ModelInstance;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.core.Direction;
@@ -77,11 +78,23 @@ public class ElectriModelProvider extends ModelProvider {
 
         Set<Item> blockItemsHandled = new HashSet<>();
 
+        // 1.7.10's ElectriBlock.registerBlockIcons clad every generic machine in RotaryCraft's steel
+        // ("rotarycraft:steel"); only the wire, battery, cable and ore blocks overrode it with art of
+        // their own. Reproduce that rather than giving each machine a texture it never had.
+        Material steel = new Material(Identifier.fromNamespaceAndPath("rotarycraft", "block/steel"));
+        Set<Block> steelClad = Set.of(
+                ElectriBlocks.GENERATOR.get(), ElectriBlocks.MOTOR.get(), ElectriBlocks.METER.get(),
+                ElectriBlocks.PRECISE_RESISTOR.get(), ElectriBlocks.TRANSFORMER.get(),
+                ElectriBlocks.FUSE.get(), ElectriBlocks.RESISTOR.get(), ElectriBlocks.RELAY.get());
+
         // BLOCKS
         for (var holder : ElectriBlocks.BLOCKS.getEntries()) {
             Block block = holder.get();
+            TextureMapping textures = steelClad.contains(block)
+                    ? TextureMapping.cube(steel)
+                    : TextureMapping.cube(block);
             Identifier blockModelId = ModelTemplates.CUBE_ALL.create(
-                    block, TextureMapping.cube(block), modelOut);
+                    block, textures, modelOut);
             MultiVariant single = new MultiVariant(
                     WeightedList.of(new Variant(blockModelId)));
 
