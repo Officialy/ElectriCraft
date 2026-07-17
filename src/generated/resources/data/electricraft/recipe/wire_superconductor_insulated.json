@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "W": "#minecraft:wool",
+    "w": {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "wtype": 8
+        }
+      },
+      "items": "electricraft:wire"
+    }
+  },
+  "pattern": [
+    "WwW",
+    "WwW",
+    "WwW"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "insul": 1,
+        "wtype": 8
+      }
+    },
+    "count": 3,
+    "id": "electricraft:wire"
+  }
+}

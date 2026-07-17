@@ -139,14 +139,14 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                 if (mat == null)
                     continue;
                 String name = type.name().toLowerCase(java.util.Locale.ROOT);
-                //Legacy: 3 ingots in a column -> PIPECRAFT (4) wires.
-                shaped(RecipeCategory.REDSTONE, wire(type, false, 4))
+                //Legacy: 3 ingots in a column -> PIPECRAFT (default/medium = 16) wires.
+                shaped(RecipeCategory.REDSTONE, wire(type, false, 16))
                         .define('I', mat)
                         .pattern("I").pattern("I").pattern("I")
                         .unlockedBy("has_material", has(mat))
                         .save(out, key("wire_" + name));
-                //Legacy: same column flanked by wool -> insulated wires.
-                shaped(RecipeCategory.REDSTONE, wire(type, true, 4))
+                //Legacy: same column flanked by wool -> insulated wires (same PIPECRAFT count).
+                shaped(RecipeCategory.REDSTONE, wire(type, true, 16))
                         .define('I', mat)
                         .define('W', net.minecraft.tags.ItemTags.WOOL)
                         .pattern("WIW").pattern("WIW").pattern("WIW")
@@ -154,8 +154,8 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                         .save(out, key("wire_" + name + "_insulated"));
             }
             //Superconductor: "IGI","SRS","tgt" (I steel, G blast glass, S silver, R redstone,
-            //t raw tungsten, g gold) -> 4; insulated: 3x WwW with wool.
-            shaped(RecipeCategory.REDSTONE, wire(WireType.SUPERCONDUCTOR, false, 4))
+            //t raw tungsten, g gold) -> PIPECRAFT (16).
+            shaped(RecipeCategory.REDSTONE, wire(WireType.SUPERCONDUCTOR, false, 16))
                     .define('I', RotaryItems.HSLA_STEEL_INGOT.get())
                     .define('G', RotaryBlocks.BLASTGLASS.get())
                     .define('S', ElectriItems.SILVER_INGOT.get())
@@ -165,6 +165,14 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                     .pattern("IGI").pattern("SRS").pattern("tgt")
                     .unlockedBy("has_silver", has(ElectriItems.SILVER_INGOT.get()))
                     .save(out, key("wire_superconductor"));
+            //Legacy: insulated superconductor is special - 3x from wool wrapped around the
+            //non-insulated superconductor wire ("WwW" x3), NOT from ingots like the other insulateds.
+            shaped(RecipeCategory.REDSTONE, wire(WireType.SUPERCONDUCTOR, true, 3))
+                    .define('W', net.minecraft.tags.ItemTags.WOOL)
+                    .define('w', net.neoforged.neoforge.common.crafting.DataComponentIngredient.of(false, wire(WireType.SUPERCONDUCTOR, false, 1)))
+                    .pattern("WwW").pattern("WwW").pattern("WwW")
+                    .unlockedBy("has_superconductor", has(RotaryItems.TUNGSTEN_INGOT.get()))
+                    .save(out, key("wire_superconductor_insulated"));
         }
 
         private ItemStackTemplate battery(BatteryType tier) {
@@ -186,7 +194,7 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                 };
                 ItemLike bottom = switch (tier) {
                     case STAR -> RotaryItems.BEDROCK_ALLOY_INGOT.get();
-                    case DIAMOND -> RotaryItems.TUNGSTEN_ALLOY_INGOT.get();
+                    case DIAMOND -> RotaryItems.TUNGSTEN_INGOT.get(); //legacy ItemStacks.tungsteningot (plain, not alloy)
                     case LAPIS -> RotaryItems.ALUMINUM_ALLOY_INGOT.get();
                     default -> RotaryItems.HSLA_PLATE.get();
                 };
@@ -337,8 +345,8 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                     .unlockedBy("has_steel", has(RotaryItems.HSLA_STEEL_INGOT.get()))
                     .save(out, key("book"));
 
-            //Legacy RF cable (post-load, RF power system is native now): 4x from "RDR","BGB","RER".
-            shaped(RecipeCategory.REDSTONE, new ItemStackTemplate(ElectriBlocks.RF_CABLE.get().asItem(), 4))
+            //Legacy RF cable (post-load, RF power system is native now): PIPECRAFT (16) from "RDR","BGB","RER".
+            shaped(RecipeCategory.REDSTONE, new ItemStackTemplate(ElectriBlocks.RF_CABLE.get().asItem(), 16))
                     .define('D', Items.DIAMOND)
                     .define('R', Blocks.REDSTONE_BLOCK)
                     .define('G', Blocks.GOLD_BLOCK)

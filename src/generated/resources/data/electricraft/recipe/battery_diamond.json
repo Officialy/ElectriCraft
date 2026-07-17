@@ -3,7 +3,7 @@
   "category": "redstone",
   "key": {
     "C": "electricraft:energy_crystal_diamond",
-    "P": "rotarycraft:tungsten_alloy_ingot",
+    "P": "rotarycraft:tungsten_ingot",
     "S": "rotarycraft:hsla_steel_ingot",
     "W": "#minecraft:wool",
     "c": "rotarycraft:inductive_ingot"
