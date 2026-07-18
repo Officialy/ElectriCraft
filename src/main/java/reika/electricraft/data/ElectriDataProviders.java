@@ -26,8 +26,8 @@ public final class ElectriDataProviders {
     @SubscribeEvent
     public static void onGatherServer(GatherDataEvent.Server event) {
         // 26.1: emit a "drops self" loot-table for every registered ElectriCraft block so the
-        // vanilla loot-table validator stops failing with "Missing loottable". Recipes / tags
-        // still TODO.
+        // vanilla loot-table validator stops failing with "Missing loottable".
+        event.createProvider(ElectriBlockTagsProvider::new);
         event.createProvider(ElectriLootProvider::new);
         event.createProvider(ElectriRecipeProvider::new);
     }

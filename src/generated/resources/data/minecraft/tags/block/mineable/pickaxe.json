@@ -1,0 +1,12 @@
+{
+  "values": [
+    "electricraft:tin_ore",
+    "electricraft:silver_ore",
+    "electricraft:nickel_ore",
+    "electricraft:aluminum_ore",
+    "electricraft:platinum_ore",
+    "electricraft:deepslate_silver_ore",
+    "electricraft:deepslate_nickel_ore",
+    "electricraft:deepslate_platinum_ore"
+  ]
+}
