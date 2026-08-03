@@ -26,8 +26,7 @@ public class ItemElectriBook extends ElectriItemBase {
     public InteractionResult use(Level level, Player ep, InteractionHand hand) {
         // Client-only screen open, gated exactly like RotaryCraft's ItemHandBook.
         if (level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
-            net.minecraft.client.Minecraft.getInstance().gui.setScreen(
-                    new reika.electricraft.guis.GuiElectriBook(ep, level, 0, 0));
+            reika.electricraft.client.ClientScreens.openElectriBook(ep, level);
         }
         return InteractionResult.SUCCESS;
     }
