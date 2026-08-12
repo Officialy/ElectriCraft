@@ -6,15 +6,7 @@
     "S": "rotarycraft:hsla_steel_ingot",
     "b": "rotarycraft:hsla_steel_plate",
     "s": "rotarycraft:screen",
-    "w": {
-      "neoforge:ingredient_type": "neoforge:components",
-      "components": {
-        "minecraft:custom_data": {
-          "wtype": 5
-        }
-      },
-      "items": "electricraft:wire"
-    }
+    "w": "electricraft:silver_wire"
   },
   "pattern": [
     "SsS",

@@ -69,19 +69,13 @@ public enum WireType {
 		return this.name().toLowerCase(Locale.ENGLISH);
 	}
 
-	//1.7.10 encoded the type (+INS_OFFSET for insulation) as item metadata; the port carries it
-	//in a stack tag on the single wire BlockItem, which BlockWire.setPlacedBy copies to the BE.
+	/** Every conductor/insulation pair has its own modern block and BlockItem identity. */
 	public ItemStack getCraftedProduct() {
-		ItemStack is = new ItemStack(ElectriBlocks.WIRE.get());
-		int ord = this.ordinal();
-		ReikaItemHelper.updateStackTag(is, tag -> tag.putInt("wtype", ord));
-		return is;
+		return new ItemStack(ElectriBlocks.getWireBlock(this, false).get());
 	}
 
 	public ItemStack getCraftedInsulatedProduct() {
-		ItemStack is = this.getCraftedProduct();
-		ReikaItemHelper.updateStackTag(is, tag -> tag.putBoolean("insul", true));
-		return is;
+		return new ItemStack(ElectriBlocks.getWireBlock(this, true).get());
 	}
 
 	private ArrayList<ItemStack> getAllValidCraftingIngots() {

@@ -79,7 +79,7 @@ public enum BatteryType {
 	}
 
 	public ItemStack getCraftedProduct() {
-		return ElectriItems.BATTERY.get().getDefaultInstance();//todo getStackOfMetadata(this.ordinal());
+		return ElectriBlocks.getBatteryBlock(this).get().asItem().getDefaultInstance();
 	}
 
 //	@SideOnly(Dist.CLIENT)

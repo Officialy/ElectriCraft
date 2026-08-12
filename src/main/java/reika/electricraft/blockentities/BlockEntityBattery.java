@@ -28,6 +28,8 @@ import reika.electricraft.registry.BatteryType;
 import reika.electricraft.registry.ElectriBlockEntities;
 import reika.electricraft.registry.ElectriItems;
 import reika.electricraft.registry.ElectriTiles;
+import reika.electricraft.blocks.BlockElectricBattery;
+import reika.electricraft.items.ItemBatteryPlacer;
 
 import java.util.ArrayList;
 
@@ -108,16 +110,17 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 		return this.getBatteryType().maxCapacity;
 	}
 
-	//1.7.10 stored the tier as block metadata; the port stores it on the BE, set at placement
-	//from the placer item's "btype" tag and persisted with the sync data.
-	private BatteryType type = BatteryType.REDSTONE;
+	// Kept only as a legacy-NBT fallback. In 26.2 the tier is immutable block identity.
+	private BatteryType legacyType = BatteryType.REDSTONE;
 
 	public BatteryType getBatteryType() {
-		return type;
+		return getBlockState().getBlock() instanceof BlockElectricBattery block
+				? block.getBatteryType()
+				: legacyType;
 	}
 
 	public void setBatteryType(BatteryType t) {
-		type = t != null ? t : BatteryType.REDSTONE;
+		legacyType = t != null ? t : BatteryType.REDSTONE;
 	}
 
 	public String getDisplayEnergy() {
@@ -148,7 +151,7 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 		super.writeSyncTag(NBT);
 
 		NBT.putLong("e", energy);
-		NBT.putInt("btype", type.ordinal());
+		NBT.putInt("btype", this.getBatteryType().ordinal());
 	}
 
 	@Override
@@ -157,7 +160,7 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 		super.readSyncTag(NBT);
 
 		energy = NBT.getLongOr("e", 0L);
-		type = BatteryType.batteryList[NBT.getIntOr("btype", 0) % BatteryType.batteryList.length];
+		legacyType = BatteryType.batteryList[Math.floorMod(NBT.getIntOr("btype", 0), BatteryType.batteryList.length)];
 	}
 
 	@Override
@@ -181,19 +184,10 @@ public class BlockEntityBattery extends NetworkBlockEntity implements WireEmitte
 	}
 
 	public void setEnergyFromNBT(ItemStack is) {
-		if (is.getItem() == ElectriItems.BATTERY.get()) {
-			if (ReikaItemHelper.hasStackTag(is)) {
-				CompoundTag tag = ReikaItemHelper.getStackTag(is);
-				energy = tag.getLongOr("nrg", 0L)*20L;
-				this.setBatteryType(BatteryType.batteryList[tag.getIntOr("btype", 0) % BatteryType.batteryList.length]);
-			}
-			else {
-				energy = 0;
-			}
-		}
-		else {
+		if (is.getItem() instanceof ItemBatteryPlacer && ReikaItemHelper.hasStackTag(is))
+			energy = Math.max(0, ReikaItemHelper.getStackTag(is).getLongOr("nrg", 0L))*20L;
+		else
 			energy = 0;
-		}
 	}
 
 	@Override

@@ -1,6 +1,10 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "electricraft:block/electrichargepad"
+    "type": "minecraft:special",
+    "base": "electricraft:item/electrichargepad",
+    "model": {
+      "type": "electricraft:casing",
+      "casing": "wireless_charger"
+    }
   }
 }

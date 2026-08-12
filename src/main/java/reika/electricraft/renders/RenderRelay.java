@@ -11,6 +11,11 @@ package reika.electricraft.renders;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import com.mojang.math.Axis;
 import org.joml.Vector3f;
 import net.minecraft.client.renderer.rendertype.RenderType;
@@ -55,14 +60,20 @@ public class RenderRelay extends ElectriTERenderer<BlockEntityRelay>
 //		var14.renderAll(tile, null, tile.phi);
 	}
 
-    // 1.21.5: render -> submit; @Override dropped
-    public void render(BlockEntityRelay tile, float p_112308_, PoseStack stack, VertexConsumer bufferSource, int light, int p_112312_) {
-		if (this.doRenderModel(stack, tile))
-			this.renderBlockEntityRelayAt(tile, stack, bufferSource, light);
-		if (( tile).isInWorld()) {// && MinecraftForgeClient.getRenderPass() == 1) {
-			IORenderer.renderIO(stack, bufferSource, tile, tile.getX(), tile.getY(), tile.getZ());
-		}
-	}
+        @Override
+    public void submit(BlockEntityRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        var level = Minecraft.getInstance().level;
+        if (level == null)
+            return;
+        BlockEntity be = level.getBlockEntity(state.blockPos);
+        if (!(be instanceof BlockEntityRelay tile) || !this.doRenderModel(poseStack, tile))
+            return;
 
+        PoseStack snapped = new PoseStack();
+        snapped.last().set(poseStack.last());
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(RelayModel.TEXTURE_LOCATION),
+                (pose, vertices) -> this.renderBlockEntityRelayAt(tile, snapped, vertices, state.lightCoords));
+        if (tile.isInWorld())
+            IORenderer.renderIO(poseStack, collector, tile, tile.getBlockPos());
+    }
 }
-

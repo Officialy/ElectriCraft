@@ -15,12 +15,7 @@
     "tgt"
   ],
   "result": {
-    "components": {
-      "minecraft:custom_data": {
-        "wtype": 8
-      }
-    },
     "count": 16,
-    "id": "electricraft:wire"
+    "id": "electricraft:superconductor_wire"
   }
 }

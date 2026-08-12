@@ -1,0 +1,6 @@
+{
+  "_comment": "Jade loads this integration only when Jade is installed.",
+  "plugins": [
+    "reika.electricraft.modinterface.jade.ElectriJadePlugin"
+  ]
+}

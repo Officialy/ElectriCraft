@@ -1,6 +1,5 @@
 {
-  "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "rotarycraft:block/steel"
+    "particle": "rotarycraft:block/steel"
   }
 }

@@ -37,8 +37,11 @@ import reika.rotarycraft.registry.RotaryItems;
 //@Strippable(value = {"mcp.mobius.waila.api.IWailaDataProvider"})
 public class BlockElectricFuse extends BlockElectricMachine {// implements IWailaDataProvider {
 
-    public BlockElectricFuse(Properties properties) {
+    private final int currentLimit;
+
+    public BlockElectricFuse(Properties properties, int currentLimit) {
         super(properties);
+        this.currentLimit = currentLimit;
     }
 
     @Override
@@ -48,14 +51,8 @@ public class BlockElectricFuse extends BlockElectricMachine {// implements IWail
         });
     }
 
-    @Override
-    public void setPlacedBy(net.minecraft.world.level.Level world, BlockPos pos, BlockState state, net.minecraft.world.entity.LivingEntity placer, net.minecraft.world.item.ItemStack stack) {
-        super.setPlacedBy(world, pos, state, placer, stack);
-        //The fuse item carries its amp limit in the "currentlim" stack tag (1.7.10 stack NBT).
-        if (world.getBlockEntity(pos) instanceof reika.electricraft.blockentities.BlockEntityFuse te
-                && reika.dragonapi.libraries.registry.ReikaItemHelper.hasStackTag(stack)) {
-            te.setCurrentLimit(reika.dragonapi.libraries.registry.ReikaItemHelper.getStackTag(stack).getIntOr("currentlim", reika.electricraft.blockentities.BlockEntityFuse.TIERS[0]));
-        }
+    public int getCurrentLimit() {
+        return currentLimit;
     }
 
     @Override

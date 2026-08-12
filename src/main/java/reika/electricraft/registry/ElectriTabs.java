@@ -13,10 +13,12 @@ import reika.electricraft.ElectriCraft;
 import reika.electricraft.blockentities.BlockEntityFuse;
 import reika.electricraft.blockentities.BlockEntityWirelessCharger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * The ElectriCraft creative tab. Metadata-era variants (wire types, battery tiers, fuse limits)
- * are listed as tagged stacks of their single item, matching the stack-tag convention the
- * blocks read at placement.
+ * The ElectriCraft creative tab. Wire material, battery tier, and fuse amperage are concrete modern
+ * registry identities; only genuinely mutable state such as stored energy remains stack data.
  */
 public final class ElectriTabs {
 
@@ -31,21 +33,10 @@ public final class ElectriTabs {
                             output.accept(type.getCraftedProduct());
                             output.accept(type.getCraftedInsulatedProduct());
                         }
-                        for (BatteryType tier : BatteryType.batteryList) {
-                            ItemStack is = new ItemStack(ElectriItems.BATTERY.get());
-                            int ord = tier.ordinal();
-                            ReikaItemHelper.updateStackTag(is, tag -> {
-                                tag.putInt("btype", ord);
-                                tag.putLong("nrg", 0L);
-                            });
-                            output.accept(is);
-                        }
-                        for (int i = 0; i < BlockEntityFuse.TIERS.length; i++) {
-                            ItemStack is = new ItemStack(ElectriBlocks.FUSE.get());
-                            final int lim = BlockEntityFuse.TIERS[i];
-                            ReikaItemHelper.updateStackTag(is, tag -> tag.putInt("currentlim", lim));
-                            output.accept(is);
-                        }
+                        for (ItemStack battery : createBatteryVariants())
+                            output.accept(battery);
+                        for (int limit : BlockEntityFuse.TIERS)
+                            output.accept(ElectriBlocks.getFuseBlock(limit).get());
                         output.accept(ElectriBlocks.GENERATOR.get());
                         output.accept(ElectriBlocks.MOTOR.get());
                         output.accept(ElectriBlocks.RELAY.get());
@@ -54,7 +45,7 @@ public final class ElectriTabs {
                         output.accept(ElectriBlocks.METER.get());
                         output.accept(ElectriBlocks.TRANSFORMER.get());
                         output.accept(ElectriBlocks.RF_CABLE.get());
-                        output.accept(ElectriBlocks.RFBATTERY.get());
+                        output.accept(ElectriItems.RFBATTERY.get());
                         for (int i = 0; i < BlockEntityWirelessCharger.ChargerTiers.tierList.length; i++) {
                             ItemStack is = new ItemStack(ElectriBlocks.WIRELESS_CHARGER.get());
                             final int t = i;
@@ -88,6 +79,18 @@ public final class ElectriTabs {
 
     public static void init(IEventBus bus) {
         TABS.register(bus);
+    }
+
+    /** Empty and filled presentation stacks for each concrete battery tier. */
+    public static List<ItemStack> createBatteryVariants() {
+        List<ItemStack> batteries = new ArrayList<>(BatteryType.batteryList.length * 2);
+        for (BatteryType tier : BatteryType.batteryList) {
+            batteries.add(tier.getCraftedProduct());
+            ItemStack full = tier.getCraftedProduct();
+            ReikaItemHelper.updateStackTag(full, tag -> tag.putLong("nrg", tier.maxCapacity));
+            batteries.add(full);
+        }
+        return batteries;
     }
 
     private ElectriTabs() {}

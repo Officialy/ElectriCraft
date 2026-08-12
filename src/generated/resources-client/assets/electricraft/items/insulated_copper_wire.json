@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "electricraft:item/insulated_copper_wire",
+    "model": {
+      "type": "electricraft:wire",
+      "insulated": true,
+      "material": "COPPER"
+    }
+  }
+}

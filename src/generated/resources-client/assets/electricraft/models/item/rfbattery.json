@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "layer0": "electricraft:item/rfbattery"
+    "bottom": "electricraft:blocks/battery/_bottom",
+    "side": "electricraft:blocks/battery/rf",
+    "top": "electricraft:blocks/battery/_top"
   }
 }

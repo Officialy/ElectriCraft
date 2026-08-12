@@ -16,7 +16,6 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.base.ElectriItemBase;
-import reika.electricraft.items.ItemBatteryPlacer;
 import reika.electricraft.items.ItemElectriBook;
 import reika.electricraft.items.ItemEnergyCrystal;
 import reika.electricraft.items.ItemRFBatteryPlacer;
@@ -72,7 +71,6 @@ public class ElectriItems {
     //The beyond-STAR tier from 1.7.10's RF interop chain (crystal metadata 6).
     public static final DeferredItem<Item> CRYSTAL_RF = reg("energy_crystal_rf", () -> new ItemEnergyCrystal(itemProperties()));
 
-    public static final DeferredItem<Item> BATTERY = reg("battery", () -> new ItemBatteryPlacer(itemProperties()));
     public static final DeferredItem<Item> RFBATTERY = reg("rfbattery", () -> new ItemRFBatteryPlacer(itemProperties()));
     public static final DeferredItem<Item> BOOK = reg("electribook", () -> new ItemElectriBook(itemProperties()));
 

@@ -1,0 +1,8 @@
+{
+  "parent": "electricraft:block/wire_item_insulated",
+  "textures": {
+    "end": "electricraft:blocks/wire/platinum_ins_end",
+    "particle": "electricraft:blocks/wire/platinum_ins",
+    "side": "electricraft:blocks/wire/platinum_ins"
+  }
+}

@@ -11,13 +11,7 @@
     "WIW"
   ],
   "result": {
-    "components": {
-      "minecraft:custom_data": {
-        "insul": 1,
-        "wtype": 5
-      }
-    },
     "count": 16,
-    "id": "electricraft:wire"
+    "id": "electricraft:insulated_silver_wire"
   }
 }

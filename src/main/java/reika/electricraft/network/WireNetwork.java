@@ -354,9 +354,9 @@ public final class WireNetwork implements NetworkObject {
 	}
 
 	private void removeSource(WireEmitter te) {
-		sources.remove(te);
+		sources.remove(this.getLocation(te));
 		if (te instanceof WrappedSource)
-			wrappers.remove(te);
+			wrappers.remove(this.getLocation(te));
 	}
 
 	public void checkRiftConnections() {
@@ -579,9 +579,9 @@ public final class WireNetwork implements NetworkObject {
 		if (te instanceof WireEmitter)
 			this.removeSource((WireEmitter)te);
 		if (te instanceof WireReceiver)
-			sinks.remove(te);
+			sinks.remove(this.getLocation(te));
 		if (te instanceof WiringTile)
-			wires.remove(te);
+			wires.remove(this.getLocation(te));
 		this.rebuild();
 	}
 

@@ -28,6 +28,7 @@ import reika.electricraft.auxiliary.interfaces.Overloadable;
 import reika.electricraft.auxiliary.interfaces.WireEmitter;
 import reika.electricraft.auxiliary.interfaces.WireReceiver;
 import reika.electricraft.base.WiringTile;
+import reika.electricraft.blocks.BlockWire;
 import reika.electricraft.registry.ElectriBlockEntities;
 import reika.electricraft.registry.ElectriTiles;
 import reika.electricraft.registry.WireType;
@@ -38,12 +39,21 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 
 	private boolean[] connections = new boolean[6];
 
+	private WireType type;
 	public boolean insulated;
 
 	private boolean shouldMelt;
 
 	public BlockEntityWire(BlockPos pos, BlockState state) {
 		super(ElectriBlockEntities.WIRE.get(), pos, state);
+		this.readVariantFromBlock();
+	}
+
+	private void readVariantFromBlock() {
+		if (!(getBlockState().getBlock() instanceof BlockWire wire))
+			throw new IllegalStateException("ElectriCraft wire block entity placed on " + getBlockState());
+		type = wire.getWireType();
+		insulated = wire.isInsulated();
 	}
 
 	@Override
@@ -113,16 +123,8 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 		return true;//connections[dir.ordinal()];
 	}
 
-	//1.7.10 stored the type as block metadata; the port stores it on the BE, copied from the
-	//item's "wtype" tag at placement. Default TIN (=old wireList[1] hardcode) for legacy saves.
-	private WireType type = WireType.TIN;
-
 	public WireType getWireType() {
 		return type;
-	}
-
-	public void setWireType(WireType t) {
-		type = t != null ? t : WireType.TIN;
 	}
 
 	@Override
@@ -131,9 +133,9 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 
 		connections = ReikaArrayHelper.booleanFromByteBitflags(NBT.getByteOr("conn", (byte)0), 6);
 
-		insulated = NBT.getBooleanOr("insul", false);
-
-		type = WireType.wireList[NBT.getIntOr("wtype", WireType.TIN.ordinal()) % WireType.wireList.length];
+		// Variant is block identity, never mutable data. This deliberately rejects the former
+		// tagged-wire representation instead of quietly recreating it in block-entity NBT.
+		this.readVariantFromBlock();
 
 		shouldMelt = NBT.getBooleanOr("melt", false);
 	}
@@ -143,10 +145,6 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 		super.writeSyncTag(NBT);
 
 		NBT.putByte("conn", ReikaArrayHelper.booleanToByteBitflags(connections));
-
-		NBT.putBoolean("insul", insulated);
-
-		NBT.putInt("wtype", type.ordinal());
 
 		NBT.putBoolean("melt", shouldMelt);
 	}

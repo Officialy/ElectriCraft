@@ -15,10 +15,10 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -26,21 +26,35 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 
 import reika.dragonapi.libraries.registry.ReikaItemHelper;
-import reika.electricraft.blockentities.BlockEntityGenerator;
 import reika.electricraft.registry.ElectriTiles;
 import reika.electricraft.blockentities.BlockEntityWirelessCharger;
 import reika.electricraft.blockentities.BlockEntityWirelessCharger.ChargerTiers;
 
 
 public class BlockChargePad extends Block implements EntityBlock {
+    public static final EnumProperty<net.minecraft.core.Direction> FACING = BlockStateProperties.FACING;
     public static ChargerTiers itemRender;
 
     public BlockChargePad(BlockBehaviour.Properties properties) {
         super(properties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, net.minecraft.core.Direction.UP));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
@@ -69,9 +83,8 @@ public class BlockChargePad extends Block implements EntityBlock {
 
     @Override
     public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state,  BlockEntity entity, ItemStack stack) {
-        if (!player.isCreative() && this.canEntityDestroy(state, world, pos, player))
-            this.destroy(world, pos, state);
-        world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        if (!player.isCreative())
+            super.playerDestroy(world, player, pos, state, entity, stack);
     }
 
     @Override
@@ -83,16 +96,21 @@ public class BlockChargePad extends Block implements EntityBlock {
 
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder builder) {
-        ArrayList li = new ArrayList<>();
+        ArrayList<ItemStack> li = new ArrayList<>();
         ItemStack is = ElectriTiles.WIRELESSPAD.getCraftedProduct();
-        ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", 1)); //todo tier
+        BlockEntity raw = builder.getOptionalParameter(
+                net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY);
+        int tier = raw instanceof BlockEntityWirelessCharger charger ? charger.getTier().ordinal() : 0;
+        ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", tier));
         li.add(is);
         return li;
     }
 
     public ItemStack getPickBlock(BlockHitResult target, Level world, BlockPos pos) {
         ItemStack is = ElectriTiles.WIRELESSPAD.getCraftedProduct();
-        ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", 1)); //todo tier level
+        int tier = world.getBlockEntity(pos) instanceof BlockEntityWirelessCharger charger
+                ? charger.getTier().ordinal() : 0;
+        ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("tier", tier));
         return is;
     }
 

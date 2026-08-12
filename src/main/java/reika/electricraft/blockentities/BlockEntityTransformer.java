@@ -23,7 +23,6 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import reika.dragonapi.instantiable.HybridTank;
 import reika.dragonapi.instantiable.StepTimer;
-import reika.dragonapi.libraries.ReikaAABBHelper;
 import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
 import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
 import reika.dragonapi.libraries.mathsci.ReikaThermoHelper;
@@ -307,21 +306,14 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 		int dz = Math.abs(this.getFacing().getStepZ());
 		double d = 0.2875;
 		double d2 = 0.0625;
-		AABB box = ReikaAABBHelper.getBlockAABB(worldPosition);
-		double minX = box.minX;
-		double minZ = box.minZ;
-		double maxX = box.maxX;
-		double maxZ = box.maxZ;
-
-		box.setMinX(minX += dz*d);
-		box.setMaxX(maxX -= dz*d);
-		box.setMinZ(minZ += dx*d);
-		box.setMaxZ(maxZ -= dx*d);
-		box.setMinX(minX += dx*d2);
-		box.setMaxX(maxX -= dx*d2);
-		box.setMinZ(minZ += dz*d2);
-		box.setMaxZ(maxZ -= dz*d2);
-		return box;
+		// AABB became immutable; the old setter calls returned replacement boxes and were
+		// silently discarded, leaving a full cube. Build the source dimensions directly.
+		double minX = worldPosition.getX() + dz * d + dx * d2;
+		double maxX = worldPosition.getX() + 1 - dz * d - dx * d2;
+		double minZ = worldPosition.getZ() + dx * d + dz * d2;
+		double maxZ = worldPosition.getZ() + 1 - dx * d - dz * d2;
+		return new AABB(minX, worldPosition.getY(), minZ,
+				maxX, worldPosition.getY() + 1, maxZ);
 	}
 
 	@Override

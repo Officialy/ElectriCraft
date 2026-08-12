@@ -28,12 +28,20 @@ import reika.electricraft.base.NetworkBlock;
 import reika.electricraft.blockentities.BlockEntityFuse;
 import reika.electricraft.registry.ElectriItems;
 import reika.electricraft.blockentities.BlockEntityBattery;
+import reika.electricraft.registry.BatteryType;
 
 //@Strippable(value = {"mcp.mobius.waila.api.IWailaDataProvider"})
 public class BlockElectricBattery extends NetworkBlock {// implements IWailaDataProvider {
 
-    public BlockElectricBattery(Properties par2Material) {
+    private final BatteryType batteryType;
+
+    public BlockElectricBattery(Properties par2Material, BatteryType batteryType) {
         super(par2Material);
+        this.batteryType = batteryType;
+    }
+
+    public BatteryType getBatteryType() {
+        return batteryType;
     }
 
     @Override
@@ -57,12 +65,8 @@ public class BlockElectricBattery extends NetworkBlock {// implements IWailaData
         BlockEntity raw = context.getOptionalParameter(
                 LootContextParams.BLOCK_ENTITY);
         final long e = (raw instanceof BlockEntityBattery te) ? te.getStoredEnergy() : 0L;
-        final int type = (raw instanceof BlockEntityBattery te) ? te.getBatteryType().ordinal() : 0;
-        ItemStack is = ElectriItems.BATTERY.get().getDefaultInstance();
-        ReikaItemHelper.updateStackTag(is, __T__ -> {
-            __T__.putLong("nrg", e);
-            __T__.putInt("btype", type); //tier survives the break/replace cycle
-        });
+        ItemStack is = this.asItem().getDefaultInstance();
+        ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putLong("nrg", e));
         li.add(is);
         return li;
     }
@@ -70,8 +74,7 @@ public class BlockElectricBattery extends NetworkBlock {// implements IWailaData
 //    @Override
     public ItemStack getPickBlock(BlockHitResult target, Level world, BlockPos pos) {
         BlockEntityBattery te = (BlockEntityBattery) world.getBlockEntity(pos);
-        ItemStack is = ElectriItems.BATTERY.get().getDefaultInstance();//.getStackOfMetadata(meta);
-        return is;
+        return this.asItem().getDefaultInstance();
     }
 
 }

@@ -14,11 +14,6 @@
     "SPS"
   ],
   "result": {
-    "components": {
-      "minecraft:custom_data": {
-        "btype": 4
-      }
-    },
-    "id": "electricraft:battery"
+    "id": "electricraft:diamond_battery"
   }
 }

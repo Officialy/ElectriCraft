@@ -1,6 +1,10 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "electricraft:item/rfbattery"
+    "type": "minecraft:special",
+    "base": "electricraft:item/rfbattery",
+    "model": {
+      "type": "electricraft:casing",
+      "casing": "rf_battery"
+    }
   }
 }

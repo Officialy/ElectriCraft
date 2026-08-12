@@ -37,12 +37,11 @@ import reika.rotarycraft.registry.RotaryItems;
 /**
  * ElectriCraft recipes, ported from the 1.7.10 ElectriRecipes + WireType/BatteryType addCrafting.
  * <p>
- * Metadata-variant results (wires, batteries, fuses) carry their variant in a CUSTOM_DATA stack
- * tag via ItemStackTemplate + DataComponentPatch (building live ItemStacks during datagen NPEs —
- * components are not bound yet). Wire recipes yield 4 (the legacy medium-difficulty PIPECRAFT
- * count). Legacy recipes NOT ported: wireless charge pad tiers (ChargerTiers unported), the RF
- * battery (needs the 7th+ crystal tiers beyond STAR), the EU/IC2 family, and the WorktableRecipes
- * duplicates (worktable handler is separate).
+ * Batteries and fuses retain real runtime state in CUSTOM_DATA templates. Wires do not: every
+ * conductor/insulation pair is a concrete registered block item, so their recipes use ordinary
+ * vanilla ingredients and results. Wire recipes yield 16 (the original medium PIPECRAFT count).
+ * Legacy recipes NOT ported: the EU/IC2 family and WorktableRecipes duplicates (the worktable
+ * handler is a separate dependency vertical).
  */
 public final class ElectriRecipeProvider extends RecipeProvider.Runner {
 
@@ -123,14 +122,7 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
         }
 
         private ItemStackTemplate wire(WireType type, boolean insulated, int count) {
-            CompoundTag nbt = new CompoundTag();
-            nbt.putInt("wtype", type.ordinal());
-            if (insulated)
-                nbt.putBoolean("insul", true);
-            DataComponentPatch patch = DataComponentPatch.builder()
-                    .set(DataComponents.CUSTOM_DATA, CustomData.of(nbt))
-                    .build();
-            return new ItemStackTemplate(ElectriBlocks.WIRE.get().asItem(), count, patch);
+            return new ItemStackTemplate(ElectriBlocks.getWireBlock(type, insulated).get().asItem(), count);
         }
 
         private void wires() {
@@ -169,19 +161,14 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
             //non-insulated superconductor wire ("WwW" x3), NOT from ingots like the other insulateds.
             shaped(RecipeCategory.REDSTONE, wire(WireType.SUPERCONDUCTOR, true, 3))
                     .define('W', net.minecraft.tags.ItemTags.WOOL)
-                    .define('w', net.neoforged.neoforge.common.crafting.DataComponentIngredient.of(false, wire(WireType.SUPERCONDUCTOR, false, 1)))
+                    .define('w', Ingredient.of(ElectriBlocks.getWireBlock(WireType.SUPERCONDUCTOR, false).get()))
                     .pattern("WwW").pattern("WwW").pattern("WwW")
                     .unlockedBy("has_superconductor", has(RotaryItems.TUNGSTEN_INGOT.get()))
                     .save(out, key("wire_superconductor_insulated"));
         }
 
         private ItemStackTemplate battery(BatteryType tier) {
-            CompoundTag nbt = new CompoundTag();
-            nbt.putInt("btype", tier.ordinal());
-            DataComponentPatch patch = DataComponentPatch.builder()
-                    .set(DataComponents.CUSTOM_DATA, CustomData.of(nbt))
-                    .build();
-            return new ItemStackTemplate(ElectriItems.BATTERY.get(), 1, patch);
+            return new ItemStackTemplate(ElectriBlocks.getBatteryBlock(tier).get().asItem());
         }
 
         private void batteries() {
@@ -288,11 +275,11 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                     .save(out, key("resistor"));
 
             //Legacy: "SsS","wCw","SbS" (S steel, s screen, w SILVER wire, C circuit board, b plate).
-            //The silver wire is matched by its wtype component (1.7.10 matched the silver metadata).
+            //Silver Wire is a concrete item identity, replacing 1.7.10 metadata exactly.
             shaped(RecipeCategory.REDSTONE, ElectriBlocks.METER.get())
                     .define('S', RotaryItems.HSLA_STEEL_INGOT.get())
                     .define('s', RotaryItems.SCREEN.get())
-                    .define('w', net.neoforged.neoforge.common.crafting.DataComponentIngredient.of(false, wire(WireType.SILVER, false, 1)))
+                    .define('w', Ingredient.of(ElectriBlocks.getWireBlock(WireType.SILVER, false).get()))
                     .define('C', RotaryItems.CIRCUIT_BOARD.get())
                     .define('b', RotaryItems.HSLA_PLATE.get())
                     .pattern("SsS").pattern("wCw").pattern("SbS")
@@ -318,16 +305,12 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                     .save(out, key("precise_resistor"));
 
             //Legacy: 8x fuses per tier from " G ","GCG","PPP" (G glass, C the tier ingot, P plate),
-            //the amp limit carried in the "currentlim" stack tag.
+            //Each rating is a concrete block/item identity in 26.2.
             ItemLike[] fuseIngots = {RotaryItems.COAL_DUST.get(), RotaryItems.HSLA_STEEL_INGOT.get(), Items.COPPER_INGOT, Items.GOLD_INGOT};
             String[] fuseNames = {"coal", "steel", "copper", "gold"};
             for (int i = 0; i < fuseIngots.length; i++) {
-                CompoundTag nbt = new CompoundTag();
-                nbt.putInt("currentlim", BlockEntityFuse.TIERS[i]);
-                DataComponentPatch patch = DataComponentPatch.builder()
-                        .set(DataComponents.CUSTOM_DATA, CustomData.of(nbt))
-                        .build();
-                shaped(RecipeCategory.REDSTONE, new ItemStackTemplate(ElectriBlocks.FUSE.get().asItem(), 8, patch))
+                shaped(RecipeCategory.REDSTONE, new ItemStackTemplate(
+                                ElectriBlocks.getFuseBlock(BlockEntityFuse.TIERS[i]).get().asItem(), 8))
                         .define('G', Blocks.GLASS)
                         .define('C', fuseIngots[i])
                         .define('P', RotaryItems.HSLA_PLATE.get())
@@ -367,7 +350,7 @@ public final class ElectriRecipeProvider extends RecipeProvider.Runner {
                     .save(out, key("crystal_rf"));
 
             //Legacy RF battery: "ScS","WCW","tPt" (t raw tungsten, c inductive, C RF crystal, P bedrock ingot).
-            shaped(RecipeCategory.REDSTONE, ElectriBlocks.RFBATTERY.get())
+            shaped(RecipeCategory.REDSTONE, ElectriItems.RFBATTERY.get())
                     .define('S', RotaryItems.HSLA_STEEL_INGOT.get())
                     .define('c', RotaryItems.INDUCTIVE_INGOT.get())
                     .define('W', net.minecraft.tags.ItemTags.WOOL)

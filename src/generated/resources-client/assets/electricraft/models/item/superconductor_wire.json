@@ -1,0 +1,8 @@
+{
+  "parent": "electricraft:block/wire_item_bare",
+  "textures": {
+    "end": "electricraft:blocks/wire/superconductor_end",
+    "particle": "electricraft:blocks/wire/superconductor",
+    "side": "electricraft:blocks/wire/superconductor"
+  }
+}

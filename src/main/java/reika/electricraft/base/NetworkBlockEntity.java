@@ -45,7 +45,9 @@ public abstract class NetworkBlockEntity extends ElectriBlockEntity implements N
     }
 
     public final boolean isConnectable() {
-        return isConnectable && !level.isClientSide() && level.hasChunk(worldPosition.getX(), worldPosition.getZ());
+        // Level.hasChunk(int, int) takes CHUNK coordinates. Passing the tile's block coordinates
+        // made virtually every machine outside the first few chunks reject network membership.
+        return isConnectable && level != null && !level.isClientSide() && level.hasChunkAt(worldPosition);
     }
 
     public void onNetworkChanged() {

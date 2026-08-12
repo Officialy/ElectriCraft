@@ -23,6 +23,7 @@ import net.minecraft.world.item.equipment.ArmorMaterials;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,28 +34,82 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-import reika.dragonapi.libraries.java.ReikaJavaLibrary;
 import reika.dragonapi.libraries.ReikaEntityHelper;
-import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.base.ElectriBlock;
 import reika.electricraft.blockentities.modinterface.BlockEntityRFCable;
 import reika.electricraft.network.WireNetwork;
 import reika.electricraft.registry.WireType;
 import reika.electricraft.blockentities.BlockEntityWire;
 import reika.rotarycraft.RotaryCraft;
-import reika.rotarycraft.api.interfaces.Fillable;
 import reika.rotarycraft.entities.EntityDischarge;
 import reika.rotarycraft.registry.SoundRegistry;
 
 //@Strippable(value = {"mcp.mobius.waila.api.IWailaDataProvider"})
 public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 
-	private static final int nWires = ReikaJavaLibrary.getEnumLengthWithoutInitializing(WireType.class);
+	private final WireType wireType;
+	private final boolean insulated;
 
-	public BlockWire(Properties properties) {
+	public BlockWire(Properties properties, WireType wireType, boolean insulated) {
 		super(properties);
+		this.wireType = wireType;
+		this.insulated = insulated;
 		//this.setBlockBounds(0.25F, 0.25F, 0.25F, 0.75F, 0.75F, 0.75F);
+	}
+
+	public WireType getWireType() {
+		return wireType;
+	}
+
+	public boolean isInsulated() {
+		return insulated;
+	}
+
+	@Override
+	public boolean hasDynamicShape() {
+		return true;
+	}
+
+	@Override
+	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		return this.connectionShape(level, pos);
+	}
+
+	@Override
+	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		return this.connectionShape(level, pos);
+	}
+
+	/** The visual conductor and physical hitbox now use the same material-dependent width. */
+	private VoxelShape connectionShape(BlockGetter level, BlockPos pos) {
+		double half = insulated ? 1D / 6D : 1D / 8D;
+		double min = .5D - half;
+		double max = .5D + half;
+		VoxelShape shape = Shapes.create(min, min, min, max, max, max);
+		if (!(level instanceof Level world) || !(level.getBlockEntity(pos) instanceof BlockEntityWire wire))
+			return shape;
+
+		for (Direction queriedSide : Direction.values()) {
+			if (!wire.isConnectedOnSideAt(world, pos.getX(), pos.getY(), pos.getZ(), queriedSide))
+				continue;
+			// BlockEntityWire preserves V31a's inverted non-X query convention; match RenderWire.
+			Direction side = queriedSide.getStepX() == 0 ? queriedSide.getOpposite() : queriedSide;
+			VoxelShape arm = switch (side) {
+				case DOWN -> Shapes.create(min, 0, min, max, min, max);
+				case UP -> Shapes.create(min, max, min, max, 1, max);
+				case NORTH -> Shapes.create(min, min, 0, max, max, min);
+				case SOUTH -> Shapes.create(min, min, max, max, max, 1);
+				case WEST -> Shapes.create(0, min, min, min, max, max);
+				case EAST -> Shapes.create(max, min, min, 1, max, max);
+			};
+			shape = Shapes.joinUnoptimized(shape, arm, BooleanOp.OR);
+		}
+		return shape.optimize();
 	}
 
 	@Override
@@ -67,17 +122,6 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 	@Override
 	public  BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
 		return new BlockEntityWire(pPos, pState);
-	}
-
-	@Override
-	public void setPlacedBy(Level world, BlockPos pos, BlockState state, net.minecraft.world.entity.LivingEntity placer, ItemStack stack) {
-		super.setPlacedBy(world, pos, state, placer, stack);
-		//The single wire item carries its type/insulation in stack tags (was item metadata in 1.7.10).
-		if (world.getBlockEntity(pos) instanceof BlockEntityWire te && ReikaItemHelper.hasStackTag(stack)) {
-			var tag = ReikaItemHelper.getStackTag(stack);
-			te.setWireType(WireType.wireList[tag.getIntOr("wtype", WireType.TIN.ordinal()) % WireType.wireList.length]);
-			te.insulated = tag.getBooleanOr("insul", false);
-		}
 	}
 
 /*	@Override
@@ -98,29 +142,8 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder context) {
-		// 26.1 fix: same NPE pattern as the other ElectriCraft drop overrides — null BlockPos
-		// crashed the moment any wire was broken. Use the loot-context BLOCK_ENTITY param.
-		// Defensive fallback: if BE entry missing, drop the default copper-insulated wire so
-		// the user doesn't lose the block entirely.
 		ArrayList<ItemStack> li = new ArrayList<>();
-		BlockEntity raw = context.getOptionalParameter(
-				LootContextParams.BLOCK_ENTITY);
-		ItemStack is;
-		boolean isSuperconductor;
-		if (raw instanceof BlockEntityWire te) {
-			is = te.insulated ? te.getWireType().getCraftedInsulatedProduct() : te.getWireType().getCraftedProduct();
-			isSuperconductor = te.getWireType() == WireType.SUPERCONDUCTOR;
-		} else {
-			is = WireType.COPPER.getCraftedInsulatedProduct();
-			isSuperconductor = false;
-		}
-		if (isSuperconductor) {
-			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
-			//The wire item is a plain BlockItem now, not the old Fillable placer — don't cast.
-			final int cap = is.getItem() instanceof Fillable f ? f.getCapacity(is) : 25;
-			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", cap));
-		}
-		li.add(is);
+		li.add(insulated ? wireType.getCraftedInsulatedProduct() : wireType.getCraftedProduct());
 		return li;
 	}
 
@@ -186,12 +209,6 @@ public class BlockWire extends ElectriBlock {//implements IWailaDataProvider {
 		}	}
 	public ItemStack getPickBlock(BlockHitResult target, Level world, int x, int y, int z)
 	{
-		BlockEntityWire te = (BlockEntityWire)world.getBlockEntity(new BlockPos(x, y, z));
-		ItemStack is = te.insulated ? te.getWireType().getCraftedInsulatedProduct() : te.getWireType().getCraftedProduct();
-		if (te.getWireType() == WireType.SUPERCONDUCTOR) {
-			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putBoolean("fluid", true));
-			ReikaItemHelper.updateStackTag(is, __T__ -> __T__.putInt("lvl", 25));
-		}
-		return is;
+		return insulated ? wireType.getCraftedInsulatedProduct() : wireType.getCraftedProduct();
 	}
 }

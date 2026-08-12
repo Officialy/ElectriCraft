@@ -34,6 +34,7 @@ import reika.dragonapi.modinteract.lua.LuaMethod;
 import reika.electricraft.base.NetworkBlockEntity;
 import reika.electricraft.registry.*;
 import reika.electricraft.registry.ElectriModelLayers;
+import reika.electricraft.client.ElectriModelOutlineRenderer;
 
 @Mod(ElectriCraft.MODID)
 public class ElectriCraft extends DragonAPIMod {
@@ -56,6 +57,7 @@ public class ElectriCraft extends DragonAPIMod {
 
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
             ElectriModelLayers.init(modEventBus);
+            NeoForge.EVENT_BUS.addListener(ElectriModelOutlineRenderer::extract);
             modEventBus.addListener(this::registerScreens);
             modEventBus.addListener(this::addClientReloadListeners);
         }
@@ -67,6 +69,8 @@ public class ElectriCraft extends DragonAPIMod {
         reika.electricraft.registry.ElectriTabs.init(modEventBus);
         ElectriBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         modEventBus.addListener(ElectriBlockEntities::registerCapabilities);
+        ElectriGameTests.TEST_INSTANCE_TYPES.register(modEventBus);
+        modEventBus.addListener(ElectriGameTests::onRegisterGameTests);
         reika.electricraft.registry.ElectriMenus.init(modEventBus);
 
         ReikaPacketHelper.registerPacketHandler(instance, packetChannel, new ElectriPacketCore());
@@ -149,6 +153,4 @@ public class ElectriCraft extends DragonAPIMod {
         return null;//todo config.getConfigFolder();
     }
 }
-
-
 

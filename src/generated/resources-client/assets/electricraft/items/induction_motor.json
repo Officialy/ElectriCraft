@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "electricraft:item/induction_motor",
+    "model": {
+      "type": "electricraft:machine",
+      "machine": "motor"
+    }
+  }
+}

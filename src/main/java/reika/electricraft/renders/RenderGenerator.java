@@ -11,11 +11,19 @@ package reika.electricraft.renders;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
+import reika.electricraft.ElectriCraft;
 import net.minecraft.world.level.block.state.BlockState;
 import reika.electricraft.base.ElectriTERenderer;
 import reika.electricraft.blockentities.BlockEntityGenerator;
@@ -43,22 +51,28 @@ public class RenderGenerator extends ElectriTERenderer<BlockEntityGenerator>
         stack.mulPose(Axis.ZP.rotationDegrees(180));
 
         if (tile.isFlipped && tile.getFacing().getStepZ() != 0) {
-            stack.mulPose(Axis.ZP.rotationDegrees(180));
+            stack.mulPose(Axis.YP.rotationDegrees(180));
         }
         VertexConsumer vertexconsumer = bufferSource;
-        generatorModel.renderToBuffer(stack, vertexconsumer, light, 0, 0xFFFFFFFF);
+        generatorModel.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         stack.popPose();
 //		this.closeGL(tile);
 	}
 
-    // 1.21.5: render -> submit; @Override dropped
-    public void render(BlockEntityGenerator tile, float p_112308_, PoseStack stack, VertexConsumer multiBufferSource, int light, int p_112312_) {
-		if (this.doRenderModel(stack, tile))
-			this.renderBlockEntityGeneratorAt(tile, stack, multiBufferSource, light);
-		if (tile.isInWorld()){// && MinecraftForgeClient.getRenderPass() == 1) {
-			IORenderer.renderIO(stack, multiBufferSource, tile, tile.getX(), tile.getY(), tile.getZ());
-		}
-	}
+        @Override
+    public void submit(BlockEntityRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        var level = Minecraft.getInstance().level;
+        if (level == null)
+            return;
+        BlockEntity be = level.getBlockEntity(state.blockPos);
+        if (!(be instanceof BlockEntityGenerator tile) || !this.doRenderModel(poseStack, tile))
+            return;
 
+        PoseStack snapped = new PoseStack();
+        snapped.last().set(poseStack.last());
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "textures/generatortex.png")),
+                (pose, vertices) -> this.renderBlockEntityGeneratorAt(tile, snapped, vertices, state.lightCoords));
+        if (tile.isInWorld())
+            IORenderer.renderIO(poseStack, collector, tile, tile.getBlockPos());
+    }
 }
-

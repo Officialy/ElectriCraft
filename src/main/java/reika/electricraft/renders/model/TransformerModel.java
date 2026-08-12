@@ -2,6 +2,7 @@ package reika.electricraft.renders.model;
     
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -91,6 +92,55 @@ public class TransformerModel extends Model<Unit>
         
         return LayerDefinition.create(definition, 64, 32);
     }
-    // 1.21.5: Model.renderToBuffer is now final; 8-arg override removed.
-}
+    /** Renders the exact V31a winding-density geometry for the two transformer coils. */
+    public void renderAll(PoseStack stack, VertexConsumer vertices, int light, int primaryTurns, int secondaryTurns) {
+        shape1.render(stack, vertices, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        shape1a.render(stack, vertices, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        shape2.render(stack, vertices, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        shape2a.render(stack, vertices, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        renderCoil(stack, vertices, light, shape3, primaryTurns);
+        renderCoil(stack, vertices, light, shape3a, secondaryTurns);
+    }
 
+    private static void renderCoil(PoseStack stack, VertexConsumer vertices, int light,
+                                   ModelPart coil, int turns) {
+        if (turns == 1) {
+            for (int i = 0; i < 4; i++) {
+                stack.pushPose();
+                stack.translate(0, i / 8D, 0);
+                coil.render(stack, vertices, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+                stack.popPose();
+            }
+            return;
+        }
+
+        int count;
+        double scale;
+        double offset;
+        double spacing;
+        if (turns < 16) {
+            count = 6;
+            scale = 0.75;
+            offset = 0.25;
+            spacing = 12;
+        } else if (turns < 128) {
+            count = 8;
+            scale = 0.5;
+            offset = 0.75;
+            spacing = 16;
+        } else {
+            count = 16;
+            scale = 0.25;
+            offset = 2.25;
+            spacing = 32;
+        }
+        for (int i = 0; i < count; i++) {
+            stack.pushPose();
+            stack.translate(0, i / spacing, 0);
+            stack.scale(1, (float)scale, 1);
+            stack.translate(0, offset, 0);
+            coil.render(stack, vertices, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+            stack.popPose();
+        }
+    }
+}

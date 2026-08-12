@@ -36,8 +36,11 @@ public class ElectriModelLayers {
         event.registerBlockEntityRenderer(ElectriBlockEntities.TRANSFORMER.get(), RenderTransformer::new);
         event.registerBlockEntityRenderer(ElectriBlockEntities.MOTOR.get(), RenderMotor::new);
         event.registerBlockEntityRenderer(ElectriBlockEntities.GENERATOR.get(), RenderGenerator::new);
-        event.registerBlockEntityRenderer(ElectriBlockEntities.BATTERY.get(), RenderModBattery::new);
+        event.registerBlockEntityRenderer(ElectriBlockEntities.BATTERY.get(), RenderElectricBattery::new);
+        event.registerBlockEntityRenderer(ElectriBlockEntities.RF_BATTERY.get(), RenderModBattery::new);
         event.registerBlockEntityRenderer(ElectriBlockEntities.WIRE.get(), RenderWire::new);
+        event.registerBlockEntityRenderer(ElectriBlockEntities.RF_CABLE.get(), RenderCable::new);
+        event.registerBlockEntityRenderer(ElectriBlockEntities.WIRELESS_CHARGER.get(), RenderWirelessCharger::new);
     }
 
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {

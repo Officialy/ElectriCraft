@@ -23,10 +23,26 @@ public class ElectriLang extends LanguageProvider {
         add("tab.electricraft", "ElectriCraft");
 
         ElectriBlocks.BLOCKS.getEntries().forEach(holder ->
-                addBlock(holder, prettify(holder.getId().getPath())));
+                addBlock(holder, blockName(holder.getId().getPath())));
 
         ElectriItems.ITEMS.getEntries().forEach(holder ->
-                addItem(holder, prettify(holder.getId().getPath())));
+                addItem(holder, itemName(holder.getId().getPath())));
+    }
+
+    private static String blockName(String path) {
+        if (path.startsWith("fuse_") && path.endsWith("a"))
+            return path.substring(5, path.length() - 1) + " A Fuse";
+        if (path.equals("rfcable"))
+            return "RF Cable";
+        if (path.equals("electrirfbattery"))
+            return "RF Battery";
+        if (path.equals("electrichargepad"))
+            return "Wireless Charger";
+        return prettify(path);
+    }
+
+    private static String itemName(String path) {
+        return path.equals("rfbattery") ? "RF Battery" : prettify(path);
     }
 
     private static String prettify(String path) {

@@ -30,5 +30,6 @@ public final class ElectriDataProviders {
         event.createProvider(ElectriBlockTagsProvider::new);
         event.createProvider(ElectriLootProvider::new);
         event.createProvider(ElectriRecipeProvider::new);
+        event.createProvider(ElectriTestStructureProvider::new);
     }
 }

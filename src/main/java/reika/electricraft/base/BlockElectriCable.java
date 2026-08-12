@@ -19,6 +19,8 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.BooleanOp;
 
 
 public abstract class BlockElectriCable extends Block implements EntityBlock {
@@ -30,6 +32,38 @@ public abstract class BlockElectriCable extends Block implements EntityBlock {
     @Override
     public boolean hasDynamicShape() {
         return true;
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return this.connectionShape(level, pos);
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return this.connectionShape(level, pos);
+    }
+
+    private VoxelShape connectionShape(BlockGetter level, BlockPos pos) {
+        double min = .3;
+        double max = .7;
+        VoxelShape shape = Shapes.create(min, min, min, max, max, max);
+        if (!(level instanceof Level world) || !(level.getBlockEntity(pos) instanceof ElectriCable cable))
+            return shape;
+        for (Direction side : Direction.values()) {
+            if (!cable.isConnectedOnSideAt(world, pos, side))
+                continue;
+            VoxelShape arm = switch (side) {
+                case DOWN -> Shapes.create(min, 0, min, max, min, max);
+                case UP -> Shapes.create(min, max, min, max, 1, max);
+                case NORTH -> Shapes.create(min, min, 0, max, max, min);
+                case SOUTH -> Shapes.create(min, min, max, max, max, 1);
+                case WEST -> Shapes.create(0, min, min, min, max, max);
+                case EAST -> Shapes.create(max, min, min, 1, max, max);
+            };
+            shape = Shapes.joinUnoptimized(shape, arm, BooleanOp.OR);
+        }
+        return shape.optimize();
     }
 
  /*   @Override

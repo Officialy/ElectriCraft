@@ -27,13 +27,14 @@ import reika.electricraft.auxiliary.interfaces.WireFuse;
 import reika.electricraft.base.BlockEntityWireComponent;
 import reika.electricraft.registry.ElectriBlockEntities;
 import reika.electricraft.registry.ElectriTiles;
+import reika.electricraft.blocks.BlockElectricFuse;
 import reika.rotarycraft.auxiliary.interfaces.NBTMachine;
 
 public class BlockEntityFuse extends BlockEntityWireComponent implements WireFuse, NBTMachine {
 
 	private boolean overloaded;
 
-	private int currentLimit;
+	private int legacyCurrentLimit = 32;
 
 	public static final int[] TIERS = {
 		32,
@@ -47,7 +48,7 @@ public class BlockEntityFuse extends BlockEntityWireComponent implements WireFus
 	}
 	public BlockEntityFuse(int limit, BlockPos pos, BlockState state) {
 		super(null, pos, state);
-		currentLimit = limit;
+		legacyCurrentLimit = limit;
 	}
 
 	@Override
@@ -57,7 +58,9 @@ public class BlockEntityFuse extends BlockEntityWireComponent implements WireFus
 
 	@Override
 	public int getMaxCurrent() {
-		return currentLimit;
+		return getBlockState().getBlock() instanceof BlockElectricFuse block
+				? block.getCurrentLimit()
+				: legacyCurrentLimit;
 	}
 
 	@Override
@@ -102,7 +105,7 @@ public class BlockEntityFuse extends BlockEntityWireComponent implements WireFus
 		super.readSyncTag(NBT);
 
 		overloaded = NBT.getBooleanOr("overload", false);
-		currentLimit = NBT.getIntOr("limit", 0);
+		legacyCurrentLimit = NBT.getIntOr("limit", TIERS[0]);
 	}
 
 	@Override
@@ -111,24 +114,24 @@ public class BlockEntityFuse extends BlockEntityWireComponent implements WireFus
 
 
 		NBT.putBoolean("overload", overloaded);
-		NBT.putInt("limit", currentLimit);
+		NBT.putInt("limit", this.getMaxCurrent());
 	}
 
 	public void setCurrentLimit(int limit) {
-		currentLimit = limit;
+		legacyCurrentLimit = limit;
 	}
 
 	@Override
 	public CompoundTag getTagsToWriteToStack() {
 		CompoundTag tag = new CompoundTag();
-		tag.putInt("currentlim", currentLimit);
+		tag.putInt("currentlim", this.getMaxCurrent());
 		return tag;
 	}
 
 	@Override
 	public void setDataFromItemStackTag(CompoundTag NBT) {
 		if (NBT != null) {
-			currentLimit = NBT.getIntOr("currentlim", 0);
+			legacyCurrentLimit = NBT.getIntOr("currentlim", TIERS[0]);
 		}
 	}
 

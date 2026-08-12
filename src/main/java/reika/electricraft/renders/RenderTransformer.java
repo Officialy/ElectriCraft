@@ -12,6 +12,11 @@ package reika.electricraft.renders;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -51,24 +56,61 @@ public class RenderTransformer extends ElectriTERenderer<BlockEntityTransformer>
 		stack.mulPose(Axis.ZP.rotationDegrees(180));
 
 		VertexConsumer vertexconsumer = bufferSource;
-		transformer.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+		transformer.renderAll(stack, vertexconsumer, light, tile.getN1(), tile.getN2());
 		stack.popPose();
 //		var14.renderAll(tile, ReikaJavaLibrary.makeListFrom(tile.getN1(), tile.getN2()), tile.phi, 0);
 	}
 
-	// 1.21.5: render -> submit; @Override dropped
-	public void render(BlockEntityTransformer tile, float p_112308_, PoseStack stack, VertexConsumer multiBufferSource, int light, int p_112312_) {
-		BlockEntityTransformer te = tile;
-		if (this.doRenderModel(stack, te))
-			this.renderBlockEntityTransformerAt(te, stack, multiBufferSource, light);
-		if (te.isInWorld()) {// && MinecraftForgeClient.getRenderPass() == 1) {
-			IORenderer.renderIO(stack, multiBufferSource, tile, tile.getX(), tile.getY(), tile.getZ());
-			this.renderArrow(te, tile.getX(), tile.getY(), tile.getZ());
-		}
-	}
+	    @Override
+    public void submit(BlockEntityRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        var level = Minecraft.getInstance().level;
+        if (level == null)
+            return;
+        BlockEntity be = level.getBlockEntity(state.blockPos);
+        if (!(be instanceof BlockEntityTransformer tile) || !this.doRenderModel(poseStack, tile))
+            return;
 
-	private void renderArrow(BlockEntityTransformer te, double par2, double par4, double par6) {
-		// TODO: Port to 26.1 rendering API (Tesselator.getBuilder() + vertex().endVertex() + end() all removed)
-	}
+        PoseStack snapped = new PoseStack();
+        snapped.last().set(poseStack.last());
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(TransformerModel.TEXTURE_LOCATION),
+                (pose, vertices) -> this.renderBlockEntityTransformerAt(tile, snapped, vertices, state.lightCoords));
+        if (tile.isInWorld())
+            IORenderer.renderIO(poseStack, collector, tile, tile.getBlockPos());
+        this.renderArrow(tile, poseStack, collector);
+    }
+
+    /** Exact V31a transformer-facing pulse, expressed through the 26.2 line pipeline. */
+    private void renderArrow(BlockEntityTransformer tile, PoseStack stack, SubmitNodeCollector collector) {
+        int alpha = Math.max(0, 512 - tile.getTicksExisted() * 8);
+        if (alpha <= 0)
+            return;
+        Direction facing = tile.getFacing();
+        float headX = 0.5F + facing.getStepX() * 0.375F;
+        float headZ = 0.5F + facing.getStepZ() * 0.375F;
+        int color = (alpha << 24) | 0xFFFFFF;
+        collector.submitCustomGeometry(stack, RenderTypes.lines(), (pose, vertices) -> {
+            arrowLine(pose, vertices, 0.5F, 1.1F, 0.5F, headX, 1.1F, headZ, color);
+            arrowLine(pose, vertices, headX, 1.1F, headZ,
+                    headX - facing.getStepX() * 0.125F + facing.getStepZ() * 0.08F, 1.1F,
+                    headZ - facing.getStepZ() * 0.125F + facing.getStepX() * 0.08F, color);
+            arrowLine(pose, vertices, headX, 1.1F, headZ,
+                    headX - facing.getStepX() * 0.125F - facing.getStepZ() * 0.08F, 1.1F,
+                    headZ - facing.getStepZ() * 0.125F - facing.getStepX() * 0.08F, color);
+        });
+    }
+
+    private static void arrowLine(PoseStack.Pose pose, VertexConsumer vertices,
+                                  float x1, float y1, float z1, float x2, float y2, float z2, int color) {
+        float nx = x2 - x1;
+        float ny = y2 - y1;
+        float nz = z2 - z1;
+        float length = (float)Math.sqrt(nx * nx + ny * ny + nz * nz);
+        if (length > 0) {
+            nx /= length;
+            ny /= length;
+            nz /= length;
+        }
+        vertices.addVertex(pose, x1, y1, z1).setColor(color).setNormal(pose, nx, ny, nz).setLineWidth(5F);
+        vertices.addVertex(pose, x2, y2, z2).setColor(color).setNormal(pose, nx, ny, nz).setLineWidth(5F);
+    }
 }
-

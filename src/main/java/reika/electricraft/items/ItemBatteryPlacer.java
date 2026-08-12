@@ -9,16 +9,15 @@
  ******************************************************************************/
 package reika.electricraft.items;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -26,10 +25,8 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
-
 import reika.dragonapi.base.BlockEntityBase;
 import reika.dragonapi.libraries.level.ReikaWorldHelper;
 import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
@@ -39,20 +36,16 @@ import reika.electricraft.auxiliary.interfaces.BatteryTile;
 import reika.electricraft.registry.BatteryType;
 import reika.electricraft.registry.ElectriBlocks;
 
-public class ItemBatteryPlacer extends Item {
+import java.util.List;
+import java.util.function.Consumer;
 
-    public ItemBatteryPlacer(Properties properties) {
-        super(properties);
-    }
+public class ItemBatteryPlacer extends BlockItem {
 
-    @Override
-    public Component getName(ItemStack stack) {
-        BatteryType tier = BatteryType.REDSTONE;
-        CompoundTag tag = ReikaItemHelper.getStackTag(stack);
-        if (tag != null)
-            tier = BatteryType.batteryList[tag.getIntOr("btype", 0) % BatteryType.batteryList.length];
-        String n = tier.name().charAt(0) + tier.name().substring(1).toLowerCase(java.util.Locale.ROOT);
-        return Component.literal(n + " Battery");
+    private final BatteryType tier;
+
+    public ItemBatteryPlacer(Block block, BatteryType tier, Properties properties) {
+        super(block, properties);
+        this.tier = tier;
     }
 
     @Override
@@ -80,17 +73,19 @@ public class ItemBatteryPlacer extends Item {
 //                --is.getCount();
             world.setBlock(pos, this.getPlacingBlock().defaultBlockState(), /*this.getPlacingMeta(is),*/ 3);
         }
-        world.playLocalSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, /*todo ElectriTiles.BATTERY.getPlaceSound()*/ null, SoundSource.BLOCKS, 1F, 1.5F, false);
+        world.playSound(null, pos, SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1F, 1.5F);
         BlockEntityBase te = (BlockEntityBase) world.getBlockEntity(pos);
         te.setPlacer(context.getPlayer());
         //te.setBlockMetadata(RotaryAux.get4SidedMetadataFromPlayerLook(ep));
         ((BatteryTile) te).setEnergyFromNBT(context.getItemInHand());
+        if (!world.isClientSide() && context.getPlayer() != null && !context.getPlayer().isCreative())
+            context.getItemInHand().shrink(1);
 
         return InteractionResult.SUCCESS;
     }
 
     protected Block getPlacingBlock() {
-        return ElectriBlocks.BATTERY.get();
+        return this.getBlock();
     }
 
 
@@ -109,11 +104,10 @@ public class ItemBatteryPlacer extends Item {
     @Override
     public void appendHoverText(ItemStack is, Item.TooltipContext ctx, TooltipDisplay display, Consumer<Component> li, TooltipFlag flag) {
         long e = 0;
-        BatteryType bat = BatteryType.REDSTONE;
+        BatteryType bat = tier;
         CompoundTag tag = ReikaItemHelper.getStackTag(is);
         if (tag != null) {
             e = tag.getLongOr("nrg", 0L);
-            bat = BatteryType.batteryList[tag.getIntOr("btype", 0) % BatteryType.batteryList.length];
         }
         long max = bat.maxCapacity;
         String sg = ReikaEngLibrary.getSIPrefix(e);
@@ -131,7 +125,11 @@ public class ItemBatteryPlacer extends Item {
     }
 
     protected boolean checkValidBounds(ItemStack is, Player ep, Level world, BlockPos pos) {
-        return pos.getY() > 0 && pos.getY() < world.getHeight() - 1;
+        return pos.getY() >= world.getMinY() && pos.getY() < world.getMaxY();
+    }
+
+    public BatteryType getBatteryType() {
+        return tier;
     }
 
 /*	@Override

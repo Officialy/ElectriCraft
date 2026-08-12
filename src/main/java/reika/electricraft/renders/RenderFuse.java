@@ -12,6 +12,11 @@ package reika.electricraft.renders;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import com.mojang.math.Axis;
 import org.joml.Vector3f;
 import net.minecraft.client.renderer.rendertype.RenderType;
@@ -49,7 +54,7 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
 
         Level level = tile.getLevel();
         boolean flag = level != null;
-        BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.FUSE.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
+        BlockState blockstate = flag ? tile.getBlockState() : ElectriBlocks.FUSE_32A.get().defaultBlockState().setValue(BlockElectricMachine.FACING, Direction.SOUTH);
 
         float facing = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
 
@@ -75,7 +80,6 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
 
 
 //		stack.mulPose(var11, 0.0F, 1.0F, 0.0F);
-        stack.translate(0, -0.1875, 0);
 //		modelFuse.renderAll(tile, null, tile.phi);
         VertexConsumer vertexconsumer = bufferSource;
         modelFuse.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
@@ -84,16 +88,33 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
 //		this.closeGL(tile);
     }
 
-    // 1.21.5: render -> submit; @Override dropped
-    public void render(BlockEntityFuse tile, float p_112308_, PoseStack stack, VertexConsumer bufferSource, int light, int p_112312_) {
+        @Override
+    public void submit(BlockEntityRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        var level = Minecraft.getInstance().level;
+        if (level == null)
+            return;
+        BlockEntity be = level.getBlockEntity(state.blockPos);
+        if (!(be instanceof BlockEntityFuse tile) || !this.doRenderModel(poseStack, tile))
+            return;
 
-        {
-            //if (this.doRenderModel((BlockEntityFuse)tile))
-            this.renderBlockEntityFuseAt(tile, stack, bufferSource, light);
-            if (tile.isInWorld()) {// && MinecraftForgeClient.getRenderPass() == 1) {
-                IORenderer.renderIO(stack, bufferSource, tile, tile.getX(), tile.getY(), tile.getZ());
-            }
-        }
+        PoseStack snapped = new PoseStack();
+        snapped.last().set(poseStack.last());
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(this.getTexture(tile)),
+                (pose, vertices) -> this.renderBlockEntityFuseAt(tile, snapped, vertices, state.lightCoords));
+        if (tile.isInWorld())
+            IORenderer.renderIO(poseStack, collector, tile, tile.getBlockPos());
+    }
+
+    private Identifier getTexture(BlockEntityFuse tile) {
+        if (tile.isOverloaded())
+            return Identifier.fromNamespaceAndPath(MODID, "textures/fusetex-burn.png");
+        float fraction = tile.getWireCurrent() / (float)tile.getMaxCurrent();
+        if (fraction >= 0.75F)
+            return Identifier.fromNamespaceAndPath(MODID, "textures/fusetex-hot3.png");
+        if (fraction >= 0.5F)
+            return Identifier.fromNamespaceAndPath(MODID, "textures/fusetex-hot2.png");
+        if (fraction >= 0.25F)
+            return Identifier.fromNamespaceAndPath(MODID, "textures/fusetex-hot.png");
+        return Identifier.fromNamespaceAndPath(MODID, "textures/fusetex.png");
     }
 }
-

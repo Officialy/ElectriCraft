@@ -10,7 +10,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "electricraft:electrirfbattery"
+          "name": "electricraft:rfbattery"
         }
       ],
       "rolls": 1.0

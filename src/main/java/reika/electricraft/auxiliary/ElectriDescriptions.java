@@ -9,16 +9,9 @@
  ******************************************************************************/
 package reika.electricraft.auxiliary;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;
-
 import reika.dragonapi.instantiable.io.XMLInterface;
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.blockentities.BlockEntityTransformer;
@@ -29,6 +22,12 @@ import reika.electricraft.registry.BatteryType;
 import reika.electricraft.registry.ElectriBook;
 import reika.electricraft.registry.ElectriTiles;
 import reika.electricraft.registry.WireType;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Loads the ElectriCraft handbook text from the {@code assets/electricraft/resources/*.xml} files
@@ -51,9 +50,10 @@ public final class ElectriDescriptions {
     private static final HashMap<ElectriTiles, Object[]> machineNotes = new HashMap<>();
     private static final HashMap<ElectriBook, Object[]> miscData = new HashMap<>();
 
-    private static final XMLInterface parents = loadData("categories");
-    private static final XMLInterface machines = loadData("machines");
-    private static final XMLInterface infos = loadData("info");
+    private static XMLInterface parents;
+    private static XMLInterface machines;
+    private static XMLInterface infos;
+    private static boolean loaded;
 
     private static XMLInterface loadData(String name) {
         XMLInterface xml = new XMLInterface(ElectriCraft.class, PARENT + name + ".xml", false);
@@ -62,6 +62,11 @@ public final class ElectriDescriptions {
         return xml;
     }
 
+    private static void reloadData() {
+        parents = loadData("categories");
+        machines = loadData("machines");
+        infos = loadData("info");
+    }
     private static String getParent(boolean locale) {
         return locale && FMLEnvironment.getDist() == Dist.CLIENT ? getLocalizedParent() : RESOURCE_ROOT;
     }
@@ -114,13 +119,20 @@ public final class ElectriDescriptions {
 
         data.clear();
         notes.clear();
+        machineData.clear();
+        machineNotes.clear();
+        miscData.clear();
+
+        reloadData();
         loadNumericalData();
-
-        machines.reread();
-        infos.reread();
-        parents.reread();
-
         loadData();
+
+        loaded = true;
+    }
+
+    private static void ensureLoaded() {
+        if (!loaded)
+            reload();
     }
 
     private static void addEntry(ElectriBook h, String sg) {
@@ -128,6 +140,9 @@ public final class ElectriDescriptions {
     }
 
     public static void loadData() {
+        if (parents == null || machines == null || infos == null)
+            reloadData();
+
         List<ElectriBook> parenttabs = ElectriBook.getCategoryTabs();
         List<ElectriBook> machinetabs = ElectriBook.getMachineTabs();
         ElectriBook[] infotabs = ElectriBook.getInfoTabs();
@@ -173,16 +188,13 @@ public final class ElectriDescriptions {
     }
 
     public static String getData(ElectriBook h) {
+        ensureLoaded();
         return data.getOrDefault(h, "");
     }
 
     public static String getNotes(ElectriBook h) {
+        ensureLoaded();
         return notes.getOrDefault(h, "");
-    }
-
-    static {
-        loadNumericalData();
-        loadData();
     }
 
     /** (Re)parses the handbook XML on client resource reload, so language changes pick up new text. */
@@ -194,11 +206,11 @@ public final class ElectriDescriptions {
     }
 
     private static void loadNumericalData() {
-        addData(ElectriBook.LIMITS, (Object) WireType.getLimitsForDisplay());
+        addData(ElectriBook.LIMITS, WireType.getLimitsForDisplay());
         addNotes(ElectriTiles.GENERATOR, WireNetwork.TORQUE_PER_AMP, WireNetwork.TORQUE_PER_AMP);
         addData(ElectriTiles.TRANSFORMER, BlockEntityTransformer.MAXTEMP, BlockEntityTransformer.MAXCURRENT);
         addData(ElectriTiles.RFBATTERY, BlockEntityRFBattery.CAPACITY);
-        addNotes(ElectriTiles.BATTERY, (Object) BatteryType.getDataForDisplay());
-        addNotes(ElectriTiles.WIRELESSPAD, (Object) BlockEntityWirelessCharger.ChargerTiers.getDataForDisplay());
+        addNotes(ElectriTiles.BATTERY, BatteryType.getDataForDisplay());
+        addNotes(ElectriTiles.WIRELESSPAD, BlockEntityWirelessCharger.ChargerTiers.getDataForDisplay());
     }
 }

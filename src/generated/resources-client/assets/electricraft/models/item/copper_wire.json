@@ -1,0 +1,8 @@
+{
+  "parent": "electricraft:block/wire_item_bare",
+  "textures": {
+    "end": "electricraft:blocks/wire/copper_end",
+    "particle": "electricraft:blocks/wire/copper",
+    "side": "electricraft:blocks/wire/copper"
+  }
+}

@@ -1,6 +1,9 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "electricraft:block/rfcable"
+    "type": "minecraft:special",
+    "base": "electricraft:item/rfcable",
+    "model": {
+      "type": "electricraft:rf_cable"
+    }
   }
 }

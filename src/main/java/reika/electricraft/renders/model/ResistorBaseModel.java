@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -107,30 +108,31 @@ public abstract class ResistorBaseModel extends RotaryModelBase {
     protected abstract List<ResistorBand> getBands();
 
     @Override
-    public final void renderAll(PoseStack stack, VertexConsumer tex, int light, BlockEntity te, ArrayList<?> li, float phi, float theta) {
-        shape1.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
-        shape2a.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
-        shape2.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
-        shape3a.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
-        shape3.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
-        shape3b.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
-        shape3c.render(stack, tex, 0, 0, 0xFFFFFFFF); //todo ints
+    public final void renderAll(PoseStack stack, VertexConsumer tex, int light, BlockEntity te,
+                                ArrayList<?> conditions, float phi, float theta) {
+        shape1.render(stack, tex, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        shape2a.render(stack, tex, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        shape2.render(stack, tex, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        shape3a.render(stack, tex, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        shape3.render(stack, tex, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        shape3b.render(stack, tex, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        shape3c.render(stack, tex, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 
         List<ResistorBand> bands = this.getBands();
         for (int i = 0; i < bands.size(); i++) {
             ResistorBand rb = bands.get(i);
-            rb.color = (BlockEntityResistorBase.ColorBand) li.get(i);
-            // 1.21.5: setGLColorBlend (fixed-function) gone; color now passed to .render(...).
-            rb.partA.render(stack, tex, 0,0, 0xFFFFFFFF); //todo both ints
-            rb.partB.render(stack, tex, 0,0, 0xFFFFFFFF);
+            BlockEntityResistorBase.ColorBand color = i < conditions.size()
+                    ? (BlockEntityResistorBase.ColorBand)conditions.get(i)
+                    : BlockEntityResistorBase.ColorBand.BLACK;
+            int argb = 0xFF000000 | color.renderColor.getColor();
+            rb.partA.render(stack, tex, light, OverlayTexture.NO_OVERLAY, argb);
+            rb.partB.render(stack, tex, light, OverlayTexture.NO_OVERLAY, argb);
         }
     }
 
     protected static class ResistorBand {
 
         private final int index;
-
-        private BlockEntityResistorBase.ColorBand color;
 
         private final ModelPart partA;
         private final ModelPart partB;
@@ -144,4 +146,3 @@ public abstract class ResistorBaseModel extends RotaryModelBase {
     }
 
 }
-

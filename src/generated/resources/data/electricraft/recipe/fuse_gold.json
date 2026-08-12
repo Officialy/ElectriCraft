@@ -12,12 +12,7 @@
     "PPP"
   ],
   "result": {
-    "components": {
-      "minecraft:custom_data": {
-        "currentlim": 8192
-      }
-    },
     "count": 8,
-    "id": "electricraft:fuse"
+    "id": "electricraft:fuse_8192a"
   }
 }

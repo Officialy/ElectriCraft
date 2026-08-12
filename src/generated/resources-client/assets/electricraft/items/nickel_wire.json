@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "electricraft:item/nickel_wire",
+    "model": {
+      "type": "electricraft:wire",
+      "insulated": false,
+      "material": "NICKEL"
+    }
+  }
+}

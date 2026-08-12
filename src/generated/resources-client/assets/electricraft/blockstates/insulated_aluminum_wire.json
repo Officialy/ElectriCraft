@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "electricraft:block/insulated_aluminum_wire"
+    }
+  }
+}

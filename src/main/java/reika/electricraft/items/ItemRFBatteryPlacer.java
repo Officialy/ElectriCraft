@@ -33,7 +33,7 @@ import reika.electricraft.blockentities.modinterface.BlockEntityRFBattery;
 public class ItemRFBatteryPlacer extends ItemBatteryPlacer {
 
 	public ItemRFBatteryPlacer(Properties properties) {
-		super(properties);
+		super(ElectriBlocks.RFBATTERY.get(), reika.electricraft.registry.BatteryType.REDSTONE, properties);
 	}
 
 	public void getSubItems(Item item, CreativeModeTab tab, List<ItemStack> li) {

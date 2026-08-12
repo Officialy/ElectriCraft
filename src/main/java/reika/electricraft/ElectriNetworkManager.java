@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 
 import net.minecraft.world.level.Level;
+import net.minecraft.server.MinecraftServer;
 import reika.dragonapi.auxiliary.trackers.TickRegistry;
 import reika.electricraft.auxiliary.ElectriNetworkEvent.ElectriNetworkRepathEvent;
 import reika.electricraft.auxiliary.ElectriNetworkEvent.ElectriNetworkTickEvent;
@@ -34,7 +35,8 @@ public class ElectriNetworkManager implements TickRegistry.TickHandler {
 	@Override
 	public void tick(TickRegistry.TickType type, Object... tickData) {
 		TickRegistry.Phase phase = (TickRegistry.Phase) tickData[0];
-		Level world = null;//todo plumb the current server level through; DimensionManager.getWorld(0) is gone in 1.21.5
+		MinecraftServer server = tickData.length > 1 && tickData[1] instanceof MinecraftServer current ? current : null;
+		Level world = server != null ? server.overworld() : null;
 		if (phase == TickRegistry.Phase.START) {
 			if (!discard.isEmpty()) {
 				networks.removeAll(discard);
@@ -81,4 +83,3 @@ public class ElectriNetworkManager implements TickRegistry.TickHandler {
 	}
 
 }
-

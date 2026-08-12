@@ -9,15 +9,10 @@
  ******************************************************************************/
 package reika.electricraft.registry;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-
 import reika.dragonapi.libraries.java.ReikaJavaLibrary;
 import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.auxiliary.ElectriBookData;
@@ -26,22 +21,26 @@ import reika.electricraft.blockentities.BlockEntityWirelessCharger;
 import reika.rotarycraft.auxiliary.interfaces.HandbookEntry;
 import reika.rotarycraft.gui.screen.GuiHandbook;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
 public enum ElectriBook implements HandbookEntry {
 
     //---------------------TOC--------------------//
     TOC("Table Of Contents", ""),
-    INFO("Info", ElectriItems.BOOK.get()),
-    CONVERSION("Conversion", ElectriTiles.GENERATOR.getCraftedProduct()),
-    TRANSPORT("Transport", WireType.SUPERCONDUCTOR.getCraftedProduct()),
-    STORAGE("Storage", BatteryType.STAR.getCraftedProduct()),
-    UTILITY("Utility", ElectriTiles.TRANSFORMER.getCraftedProduct()),
-    MODINTERFACE("Mod Interaction", ElectriTiles.RF_CABLE.getCraftedProduct()),
+    INFO("Info", ElectriItems.BOOK::toStack),
+    CONVERSION("Conversion", ElectriTiles.GENERATOR::getCraftedProduct),
+    TRANSPORT("Transport", WireType.SUPERCONDUCTOR::getCraftedProduct),
+    STORAGE("Storage", BatteryType.STAR::getCraftedProduct),
+    UTILITY("Utility", ElectriTiles.TRANSFORMER::getCraftedProduct),
+    MODINTERFACE("Mod Interaction", ElectriTiles.RF_CABLE::getCraftedProduct),
     //---------------------INFO--------------------//
     INTRO("Introduction", ""),
     PHYSICS("Electric Physics", Items.BOOK),
-    SOURCESINK("Sources and Sinks", WireType.GOLD.getCraftedInsulatedProduct()),
-    NETWORKS("Electric Networks", WireType.SUPERCONDUCTOR.getCraftedInsulatedProduct()),
-    LIMITS("Limits", WireType.COPPER.getCraftedProduct()),
+    SOURCESINK("Sources and Sinks", WireType.GOLD::getCraftedInsulatedProduct),
+    NETWORKS("Electric Networks", WireType.SUPERCONDUCTOR::getCraftedInsulatedProduct),
+    LIMITS("Limits", WireType.COPPER::getCraftedProduct),
 
     //--------------------PROCESSING---------------//
     CONVDESC("Conversion Machines", ""),
@@ -69,7 +68,7 @@ public enum ElectriBook implements HandbookEntry {
     //EUBATT(ElectriTiles.EUBATTERY),
     WIRELESSPAD(ElectriTiles.WIRELESSPAD);
 
-    private final ItemStack iconItem;
+    private final Supplier<ItemStack> iconItem;
     private final String pageTitle;
     private boolean isParent = false;
     private ElectriTiles machine;
@@ -77,7 +76,7 @@ public enum ElectriBook implements HandbookEntry {
     public static final ElectriBook[] tabList = values();
 
     ElectriBook(ElectriTiles r) {
-        this(r.getName(), r.getCraftedProduct());
+        this(r.getName(), r::getCraftedProduct);
         machine = r;
     }
 
@@ -87,18 +86,18 @@ public enum ElectriBook implements HandbookEntry {
     }
 
     ElectriBook(String name) {
-        this(name, (ItemStack) null);
+        this(name, (Supplier<ItemStack>) null);
     }
 
     ElectriBook(String name, Item icon) {
-        this(name, new ItemStack(icon));
+        this(name, () -> new ItemStack(icon));
     }
 
     ElectriBook(String name, Block icon) {
-        this(name, new ItemStack(icon));
+        this(name, () -> new ItemStack(icon));
     }
 
-    ElectriBook(String name, ItemStack icon) {
+    ElectriBook(String name, Supplier<ItemStack> icon) {
         iconItem = icon;
         pageTitle = name;
     }
@@ -163,7 +162,10 @@ public enum ElectriBook implements HandbookEntry {
 
     @Override
     public ItemStack getTabIcon() {
-        return iconItem;
+        if (iconItem == null)
+            return ItemStack.EMPTY;
+        ItemStack icon = iconItem.get();
+        return icon != null ? icon : ItemStack.EMPTY;
     }
 
     @Override

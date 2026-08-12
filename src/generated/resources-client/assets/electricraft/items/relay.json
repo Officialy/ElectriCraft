@@ -1,6 +1,10 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "electricraft:block/relay"
+    "type": "minecraft:special",
+    "base": "electricraft:item/relay",
+    "model": {
+      "type": "electricraft:machine",
+      "machine": "relay"
+    }
   }
 }

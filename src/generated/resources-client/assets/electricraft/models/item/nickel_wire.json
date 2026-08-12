@@ -1,0 +1,8 @@
+{
+  "parent": "electricraft:block/wire_item_bare",
+  "textures": {
+    "end": "electricraft:blocks/wire/nickel_end",
+    "particle": "electricraft:blocks/wire/nickel",
+    "side": "electricraft:blocks/wire/nickel"
+  }
+}

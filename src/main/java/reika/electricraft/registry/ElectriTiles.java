@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -45,12 +46,12 @@ import reika.rotarycraft.auxiliary.interfaces.NBTMachine;
 
 public enum ElectriTiles implements TileEnum {
 
-    WIRE("electri.wire", ElectriBlocks.WIRE.get(), BlockEntityWire.class, "RenderWire"),
+    WIRE("electri.wire", ElectriBlocks.COPPER_WIRE.get(), BlockEntityWire.class, "RenderWire"),
     GENERATOR("machine.electrigenerator", ElectriBlocks.GENERATOR.get(), BlockEntityGenerator.class, "RenderGenerator"),
     MOTOR("machine.electrimotor", ElectriBlocks.MOTOR.get(), BlockEntityMotor.class, "RenderMotor"),
     RESISTOR("machine.electriresistor", ElectriBlocks.RESISTOR.get(), BlockEntityResistor.class, "RenderResistor"),
     RELAY("machine.electrirelay", ElectriBlocks.RELAY.get(), BlockEntityRelay.class, "RenderRelay"),
-    BATTERY("machine.electribattery", ElectriBlocks.BATTERY.get(), BlockEntityBattery.class),
+    BATTERY("machine.electribattery", ElectriBlocks.REDSTONE_BATTERY.get(), BlockEntityBattery.class),
     RF_CABLE("machine.rfcable", ElectriBlocks.RF_CABLE.get(), BlockEntityRFCable.class, "RenderCable"),
     METER("machine.wiremeter", ElectriBlocks.METER.get(), BlockEntityMeter.class, "RenderElectricMeter"),
     RFBATTERY("machine.rfbattery", ElectriBlocks.RFBATTERY.get(), BlockEntityRFBattery.class, "RenderModBattery"),
@@ -58,7 +59,7 @@ public enum ElectriTiles implements TileEnum {
     //	EUSPLIT("machine.eusplit", 				ElectriBlocks.EUSPLIT, 		BlockEntityEUSplitter.class, 	0),
 //	EUCABLE("machine.eucable", 				ElectriBlocks.EUCABLE, 		BlockEntityEUCable.class, 		0, "RenderCable"),
 //	EUBATTERY("machine.eubattery", 			ElectriBlocks.EUBATTERY, 	BlockEntityEUBattery.class, 		0, "RenderModBattery"),
-    FUSE("machine.fuse", ElectriBlocks.FUSE.get(), BlockEntityFuse.class, "RenderFuse"),
+    FUSE("machine.fuse", ElectriBlocks.FUSE_32A.get(), BlockEntityFuse.class, "RenderFuse"),
     WIRELESSPAD("machine.wirelesspad", ElectriBlocks.WIRELESS_CHARGER.get(), BlockEntityWirelessCharger.class),
     PRECISERESISTOR("machine.precresistor", ElectriBlocks.PRECISE_RESISTOR.get(), BlockEntityPreciseResistor.class, "RenderPreciseResistor");
 
@@ -103,6 +104,21 @@ public enum ElectriTiles implements TileEnum {
                 li.add(electriTiles);
         }
         return li;
+    }
+
+    /** Resolves a modern concrete machine block without relying on removed metadata IDs. */
+    public static ElectriTiles getMachine(Block block) {
+        if (ElectriBlocks.isWire(block))
+            return WIRE;
+        if (ElectriBlocks.isBattery(block))
+            return BATTERY;
+        if (ElectriBlocks.isFuse(block))
+            return FUSE;
+        for (ElectriTiles machine : teList) {
+            if (machine.blockInstance == block)
+                return machine;
+        }
+        return null;
     }
 
 /*	public static BlockEntity createTEFromIDAndMetadata(Block id) {
@@ -152,10 +168,7 @@ public enum ElectriTiles implements TileEnum {
     }
 
     public static ElectriTiles getTE(BlockGetter iba, BlockPos pos) {
-        Block id = iba.getBlockState(pos).getBlock();
-        if (id == ElectriBlocks.WIRE.get())
-            return WIRE;
-        return null;//todo getMachineFromIDandMetadata(id);
+        return getMachine(iba.getBlockState(pos).getBlock());
     }
 
     public ItemStack getCraftedProduct(BlockEntity te) {
@@ -174,20 +187,18 @@ public enum ElectriTiles implements TileEnum {
 
     public ItemStack getCraftedProduct() {
 		if (this == WIRE) {
-//			return new ItemStack(ElectriItems.WIRE.get());
+			return new ItemStack(ElectriBlocks.COPPER_WIRE.get());
 		}
 		else
         if (this == BATTERY) {
-            return new ItemStack(ElectriItems.BATTERY.get());
+            return BatteryType.REDSTONE.getCraftedProduct();
         } else if (this == RFBATTERY) {
             return new ItemStack(ElectriItems.RFBATTERY.get());
         }
 //	todo	else if (this == EUBATTERY) {
 //			return new ItemStack(ElectriItems.EUBATTERY.get());
 //		}
-//		else
-//			return new ItemStack(ElectriItems.PLACER.get(), 1, this.ordinal());
-        return ItemStack.EMPTY;
+        return new ItemStack(blockInstance.asItem());
     }
 
     public BlockEntity createTEInstanceForRender() {
@@ -328,15 +339,16 @@ public enum ElectriTiles implements TileEnum {
     }
 
     public static ElectriTiles getMachine(ItemStack item) {
-//		if (item.getItem() == ElectriItems.WIRE.get())
-//			return WIRE;
-        if (item.getItem() == ElectriItems.BATTERY.get())
-            return BATTERY;
         if (item.getItem() == ElectriItems.RFBATTERY.get())
             return RFBATTERY;
-//		if (item.getItem() == ElectriItems.EUBATTERY.get())
-//			return EUBATTERY;
-        return teList[1];//todo item.getItemDamage()];
+        // ItemRFBatteryPlacer shares the survival placement base class, so this must follow the
+        // exact RF identity check or RF batteries are incorrectly classified as normal batteries.
+        if (item.getItem() instanceof reika.electricraft.items.ItemBatteryPlacer)
+            return BATTERY;
+        if (item.getItem() instanceof BlockItem blockItem) {
+            return getMachine(blockItem.getBlock());
+        }
+        return null;
     }
 
     public boolean hasNBTVariants() {

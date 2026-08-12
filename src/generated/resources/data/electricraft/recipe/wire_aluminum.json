@@ -10,12 +10,7 @@
     "I"
   ],
   "result": {
-    "components": {
-      "minecraft:custom_data": {
-        "wtype": 3
-      }
-    },
     "count": 16,
-    "id": "electricraft:wire"
+    "id": "electricraft:aluminum_wire"
   }
 }

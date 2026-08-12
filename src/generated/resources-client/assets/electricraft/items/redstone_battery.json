@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "electricraft:item/redstone_battery",
+    "model": {
+      "type": "electricraft:casing",
+      "casing": "battery",
+      "variant": "REDSTONE"
+    }
+  }
+}

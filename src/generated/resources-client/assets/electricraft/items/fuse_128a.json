@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "electricraft:item/fuse_128a",
+    "model": {
+      "type": "electricraft:machine",
+      "machine": "fuse"
+    }
+  }
+}

@@ -1,6 +1,10 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "electricraft:block/transformer"
+    "type": "minecraft:special",
+    "base": "electricraft:item/transformer",
+    "model": {
+      "type": "electricraft:machine",
+      "machine": "transformer"
+    }
   }
 }

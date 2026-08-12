@@ -35,7 +35,7 @@ public class FuseModel extends Model<Unit>
     // 1.21.5: Model.root already exists
     
     public FuseModel(ModelPart modelPart) {
-        super(modelPart, RenderTypes::entityCutout);
+        super(modelPart, RenderTypes::entityCutoutCull);
         
         this.shape1a = modelPart.getChild("shape1a");
         this.shape3 = modelPart.getChild("shape3");
@@ -153,4 +153,3 @@ public class FuseModel extends Model<Unit>
     }
     // 1.21.5: Model.renderToBuffer is now final; 8-arg override removed.
 }
-

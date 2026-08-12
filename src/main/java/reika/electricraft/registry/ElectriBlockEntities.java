@@ -14,7 +14,7 @@ public class ElectriBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, ElectriCraft.MODID);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityBattery>> BATTERY = BLOCK_ENTITIES.register("battery", () ->
-            new BlockEntityType<>(BlockEntityBattery::new, ElectriBlocks.BATTERY.get()));
+            new BlockEntityType<>(BlockEntityBattery::new, ElectriBlocks.getBatteryBlocks()));
     //Was wrongly constructing BlockEntityBattery (the EC battery) — the RF battery got the wrong BE.
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<reika.electricraft.blockentities.modinterface.BlockEntityRFBattery>> RF_BATTERY = BLOCK_ENTITIES.register("rf_battery", () ->
             new BlockEntityType<>(reika.electricraft.blockentities.modinterface.BlockEntityRFBattery::new, ElectriBlocks.RFBATTERY.get()));
@@ -22,7 +22,7 @@ public class ElectriBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityRFCable>> RF_CABLE = BLOCK_ENTITIES.register("rf_cable", () ->
             new BlockEntityType<>(BlockEntityRFCable::new, ElectriBlocks.RF_CABLE.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityFuse>> FUSE = BLOCK_ENTITIES.register("fuse", () ->
-            new BlockEntityType<>(BlockEntityFuse::new, ElectriBlocks.FUSE.get()));
+            new BlockEntityType<>(BlockEntityFuse::new, ElectriBlocks.getFuseBlocks()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityGenerator>> GENERATOR = BLOCK_ENTITIES.register("generator", () ->
             new BlockEntityType<>(BlockEntityGenerator::new, ElectriBlocks.GENERATOR.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityMeter>> METER = BLOCK_ENTITIES.register("meter", () ->
@@ -30,15 +30,16 @@ public class ElectriBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityMotor>> MOTOR = BLOCK_ENTITIES.register("motor", () ->
             new BlockEntityType<>(BlockEntityMotor::new, ElectriBlocks.MOTOR.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityPreciseResistor>> PRECISE_RESISTOR = BLOCK_ENTITIES.register("precise_resistor", () ->
-            new BlockEntityType<>(BlockEntityPreciseResistor::new, ElectriBlocks.RESISTOR.get()));
+            new BlockEntityType<>(BlockEntityPreciseResistor::new, ElectriBlocks.PRECISE_RESISTOR.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityRelay>> RELAY = BLOCK_ENTITIES.register("relay", () ->
             new BlockEntityType<>(BlockEntityRelay::new, ElectriBlocks.RELAY.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityResistor>> RESISTOR = BLOCK_ENTITIES.register("resistor", () ->
             new BlockEntityType<>(BlockEntityResistor::new, ElectriBlocks.RESISTOR.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityTransformer>> TRANSFORMER = BLOCK_ENTITIES.register("transformer", () ->
             new BlockEntityType<>(BlockEntityTransformer::new, ElectriBlocks.TRANSFORMER.get()));
+    /** One BE type serves the 18 concrete conductor blocks; the immutable block selects its variant. */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityWire>> WIRE = BLOCK_ENTITIES.register("wire", () ->
-            new BlockEntityType<>(BlockEntityWire::new, ElectriBlocks.WIRE.get()));
+            new BlockEntityType<>(BlockEntityWire::new, ElectriBlocks.getWireBlocks()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityWirelessCharger>> WIRELESS_CHARGER = BLOCK_ENTITIES.register("wireless_charger", () ->
             new BlockEntityType<>(BlockEntityWirelessCharger::new, ElectriBlocks.WIRELESS_CHARGER.get()));
 

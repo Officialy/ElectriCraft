@@ -35,7 +35,7 @@ public class BlockEntityWirelessCharger extends ElectriBlockEntity {
 
 	public Direction getFacing() {
 		//return facing != null ? facing : Direction.UP;
-		return switch (getBlockState().getValue(ElectriBlock.FACING)) {
+		return switch (getBlockState().getValue(reika.electricraft.blocks.BlockChargePad.FACING)) {
 			case WEST -> Direction.WEST;
 			case EAST -> Direction.EAST;
 			case NORTH -> Direction.NORTH;

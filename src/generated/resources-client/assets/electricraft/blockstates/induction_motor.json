@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "electricraft:block/induction_motor",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "electricraft:block/induction_motor"
+    },
+    "facing=south": {
+      "model": "electricraft:block/induction_motor",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "electricraft:block/induction_motor",
+      "y": 270
+    }
+  }
+}

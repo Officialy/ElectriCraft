@@ -15,10 +15,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
 import reika.dragonapi.libraries.registry.ReikaDyeHelper;
@@ -28,6 +35,10 @@ import reika.electricraft.base.BlockEntityResistorBase;
 import reika.electricraft.base.BlockEntityResistorBase.ColorBand;
 import reika.electricraft.registry.ElectriTiles;
 import reika.electricraft.blockentities.BlockEntityMotor;
+import reika.electricraft.blockentities.BlockEntityTransformer;
+import reika.electricraft.blocks.BlockElectricFuse;
+import reika.electricraft.base.BlockEntityWireComponent;
+import reika.electricraft.auxiliary.interfaces.ConversionTile;
 import reika.rotarycraft.auxiliary.RotaryAux;
 import reika.rotarycraft.auxiliary.interfaces.NBTMachine;
 import reika.rotarycraft.registry.RotaryItems;
@@ -37,6 +48,52 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
 
     public BlockElectricMachine(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state,
+                            net.minecraft.world.entity.LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(world, pos, state, placer, stack);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        Direction playerLook = state.getValue(FACING).getOpposite();
+        if (blockEntity instanceof BlockEntityTransformer transformer) {
+            // V31a mounted the windings across the player's view: input/output are right/left.
+            transformer.setFacing(playerLook.getClockWise());
+        } else if (blockEntity instanceof BlockEntityWireComponent component) {
+            component.setFacing(playerLook);
+        } else if (blockEntity instanceof ConversionTile conversion) {
+            conversion.setFacing(playerLook);
+        }
+        if (blockEntity != null)
+            blockEntity.setChanged();
+    }
+
+    @Override
+    public boolean hasDynamicShape() {
+        return true;
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        VoxelShape machineShape = this.getMachineShape(level, pos);
+        return machineShape != null ? machineShape : super.getShape(state, level, pos, context);
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        VoxelShape machineShape = this.getMachineShape(level, pos);
+        return machineShape != null ? machineShape : super.getCollisionShape(state, level, pos, context);
+    }
+
+    /** Restores V31a's non-cubic bounds for inline components and the transformer. */
+    private VoxelShape getMachineShape(BlockGetter level, BlockPos pos) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        AABB bounds = null;
+        if (blockEntity instanceof reika.electricraft.base.BlockEntityWireComponent component)
+            bounds = component.getAABB();
+        else if (blockEntity instanceof BlockEntityTransformer transformer)
+            bounds = transformer.getAABB();
+        return bounds != null ? Shapes.create(bounds.move(-pos.getX(), -pos.getY(), -pos.getZ())) : null;
     }
 
 //    @Override
@@ -59,17 +116,29 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
     public void playerDestroy(Level world, Player ep, BlockPos pos, BlockState state,  BlockEntity blockEntity, ItemStack p_49832_) {
         if (!this.canHarvest(world, ep, pos))
             return;
-        BlockEntity te = world.getBlockEntity(pos);
-        ElectriTiles m = ElectriTiles.getTE(world, pos);
-        if (m != null) {
-            ItemStack is = m.getCraftedProduct();
-            if (m.hasNBTVariants()) {
-                CompoundTag nbt = ((NBTMachine) te).getTagsToWriteToStack();
-                // 1.21.5: ItemStack.setTag removed; persist via CUSTOM_DATA helper.
-                ReikaItemHelper.setStackTag(is, nbt != null ? nbt.copy() : null);
-            }
-            ReikaItemHelper.dropItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, is);
-        }    }
+        // Vanilla removes the block before invoking playerDestroy, so looking it up from the
+        // world here loses both the machine identity and its BE. Use the supplied state/context.
+        super.playerDestroy(world, ep, pos, state, blockEntity, p_49832_);
+    }
+
+    @Override
+    public java.util.List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+        ElectriTiles machine = ElectriTiles.getMachine(state.getBlock());
+        if (machine == null)
+            return java.util.List.of();
+        // Fuse amperage is a modern registry identity, not mutable stack NBT. In particular, do
+        // not collapse every fuse back to ElectriTiles.FUSE's representative 32 A item here.
+        ItemStack result = state.getBlock() instanceof BlockElectricFuse
+                ? new ItemStack(state.getBlock().asItem())
+                : machine.getCraftedProduct();
+        BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (!(state.getBlock() instanceof BlockElectricFuse)
+                && machine.hasNBTVariants() && blockEntity instanceof NBTMachine nbtMachine) {
+            CompoundTag nbt = nbtMachine.getTagsToWriteToStack();
+            ReikaItemHelper.setStackTag(result, nbt != null ? nbt.copy() : null);
+        }
+        return java.util.List.of(result);
+    }
 /*    @Override
     public final AABB getCollisionBoundingBoxFromPool(Level world, BlockPos pos) {
         ElectriTiles t = ElectriTiles.getTE(world, pos);
