@@ -209,3 +209,5 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 /run
+/run-gametest
+/src/generated

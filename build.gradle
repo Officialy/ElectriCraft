@@ -5,6 +5,22 @@ ext {
     mod_description = "ElectriCraft adds electrical energy systems compatible with RotaryCraft power."
 }
 
+// Keep ElectriCraft's tests independently runnable; using another mod's GameTest run used to load
+// every registered namespace and made this small suite wait behind the much larger Chroma suite.
+neoForge {
+    runs {
+        gameTest {
+            type = "gameTestServer"
+            gameDirectory = file('run-gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            def selector = project.hasProperty('gameTestSelector')
+                    ? project.property('gameTestSelector').toString()
+                    : "${project.mod_id}:*"
+            programArguments.addAll '--tests', selector
+        }
+    }
+}
+
 dependencies {
     implementation project(":DragonAPI")
     implementation project(":RotaryCraft")

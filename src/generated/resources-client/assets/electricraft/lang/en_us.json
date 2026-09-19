@@ -46,6 +46,8 @@
   "block.electricraft.tin_ore": "Tin Ore",
   "block.electricraft.tin_wire": "Tin Wire",
   "block.electricraft.transformer": "Transformer",
+  "config.jade.plugin_electricraft": "ElectriCraft",
+  "config.jade.plugin_electricraft.machine_data": "Machine Data",
   "item.electricraft.aluminum_ingot": "Aluminum Ingot",
   "item.electricraft.blue_dust": "Blue Dust",
   "item.electricraft.crystal_dust": "Crystal Dust",

@@ -42,14 +42,17 @@ public abstract class BlockEntityWireComponent extends WiringTile implements Scr
 	public abstract boolean canConnect();
 
 	public final AABB getAABB() {
-		float miny = 0;
-		float maxy = this.getHeight();
-		float w = this.getWidth()/2F;
+		// GameTest deliberately places structures as far as +/-15 million blocks out. Adding
+		// fractional float bounds to coordinates of that magnitude rounds the fractions away and
+		// turns 3/4-wide relays/resistors into full cubes. Keep all world-space AABB math in double.
+		double miny = 0;
+		double maxy = this.getHeight();
+		double w = this.getWidth()/2D;
 		Direction dir = this.getFacing();
-		float maxx = dir.getStepX() != 0 ? 1 : 0.5F+w;
-		float minx = dir.getStepX() != 0 ? 0 : 0.5F-w;
-		float maxz = dir.getStepZ() != 0 ? 1 : 0.5F+w;
-		float minz = dir.getStepZ() != 0 ? 0 : 0.5F-w;
+		double maxx = dir.getStepX() != 0 ? 1 : 0.5D+w;
+		double minx = dir.getStepX() != 0 ? 0 : 0.5D-w;
+		double maxz = dir.getStepZ() != 0 ? 1 : 0.5D+w;
+		double minz = dir.getStepZ() != 0 ? 0 : 0.5D-w;
 		if (isFlipped) {
 			miny = 1-this.getHeight();
 			maxy = 1;

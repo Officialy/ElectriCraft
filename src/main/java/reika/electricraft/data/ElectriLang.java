@@ -27,6 +27,9 @@ public class ElectriLang extends LanguageProvider {
 
         ElectriItems.ITEMS.getEntries().forEach(holder ->
                 addItem(holder, itemName(holder.getId().getPath())));
+
+        add("config.jade.plugin_electricraft", "ElectriCraft");
+        add("config.jade.plugin_electricraft.machine_data", "Machine Data");
     }
 
     private static String blockName(String path) {

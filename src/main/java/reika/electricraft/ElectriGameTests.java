@@ -40,6 +40,7 @@ import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.blockentities.BlockEntityBattery;
 import reika.electricraft.blockentities.BlockEntityFuse;
 import reika.electricraft.blockentities.BlockEntityGenerator;
+import reika.electricraft.blockentities.BlockEntityRelay;
 import reika.electricraft.blockentities.BlockEntityTransformer;
 import reika.electricraft.blockentities.BlockEntityWire;
 import reika.electricraft.blockentities.BlockEntityWirelessCharger;
@@ -313,9 +314,19 @@ public final class ElectriGameTests {
         helper.setBlock(fusePos, ElectriBlocks.FUSE_32A.get());
         helper.setBlock(transformerPos, ElectriBlocks.TRANSFORMER.get());
         assertNear(helper, shapeBounds(helper, resistorPos).maxY, .75, "resistor height");
-        assertNear(helper, shapeBounds(helper, relayPos).getZsize(), .75, "relay width");
+        BlockEntityRelay relayEntity = helper.getBlockEntity(relayPos, BlockEntityRelay.class);
+        AABB relayEntityBounds = relayEntity.getAABB().move(
+                -helper.absolutePos(relayPos).getX(),
+                -helper.absolutePos(relayPos).getY(),
+                -helper.absolutePos(relayPos).getZ());
+        assertNear(helper, Math.min(relayEntityBounds.getXsize(), relayEntityBounds.getZsize()), .75,
+                "relay block-entity cross-axis width");
+        AABB relay = shapeBounds(helper, relayPos);
+        assertNear(helper, Math.min(relay.getXsize(), relay.getZsize()), .75, "relay cross-axis width");
+        assertNear(helper, Math.max(relay.getXsize(), relay.getZsize()), 1, "relay connection-axis length");
         assertNear(helper, shapeBounds(helper, fusePos).maxY, .625, "fuse height");
-        helper.assertTrue(shapeBounds(helper, transformerPos).getZsize() < .5,
+        AABB transformer = shapeBounds(helper, transformerPos);
+        helper.assertTrue(Math.min(transformer.getXsize(), transformer.getZsize()) < .5,
                 "transformer collision must follow its narrow winding axis");
         helper.succeed();
     }
