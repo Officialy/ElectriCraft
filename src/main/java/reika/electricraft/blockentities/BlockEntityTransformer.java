@@ -18,11 +18,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import reika.dragonapi.instantiable.HybridTank;
 import reika.dragonapi.instantiable.StepTimer;
+import reika.dragonapi.instantiable.storage.HybridTankResourceHandler;
+import reika.dragonapi.interfaces.blockentity.HasFluidResourceHandler;
 import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
 import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
 import reika.dragonapi.libraries.mathsci.ReikaThermoHelper;
@@ -42,7 +45,7 @@ import reika.rotarycraft.registry.RotaryFluids;
 
 import java.util.ArrayList;
 
-public class BlockEntityTransformer extends NetworkBlockEntity implements WireEmitter, WireReceiver, Screwdriverable, TemperatureTE, IFluidHandler, PipeConnector, Overloadable, net.minecraft.world.MenuProvider {
+public class BlockEntityTransformer extends NetworkBlockEntity implements WireEmitter, WireReceiver, Screwdriverable, TemperatureTE, HasFluidResourceHandler, PipeConnector, Overloadable, net.minecraft.world.MenuProvider {
 
 	@Override
 	public net.minecraft.network.chat.Component getDisplayName() {
@@ -77,6 +80,15 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 	private final StepTimer tempTimer = new StepTimer(20);
 
 	private final HybridTank tank = new HybridTank("transformer", 200);
+	private final ResourceHandler<FluidResource> fluidHandler = new HybridTankResourceHandler(
+			new HybridTank[]{tank},
+			(index, resource) -> resource.getFluid() == RotaryFluids.LIQUID_NITROGEN.get(),
+			(index, resource) -> false, this::setChanged);
+
+	@Override
+	public ResourceHandler<FluidResource> getFluidHandler(Direction side) {
+		return side == null || canIntake(side) ? fluidHandler : null;
+	}
 
 	public BlockEntityTransformer(BlockPos pos, BlockState state) {
 		super(ElectriBlockEntities.TRANSFORMER.get(), pos, state);
@@ -385,15 +397,7 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 		return this.canIntake(side) ? BlockEntityPiping.Flow.INPUT : BlockEntityPiping.Flow.NONE;
 	}
 
-	@Override
-	public int fillPipe(Direction from, FluidStack resource, FluidAction action) {
-		return this.canFill(from, resource.getFluid()) ? tank.fill(resource, action) : 0;
-	}
 
-	@Override
-	public FluidStack drainPipe(Direction from, int maxDrain, FluidAction doDrain) {
-		return null;
-	}
 
 	public boolean canFill(Direction from, Fluid fluid) {
 		return this.canIntake(from) && fluid.equals(RotaryFluids.LIQUID_NITROGEN.get());
@@ -431,41 +435,6 @@ public class BlockEntityTransformer extends NetworkBlockEntity implements WireEm
 	@Override
 	public int getAmbientTemperature() {
 		return 0;
-	}
-
-	@Override
-	public int getTanks() {
-		return 0;
-	}
-
-	@Override
-	public  FluidStack getFluidInTank(int tank) {
-		return null;
-	}
-
-	@Override
-	public int getTankCapacity(int tank) {
-		return 0;
-	}
-
-	@Override
-	public boolean isFluidValid(int tank,  FluidStack stack) {
-		return false;
-	}
-
-	@Override
-	public int fill(FluidStack resource, FluidAction action) {
-		return 0;
-	}
-
-	@Override
-	public  FluidStack drain(FluidStack resource, FluidAction action) {
-		return null;
-	}
-
-	@Override
-	public  FluidStack drain(int maxDrain, FluidAction action) {
-		return null;
 	}
 
 	@Override

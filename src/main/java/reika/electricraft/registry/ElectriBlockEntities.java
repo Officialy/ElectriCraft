@@ -50,6 +50,8 @@ public class ElectriBlockEntities {
      * face but the top, emits only on the top. The charge pad refuses its beam face.
      */
     public static void registerCapabilities(net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.Fluid.BLOCK, TRANSFORMER.get(),
+                (be, side) -> be.getFluidHandler(side));
         event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.Energy.BLOCK, RF_CABLE.get(),
                 (be, side) -> be.getEnergyView());
         event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.Energy.BLOCK, RF_BATTERY.get(),
