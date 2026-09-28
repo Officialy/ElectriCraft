@@ -6,10 +6,12 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
 import reika.electricraft.ElectriCraft;
 import reika.electricraft.registry.ElectriBlocks;
+import reika.dragonapi.libraries.level.LegacyMotionTags;
 
 /**
  * ElectriCraft's ore blocks are registered with {@code requiresCorrectToolForDrops()}; without a
@@ -26,6 +28,16 @@ public class ElectriBlockTagsProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        // 26.3 made movement blocking, suffocation, fluid blocking and fluid washing tag-driven and
+        // NeoForge tags no modded blocks; give every block its 26.2 behaviour (see LegacyMotionTags).
+        var motionTag = tag(BlockTags.BLOCKS_MOTION_NO_LEAVES);
+        var leafTag = tag(BlockTags.LEAVES);
+        var washedTag = tag(BlockTags.WASHED_AWAY_BY_FLUIDS);
+        // 1.7.10 ElectriBlocks#getBlockMaterial: rock for ores, iron for everything else (wires included),
+        // so every non-fluid block blocked movement, stopped fluids and was never washed away.
+        LegacyMotionTags.classifyEntries(ElectriBlocks.BLOCKS.getEntries(), block -> !(block instanceof LiquidBlock),
+                motionTag::add, leafTag::add, washedTag::add);
+
         var pickaxe = tag(BlockTags.MINEABLE_WITH_PICKAXE);
         var stone = tag(BlockTags.NEEDS_STONE_TOOL);
         var iron = tag(BlockTags.NEEDS_IRON_TOOL);

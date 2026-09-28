@@ -89,6 +89,7 @@ public final class ElectriGameTests {
         register(event, env, "transformer_orientation", 40, ElectriGameTests::transformerOrientation);
         register(event, env, "mechanical_to_battery_power", 100, ElectriGameTests::mechanicalToBatteryPower);
         register(event, env, "wire_and_machine_shapes", 40, ElectriGameTests::wireAndMachineShapes);
+        register(event, env, "wire_holds_back_water", 40, ElectriGameTests::wireHoldsBackWater);
         register(event, env, "battery_survival_placement", 20, ElectriGameTests::batterySurvivalPlacement);
         register(event, env, "rf_battery_sided_energy", 20, ElectriGameTests::rfBatterySidedEnergy);
         register(event, env, "stateful_block_drops", 20, ElectriGameTests::statefulBlockDrops);
@@ -348,6 +349,27 @@ public final class ElectriGameTests {
     }
 
     /** Stateful battery placement must preserve tier/energy and consume one item in survival. */
+    /**
+     * 1.7.10 made every ElectriCraft wire {@code Material.iron}, which blocks movement, so flowing water never
+     * replaced it. 26.3 decides that from block tags (see {@code LegacyMotionTags}); this pins the tags
+     * and the behaviour they produce.
+     */
+    private static void wireHoldsBackWater(GameTestHelper helper) {
+        BlockPos target = new BlockPos(3, 1, 3);
+        helper.setBlock(target, ElectriBlocks.COPPER_WIRE.get());
+        var state = helper.getLevel().getBlockState(helper.absolutePos(target));
+        helper.assertTrue(state.is(net.minecraft.tags.BlockTags.BLOCKS_MOTION)
+                        && !state.is(net.minecraft.tags.BlockTags.WASHED_AWAY_BY_FLUIDS),
+                "copper wire must block motion and not be washed away by fluids");
+        helper.setBlock(target.west(), net.minecraft.world.level.block.Blocks.WATER);
+        helper.runAfterDelay(30, () -> {
+            helper.assertTrue(helper.getLevel().getBlockState(helper.absolutePos(target)).is(ElectriBlocks.COPPER_WIRE.get()),
+                    "flowing water must not wash away a copper wire, found "
+                            + helper.getLevel().getBlockState(helper.absolutePos(target)));
+            helper.succeed();
+        });
+    }
+
     private static void batterySurvivalPlacement(GameTestHelper helper) {
         Player player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.snapTo(Vec3.atCenterOf(helper.absolutePos(new BlockPos(1, 2, 1))));
