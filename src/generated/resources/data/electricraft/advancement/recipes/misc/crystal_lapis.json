@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:crystal_lapis"
+        "recipes": "electricraft:crystal_lapis"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

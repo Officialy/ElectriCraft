@@ -52,8 +52,8 @@ public class RenderTransformer extends ElectriTERenderer<BlockEntityTransformer>
 		float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
 		stack.pushPose();
 		stack.translate(0.5F, 1.5F, 0.5F);
-		stack.mulPose(Axis.YP.rotationDegrees(-f));
-		stack.mulPose(Axis.ZP.rotationDegrees(180));
+		stack.rotate(Axis.YP.rotationDegrees(-f));
+		stack.rotate(Axis.ZP.rotationDegrees(180));
 
 		VertexConsumer vertexconsumer = bufferSource;
 		transformer.renderAll(stack, vertexconsumer, light, tile.getN1(), tile.getN2());

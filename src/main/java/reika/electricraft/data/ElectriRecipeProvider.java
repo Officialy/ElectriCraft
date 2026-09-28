@@ -1,17 +1,16 @@
 package reika.electricraft.data;
 
-import java.util.concurrent.CompletableFuture;
-
-import net.minecraft.core.HolderLookup;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.core.registries.MultiRegistryBootstrap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -43,28 +42,21 @@ import reika.rotarycraft.registry.RotaryItems;
  * Legacy recipes NOT ported: the EU/IC2 family and WorktableRecipes duplicates (the worktable
  * handler is a separate dependency vertical).
  */
-public final class ElectriRecipeProvider extends RecipeProvider.Runner {
+public final class ElectriRecipeProvider {
 
-    public ElectriRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    private ElectriRecipeProvider() {
     }
 
-    @Override
-    public String getName() {
-        return "ElectriCraft Recipes";
-    }
-
-    @Override
-    protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput out) {
-        return new Recipes(registries, out);
+    public static MultiRegistryBootstrap bootstrap() {
+        return RecipeProvider.asBootstrap(Recipes::new);
     }
 
     private static final class Recipes extends RecipeProvider {
         private final RecipeOutput out;
 
-        Recipes(HolderLookup.Provider registries, RecipeOutput out) {
-            super(registries, out);
-            this.out = out;
+        Recipes(BootstrapContext<Recipe<?>> recipes, BootstrapContext<Advancement> advancements) {
+            super(recipes, advancements);
+            this.out = this.output;
         }
 
         @Override

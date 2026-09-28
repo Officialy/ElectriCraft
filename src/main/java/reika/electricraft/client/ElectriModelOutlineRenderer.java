@@ -92,8 +92,8 @@ public final class ElectriModelOutlineRenderer implements CustomBlockOutlineRend
     private static List<Line> modelLines(ModelPart model, Direction facing) {
         PoseStack modelPose = new PoseStack();
         modelPose.translate(.5F, 1.5F, .5F);
-        modelPose.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
-        modelPose.mulPose(Axis.ZP.rotationDegrees(180F));
+        modelPose.rotate(Axis.YP.rotationDegrees(-facing.toYRot()));
+        modelPose.rotate(Axis.ZP.rotationDegrees(180F));
         LineCollector collector = new LineCollector();
         model.visit(modelPose, (pose, path, cubeIndex, cube) -> {
             for (ModelPart.Polygon polygon : cube.polygons) {

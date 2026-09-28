@@ -1,9 +1,8 @@
 package reika.electricraft.data;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -13,7 +12,6 @@ import reika.electricraft.registry.ElectriBlocks;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * 26.1 block loot-table data provider for ElectriCraft.
@@ -24,16 +22,16 @@ import java.util.concurrent.CompletableFuture;
  */
 public final class ElectriLootProvider extends LootTableProvider {
 
-    public ElectriLootProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, Set.of(), List.of(
+    public ElectriLootProvider() {
+        super(Set.of(), List.of(
                 new SubProviderEntry(Blocks::new, LootContextParamSets.BLOCK)
-        ), registries);
+        ));
     }
 
     private static final class Blocks extends BlockLootSubProvider {
 
-        Blocks(HolderLookup.Provider registries) {
-            super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
+        Blocks(LootTableSubProvider.Context context) {
+            super(Set.of(), FeatureFlags.REGISTRY.allFlags(), context);
         }
 
         @Override

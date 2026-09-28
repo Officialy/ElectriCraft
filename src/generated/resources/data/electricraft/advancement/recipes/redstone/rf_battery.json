@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:rf_battery"
+        "recipes": "electricraft:rf_battery"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

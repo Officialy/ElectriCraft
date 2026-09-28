@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:platinum_ore_smelting"
+        "recipes": "electricraft:platinum_ore_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

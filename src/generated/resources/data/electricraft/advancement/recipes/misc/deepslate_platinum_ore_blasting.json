@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:deepslate_platinum_ore_blasting"
+        "recipes": "electricraft:deepslate_platinum_ore_blasting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:wire_aluminum_insulated"
+        "recipes": "electricraft:wire_aluminum_insulated"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

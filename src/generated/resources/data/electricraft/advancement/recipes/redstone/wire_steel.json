@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:wire_steel"
+        "recipes": "electricraft:wire_steel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

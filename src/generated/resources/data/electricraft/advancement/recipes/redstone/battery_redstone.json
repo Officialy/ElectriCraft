@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:battery_redstone"
+        "recipes": "electricraft:battery_redstone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

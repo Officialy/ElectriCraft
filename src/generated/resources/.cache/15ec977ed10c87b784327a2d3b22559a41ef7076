@@ -1,0 +1,4 @@
+// 26.3	2026-09-28T00:47:04.359332	Tags for minecraft:block mod id electricraft
+7893a327f9b4d9883112fc7d29c35a44daffa537 data/minecraft/tags/block/mineable/pickaxe.json
+11d4996a525a5d42d86e377dc88547076985824d data/minecraft/tags/block/needs_iron_tool.json
+d27358f64e525c292b8b59ac089149249e54534e data/minecraft/tags/block/needs_stone_tool.json

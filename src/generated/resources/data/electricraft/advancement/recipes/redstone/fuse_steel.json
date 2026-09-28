@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:fuse_steel"
+        "recipes": "electricraft:fuse_steel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

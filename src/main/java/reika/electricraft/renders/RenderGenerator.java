@@ -47,11 +47,11 @@ public class RenderGenerator extends ElectriTERenderer<BlockEntityGenerator>
         float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
         stack.pushPose();
         stack.translate(0.5F, 1.5F, 0.5F);
-        stack.mulPose(Axis.YP.rotationDegrees(-f));
-        stack.mulPose(Axis.ZP.rotationDegrees(180));
+        stack.rotate(Axis.YP.rotationDegrees(-f));
+        stack.rotate(Axis.ZP.rotationDegrees(180));
 
         if (tile.isFlipped && tile.getFacing().getStepZ() != 0) {
-            stack.mulPose(Axis.YP.rotationDegrees(180));
+            stack.rotate(Axis.YP.rotationDegrees(180));
         }
         VertexConsumer vertexconsumer = bufferSource;
         generatorModel.renderToBuffer(stack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);

@@ -359,6 +359,8 @@ public final class ElectriGameTests {
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
         BlockPos floor = helper.absolutePos(new BlockPos(5, 0, 5));
+        helper.assertTrue(helper.getLevel().getBlockState(floor).is(net.minecraft.world.level.block.Blocks.STONE),
+                "test arena must have its stone floor under the click, found " + helper.getLevel().getBlockState(floor));
         BlockHitResult hit = new BlockHitResult(
                 new Vec3(floor.getX() + 0.5, floor.getY() + 1, floor.getZ() + 0.5),
                 Direction.UP, floor, false);
@@ -367,7 +369,8 @@ public final class ElectriGameTests {
         helper.assertTrue(result.consumesAction(), "battery item must accept a valid floor placement");
         BlockPos placed = floor.above();
         helper.assertTrue(helper.getLevel().getBlockState(placed).is(ElectriBlocks.DIAMOND_BATTERY.get()),
-                "battery placer must put the battery above the clicked floor");
+                "battery placer must put the battery above the clicked floor (floor="
+                        + helper.getLevel().getBlockState(floor) + ", above=" + helper.getLevel().getBlockState(placed) + ")");
         helper.assertTrue(helper.getLevel().getBlockEntity(placed) instanceof BlockEntityBattery battery,
                 "placed battery must create its server block entity");
         BlockEntityBattery battery = (BlockEntityBattery)helper.getLevel().getBlockEntity(placed);
@@ -484,7 +487,7 @@ public final class ElectriGameTests {
         BlockPos pos = helper.absolutePos(relative);
         var state = helper.getLevel().getBlockState(pos);
         BlockEntity blockEntity = helper.getLevel().getBlockEntity(pos);
-        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        net.minecraft.server.level.ServerPlayer player = (net.minecraft.server.level.ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
         ItemStack tool = new ItemStack(Items.IRON_PICKAXE);
         player.setItemInHand(InteractionHand.MAIN_HAND, tool);
 

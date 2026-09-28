@@ -51,8 +51,8 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
         float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
         stack.pushPose();
         stack.translate(0.5F, 1.5F, 0.5F);
-        stack.mulPose(Axis.YP.rotationDegrees(-f));
-        stack.mulPose(Axis.ZP.rotationDegrees(180));
+        stack.rotate(Axis.YP.rotationDegrees(-f));
+        stack.rotate(Axis.ZP.rotationDegrees(180));
 //		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 //		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 //		this.setupGL(tile, par2, par4, par6);
@@ -91,10 +91,10 @@ public class RenderElectricMeter extends ElectriTERenderer<BlockEntityMeter> {
         int rightAngle = 90 * (int)((angle + 225F) / 90F);
         stack.pushPose();
         stack.translate(0.5, 0.5, 0.5);
-        stack.mulPose(Axis.YP.rotationDegrees(rightAngle));
+        stack.rotate(Axis.YP.rotationDegrees(rightAngle));
         stack.translate(0, 0.515, 0);
         stack.scale(0.01F, 0.01F, 0.01F);
-        stack.mulPose(Axis.XN.rotationDegrees(90));
+        stack.rotate(Axis.XN.rotationDegrees(90));
         submitLine(collector, stack, "Voltage:", -30, -30);
         submitLine(collector, stack, String.format("%dV", tile.getWireVoltage()), -30, -20);
         submitLine(collector, stack, "Current:", -30, 0);

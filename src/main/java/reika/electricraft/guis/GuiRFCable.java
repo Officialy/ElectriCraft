@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import org.lwjgl.glfw.GLFW;
 
 import reika.dragonapi.libraries.io.ReikaPacketHelper;
 import reika.dragonapi.libraries.mathsci.ReikaEngLibrary;
@@ -76,7 +75,7 @@ public class GuiRFCable extends AbstractContainerScreen<BlankContainer<BlockEnti
     }
 
     private int getPower(int base) {
-        boolean shift = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT);
+        boolean shift = InputConstants.isKeyDown(InputConstants.KEY_LSHIFT);
         return Math.abs(base) + (shift ? 3 : 0);
     }
 

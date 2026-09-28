@@ -52,8 +52,8 @@ public class RenderResistor extends ElectriTERenderer<BlockEntityResistorBase> {
         float f = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
         stack.pushPose();
         stack.translate(0.5F, 1.5F, 0.5F);
-        stack.mulPose(Axis.YP.rotationDegrees(-f));
-        stack.mulPose(Axis.ZP.rotationDegrees(180));
+        stack.rotate(Axis.YP.rotationDegrees(-f));
+        stack.rotate(Axis.ZP.rotationDegrees(180));
 
 //		stack.mulPose(var11, 0.0F, 1.0F, 0.0F);
 		BlockEntityResistorBase.ColorBand[] colors = tile.getColorBands();

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:generator"
+        "recipes": "electricraft:generator"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

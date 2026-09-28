@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:battery_ender"
+        "recipes": "electricraft:battery_ender"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

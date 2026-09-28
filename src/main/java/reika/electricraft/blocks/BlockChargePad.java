@@ -82,7 +82,7 @@ public class BlockChargePad extends Block implements EntityBlock {
     }
 
     @Override
-    public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state,  BlockEntity entity, ItemStack stack) {
+    public void playerDestroy(net.minecraft.server.level.ServerLevel world, net.minecraft.server.level.ServerPlayer player, BlockPos pos, BlockState state, BlockEntity entity, ItemStack stack) {
         if (!player.isCreative())
             super.playerDestroy(world, player, pos, state, entity, stack);
     }

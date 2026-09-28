@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:tin_ore_smelting"
+        "recipes": "electricraft:tin_ore_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

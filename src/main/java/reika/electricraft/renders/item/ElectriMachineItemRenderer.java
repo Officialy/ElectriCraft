@@ -57,7 +57,7 @@ public final class ElectriMachineItemRenderer implements NoDataSpecialModelRende
         poseStack.pushPose();
         poseStack.translate(.5D, 1.5D, .5D);
         poseStack.scale(-1F, -1F, 1F);
-        poseStack.mulPose(Axis.YN.rotationDegrees(90F));
+        poseStack.rotate(Axis.YN.rotationDegrees(90F));
 
         PoseStack snapshot = new PoseStack();
         snapshot.last().set(poseStack.last());

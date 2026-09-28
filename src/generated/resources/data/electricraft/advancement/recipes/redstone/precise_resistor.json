@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:precise_resistor"
+        "recipes": "electricraft:precise_resistor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

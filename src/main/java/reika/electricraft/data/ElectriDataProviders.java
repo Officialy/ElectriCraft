@@ -1,5 +1,7 @@
 package reika.electricraft.data;
 
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -28,8 +30,9 @@ public final class ElectriDataProviders {
         // 26.1: emit a "drops self" loot-table for every registered ElectriCraft block so the
         // vanilla loot-table validator stops failing with "Missing loottable".
         event.createProvider(ElectriBlockTagsProvider::new);
-        event.createProvider(ElectriLootProvider::new);
-        event.createProvider(ElectriRecipeProvider::new);
+        event.createReloadableRegistryObjects(new RegistrySetBuilder()
+                .add(ElectriRecipeProvider.bootstrap())
+                .add(Registries.LOOT_TABLE, new ElectriLootProvider()));
         event.createProvider(ElectriTestStructureProvider::new);
     }
 }

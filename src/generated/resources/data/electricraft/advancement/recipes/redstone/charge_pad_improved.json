@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:charge_pad_improved"
+        "recipes": "electricraft:charge_pad_improved"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

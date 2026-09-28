@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:rf_cable"
+        "recipes": "electricraft:rf_cable"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

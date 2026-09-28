@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:wire_platinum"
+        "recipes": "electricraft:wire_platinum"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

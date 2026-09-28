@@ -113,7 +113,7 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
     }
 
     @Override
-    public void playerDestroy(Level world, Player ep, BlockPos pos, BlockState state,  BlockEntity blockEntity, ItemStack p_49832_) {
+    public void playerDestroy(net.minecraft.server.level.ServerLevel world, net.minecraft.server.level.ServerPlayer ep, BlockPos pos, BlockState state, BlockEntity blockEntity, ItemStack p_49832_) {
         if (!this.canHarvest(world, ep, pos))
             return;
         // Vanilla removes the block before invoking playerDestroy, so looking it up from the

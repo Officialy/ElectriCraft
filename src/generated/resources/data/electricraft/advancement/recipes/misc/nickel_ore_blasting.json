@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:nickel_ore_blasting"
+        "recipes": "electricraft:nickel_ore_blasting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

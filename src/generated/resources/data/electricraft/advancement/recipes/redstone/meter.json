@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:meter"
+        "recipes": "electricraft:meter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

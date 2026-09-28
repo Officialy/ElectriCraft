@@ -59,8 +59,8 @@ public class RenderFuse extends ElectriTERenderer<BlockEntityFuse> {
         float facing = blockstate.getValue(BlockElectricMachine.FACING).toYRot();
 
         stack.translate(0.5F, 1.5F, 0.5F);
-        stack.mulPose(Axis.YP.rotationDegrees(-facing));
-        stack.mulPose(Axis.ZP.rotationDegrees(180));
+        stack.rotate(Axis.YP.rotationDegrees(-facing));
+        stack.rotate(Axis.ZP.rotationDegrees(180));
 
 
         Identifier s = Identifier.fromNamespaceAndPath(MODID, "textures/fusetex.png");

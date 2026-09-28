@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:battery_glowstone"
+        "recipes": "electricraft:battery_glowstone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

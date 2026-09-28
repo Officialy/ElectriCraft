@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:crystal_diamond"
+        "recipes": "electricraft:crystal_diamond"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

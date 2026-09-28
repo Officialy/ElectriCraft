@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "electricraft:crystal_rf"
+        "recipes": "electricraft:crystal_rf"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

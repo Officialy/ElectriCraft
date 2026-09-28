@@ -1,5 +1,6 @@
 {
   "type": "minecraft:blasting",
+  "cookingtime": 100,
   "experience": 0.2,
   "ingredient": "electricraft:tin_ore",
   "result": {
