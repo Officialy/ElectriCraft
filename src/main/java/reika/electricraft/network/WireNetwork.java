@@ -9,6 +9,7 @@
  ******************************************************************************/
 package reika.electricraft.network;
 
+import reika.dragonapi.interfaces.blockentity.WorldRift;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -361,12 +362,12 @@ public final class WireNetwork implements NetworkObject {
 
 	public void checkRiftConnections() {
 		boolean flag = false;
-		/*todo crc for (WorldLocation loc : rifts) {
+		for (WorldLocation loc : rifts) {
 			if (!(loc.getBlockEntity() instanceof WorldRift)) {
 				flag = true;
 				break;
 			}
-		}*/
+		}
 		if (flag) {
 			this.clear(true);
 		}

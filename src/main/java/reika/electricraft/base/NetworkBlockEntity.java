@@ -9,6 +9,7 @@
  ******************************************************************************/
 package reika.electricraft.base;
 
+import reika.dragonapi.interfaces.blockentity.WorldRift;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -81,13 +82,9 @@ public abstract class NetworkBlockEntity extends ElectriBlockEntity implements N
                 }
             }
         }
-/*		else if (te instanceof WorldRift) {
-			WorldRift sr = (WorldRift)te;
-			WorldLocation loc = sr.getLinkTarget();
-			if (loc != null) {
-				this.linkTile(sr.getBlockEntityFrom(dir), dir);
-			}
-		}*/
+        else if (te instanceof WorldRift sr) {
+            WorldRift.forward(sr, loc -> this.linkTile(sr.getTileEntityFrom(dir), dir));
+        }
     }
 
     protected void onJoinNetwork() {

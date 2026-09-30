@@ -9,6 +9,7 @@
  ******************************************************************************/
 package reika.electricraft.blockentities;
 
+import reika.dragonapi.interfaces.blockentity.WorldRift;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -109,9 +110,9 @@ public class BlockEntityWire extends WiringTile implements Overloadable {
 		if (te instanceof WireReceiver) {
 			flag = flag || ((WireReceiver)te).canReceivePowerFromSide(dir.getOpposite());
 		}
-//		if (te instanceof WorldRift) {
-//			flag = true;
-//		}
+		if (te instanceof WorldRift) {
+			flag = true;
+		}
 		if (te instanceof WrappableWireSource) {
 			flag = flag || ((WrappableWireSource) te).canConnectToSide(dir.getOpposite());
 		}

@@ -9,6 +9,7 @@
  ******************************************************************************/
 package reika.electricraft.network;
 
+import reika.dragonapi.interfaces.blockentity.WorldRift;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -85,26 +86,25 @@ public class PathCalculator {
 						}
 						else {
 							BlockEntity te = world.getBlockEntity(new BlockPos(dx, dy, dz));
-					/*		if (te instanceof WorldRift) {
-								WorldRift sr = (WorldRift)te;
+							if (te instanceof WorldRift sr) {
 								rifts.add(new WorldLocation(te));
 								WorldLocation loc = sr.getLinkTarget();
 								if (loc != null) {
 									rifts.add(loc);
-									BlockEntity other = sr.getBlockEntityFrom(dir);
+									BlockEntity other = sr.getTileEntityFrom(dir);
 									if (other instanceof WiringTile) {
 										if (((WiringTile)other).canNetworkOnSide(dir.getOpposite())) {
-											World w2 = loc.getWorld();
-											dx = loc.xCoord+dir.getStepX();
-											dy = loc.yCoord+dir.getStepY();
-											dz = loc.zCoord+dir.getStepZ();
+											Level w2 = loc.getWorld();
+											dx = loc.pos.getX()+dir.getStepX();
+											dy = loc.pos.getY()+dir.getStepY();
+											dz = loc.pos.getZ()+dir.getStepZ();
 											if (w2 != null && w2.hasChunksAt(dx, dy, dz, dx, dy, dz)) {
 												this.recursiveCalculate(w2, dx, dy, dz, li);
 											}
 										}
 									}
 								}
-							}*/
+							}
 						}
 					}
 				}
@@ -154,24 +154,23 @@ public class PathCalculator {
 						}
 						else {
 							BlockEntity te2 = world.getBlockEntity(new BlockPos(dx, dy, dz));
-						/*	if (te2 instanceof WorldRift) {
-								WorldRift sr = (WorldRift)te2;
+							if (te2 instanceof WorldRift sr) {
 								WorldLocation loc = sr.getLinkTarget();
 								if (loc != null) {
-									BlockEntity other = sr.getBlockEntityFrom(dir);
+									BlockEntity other = sr.getTileEntityFrom(dir);
 									if (other instanceof WiringTile) {
 										if (((WiringTile)other).canNetworkOnSide(dir.getOpposite())) {
-											World w2 = loc.getWorld();
-											dx = loc.xCoord+dir.getStepX();
-											dy = loc.yCoord+dir.getStepY();
-											dz = loc.zCoord+dir.getStepZ();
+											Level w2 = loc.getWorld();
+											dx = loc.pos.getX()+dir.getStepX();
+											dy = loc.pos.getY()+dir.getStepY();
+											dz = loc.pos.getZ()+dir.getStepZ();
 											if (w2 != null && w2.hasChunksAt(dx, dy, dz, dx, dy, dz)) {
 												this.recursiveCalculate(w2, dx, dy, dz, li);
 											}
 										}
 									}
 								}
-							}*/
+							}
 						}
 					}
 				}
