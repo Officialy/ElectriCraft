@@ -23,6 +23,7 @@ public final class ElectriDataProviders {
     public static void onGatherClient(GatherDataEvent.Client event) {
         event.createProvider(output -> new ElectriLang(output, "en_us"));
         event.createProvider(ElectriModelProvider::new);
+        event.createProvider(ElectriLegacyBlockAtlasProvider::new);
     }
 
     @SubscribeEvent
