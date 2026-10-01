@@ -132,13 +132,18 @@ public enum ElectriOres implements OreEnum {
     }
 
     public ItemStack getProduct() {
+        return new ItemStack(this.getProductItem());
+    }
+
+    /** Registry-only lookup also works during 26.3 datagen, before item components are bound. */
+    public net.minecraft.world.item.Item getProductItem() {
         return switch (this) { //was one metadata item in 1.7.10; copper is vanilla now
-            case COPPER -> new ItemStack(net.minecraft.world.item.Items.COPPER_INGOT);
-            case TIN -> ElectriItems.TIN_INGOT.get().getDefaultInstance();
-            case SILVER -> ElectriItems.SILVER_INGOT.get().getDefaultInstance();
-            case NICKEL -> ElectriItems.NICKEL_INGOT.get().getDefaultInstance();
-            case ALUMINUM -> ElectriItems.ALUMINUM_INGOT.get().getDefaultInstance();
-            case PLATINUM -> ElectriItems.PLATINUM_INGOT.get().getDefaultInstance();
+            case COPPER -> net.minecraft.world.item.Items.COPPER_INGOT;
+            case TIN -> ElectriItems.TIN_INGOT.get();
+            case SILVER -> ElectriItems.SILVER_INGOT.get();
+            case NICKEL -> ElectriItems.NICKEL_INGOT.get();
+            case ALUMINUM -> ElectriItems.ALUMINUM_INGOT.get();
+            case PLATINUM -> ElectriItems.PLATINUM_INGOT.get();
         };
     }
 

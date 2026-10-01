@@ -1,4 +1,11 @@
-// 26.3	2026-09-28T14:33:56.736348	Tags for minecraft:block mod id electricraft
+// 26.3	2026-10-01T22:47:19.2264678	Tags for minecraft:block mod id electricraft
+587e833e3f1a3e5ab35132a62a49c280f3e36c30 data/c/tags/block/ores.json
+46cee672df24cb33f73846f0f45b107aba114eda data/c/tags/block/ores/aluminum.json
+37c1e07dffc966dafe0401977955eba42bfaeccf data/c/tags/block/ores/copper.json
+dc2d11e5e69c8b0139925db84711d25913bd34d2 data/c/tags/block/ores/nickel.json
+10ac96935a7785754d5aefcd88d38eee18eae7db data/c/tags/block/ores/platinum.json
+dc713a68b09cf6ed466d5816273ede7e1be4beae data/c/tags/block/ores/silver.json
+e566cab4345c2cf616efe031216c591508f88a84 data/c/tags/block/ores/tin.json
 4f92acb5aa8db8ab72ac91de6bc7412876b6b229 data/minecraft/tags/block/blocks_motion_no_leaves.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/minecraft/tags/block/leaves.json
 7893a327f9b4d9883112fc7d29c35a44daffa537 data/minecraft/tags/block/mineable/pickaxe.json

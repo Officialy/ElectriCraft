@@ -28,6 +28,15 @@ public class ElectriBlockTagsProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        for (var ore : reika.electricraft.registry.ElectriOres.oreList) {
+            var key = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK,
+                    net.minecraft.resources.Identifier.fromNamespaceAndPath("c", "ores/" + ore.name().toLowerCase(java.util.Locale.ROOT)));
+            tag(key).add(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getResourceKey(ore.getBlock()).orElseThrow());
+            if (ore.getDeepslateBlock() != null)
+                tag(key).add(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getResourceKey(ore.getDeepslateBlock()).orElseThrow());
+            tag(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK,
+                    net.minecraft.resources.Identifier.fromNamespaceAndPath("c", "ores"))).addTag(key);
+        }
         // 26.3 made movement blocking, suffocation, fluid blocking and fluid washing tag-driven and
         // NeoForge tags no modded blocks; give every block its 26.2 behaviour (see LegacyMotionTags).
         var motionTag = tag(BlockTags.BLOCKS_MOTION_NO_LEAVES);
