@@ -28,13 +28,16 @@ public final class ElectriDataProviders {
 
     @SubscribeEvent
     public static void onGatherServer(GatherDataEvent.Server event) {
+        event.createWorldRegistryObjects(ElectriWorldGenProvider.buildRegistrySet());
+        event.createProvider(ElectriWorldGenProvider::new);
         // 26.1: emit a "drops self" loot-table for every registered ElectriCraft block so the
         // vanilla loot-table validator stops failing with "Missing loottable".
         event.createProvider(ElectriBlockTagsProvider::new);
         event.createProvider(ElectriItemTagsProvider::new);
         event.createReloadableRegistryObjects(new RegistrySetBuilder()
                 .add(ElectriRecipeProvider.bootstrap())
-                .add(Registries.LOOT_TABLE, new ElectriLootProvider()));
+                .add(Registries.LOOT_TABLE, new ElectriLootProvider())
+                .add(Registries.ADVANCEMENT, new ElectriAdvancementProvider()));
         event.createProvider(ElectriTestStructureProvider::new);
     }
 }

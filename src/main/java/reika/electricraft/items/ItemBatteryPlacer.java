@@ -34,7 +34,6 @@ import reika.dragonapi.libraries.mathsci.ReikaMathLibrary;
 import reika.dragonapi.libraries.registry.ReikaItemHelper;
 import reika.electricraft.auxiliary.interfaces.BatteryTile;
 import reika.electricraft.registry.BatteryType;
-import reika.electricraft.registry.ElectriBlocks;
 
 import java.util.List;
 import java.util.function.Consumer;

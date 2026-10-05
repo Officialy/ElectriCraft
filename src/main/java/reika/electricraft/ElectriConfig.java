@@ -28,12 +28,13 @@ public class ElectriConfig extends ControlledConfig {
 
 		for (int i = 0; i < entries.size(); i++) {
 			String name = entries.get(i);
+			if (name.equals("COPPER")) continue; // Vanilla owns copper generation and its ingot.
 			ores[i] = this.registerAdditionalOption("Ore Control", name, true);
 		}
 	}
 
 	public boolean isOreGenEnabled(ElectriOres ore) {
-		return ores[ore.ordinal()].getData();
+		return ore != ElectriOres.COPPER && ores[ore.ordinal()].getData();
 	}
 
 }

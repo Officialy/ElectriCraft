@@ -164,7 +164,7 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
         if (RotaryAux.isHoldingScrewdriver(ep))
             return false;
         // 1.21.5: ReikaDyeHelper.isDyeItem/getColorFromItem haven't been ported yet — gate this branch off.
-        if (false && e != null && e.isResistor()) {
+        if (false) {
             BlockEntityResistorBase te = (BlockEntityResistorBase) world.getBlockEntity(pos);
             Direction dir = te.getFacing();
             float inc = dir.getStepX() != 0 ? a : c;

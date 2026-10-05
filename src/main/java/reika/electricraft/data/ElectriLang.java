@@ -21,6 +21,7 @@ public class ElectriLang extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add("tab.electricraft", "ElectriCraft");
+        ElectriAdvancementProvider.addTranslations(this::add);
 
         ElectriBlocks.BLOCKS.getEntries().forEach(holder ->
                 addBlock(holder, blockName(holder.getId().getPath())));

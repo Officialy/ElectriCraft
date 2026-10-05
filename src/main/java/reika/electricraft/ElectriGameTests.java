@@ -107,7 +107,7 @@ public final class ElectriGameTests {
             helper.setBlock(relative, block);
 
             BlockEntity be = helper.getLevel().getBlockEntity(helper.absolutePos(relative));
-            helper.assertTrue(be != null && machine.getTEClass().isInstance(be),
+            helper.assertTrue(machine.getTEClass().isInstance(be),
                     machine + " must create " + machine.getTEClass().getSimpleName());
             helper.assertTrue(be.getType().isValid(helper.getLevel().getBlockState(helper.absolutePos(relative))),
                     machine + " BlockEntityType must accept its registered block state");

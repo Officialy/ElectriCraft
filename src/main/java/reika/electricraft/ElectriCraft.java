@@ -63,6 +63,7 @@ public class ElectriCraft extends DragonAPIMod {
         }
 
         ElectriBlocks.BLOCKS.register(modEventBus);
+        reika.electricraft.world.ElectriFeatures.TYPES.register(modEventBus);
         ElectriBlocks.ITEMS.register(modEventBus);
 
         ElectriItems.ITEMS.register(modEventBus);
@@ -94,6 +95,11 @@ public class ElectriCraft extends DragonAPIMod {
 
     public void commonSetup(FMLCommonSetupEvent event) {
         this.startTiming(LoadProfiler.LoadPhase.LOAD);
+        event.enqueueWork(() -> {
+            if (reika.rotarycraft.registry.ConfigRegistry.HANDBOOK.getState())
+                reika.dragonapi.auxiliary.trackers.PlayerFirstTimeTracker.addTracker(
+                        new reika.electricraft.auxiliary.ElectriBookTracker());
+        });
 
         config = new ElectriConfig(instance, ElectriOptions.optionList, null);
         config.loadSubfolderedConfigFile();

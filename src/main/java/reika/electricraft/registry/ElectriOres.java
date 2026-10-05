@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import reika.dragonapi.libraries.level.LegacyOreVeins;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
@@ -51,15 +52,13 @@ public enum ElectriOres implements OreEnum {
 
     public static final ElectriOres[] oreList = values();
 
-    private static final EnumMap<ElectriOres, Boolean> equivalents = new EnumMap<>(ElectriOres.class);
-
     ElectriOres(int min, int max, int size, int count, ResourceKey<Level> dim, float xp, int level, String name) {
         minY = min;
         maxY = max;
         veinSize = size;
         perChunk = count;
         dimensionID = dim;
-        oreName = I18n.get(name);
+        oreName = Component.translatable(name).getString();
         harvestLevel = level;
         xpDropped = xp;
     }
@@ -69,18 +68,14 @@ public enum ElectriOres implements OreEnum {
         return this.name() + " " + perChunk + "x" + veinSize + " between " + minY + " and " + maxY;
     }
 
-    public static ElectriOres getOre(BlockGetter iba, BlockPos pos) {
-        Block id = iba.getBlockState(pos).getBlock();
-
-        if (id != ElectriBlocks.ORE.get())
-            return null;
-        return oreList[1]; //todo int was meta
+    public static ElectriOres getOre(BlockGetter world, BlockPos pos) {
+        return getOre(world.getBlockState(pos).getBlock());
     }
 
-    public static ElectriOres getOre(Block id) {
-        if (id != ElectriBlocks.ORE.get())
-            return null;
-        return 2 < oreList.length ? oreList[2] : null; //todo number was meta
+    public static ElectriOres getOre(Block block) {
+        for (ElectriOres ore : oreList)
+            if (block == ore.getBlock() || block == ore.getDeepslateBlock()) return ore;
+        return null;
     }
 
     public String getTextureName() {
@@ -124,7 +119,7 @@ public enum ElectriOres implements OreEnum {
 
     @Override
     public boolean canGenAt(Level world, BlockPos pos) {
-        return false;
+        return isOreEnabled() && isValidDimension(world.dimension());
     }
 
     public ItemStack getOreBlock() {
@@ -148,22 +143,14 @@ public enum ElectriOres implements OreEnum {
     }
 
     public List<ItemStack> getOreDrop() {
-        return ReikaJavaLibrary.makeListFrom(new ItemStack(ElectriBlocks.ORE.get(), 1));
+        return List.of(new ItemStack(this == COPPER ? net.minecraft.world.item.Items.RAW_COPPER : getBlock().asItem()));
     }
 
     public String getProductName() {
-        return I18n.get("Items." + this.name().toLowerCase(Locale.ENGLISH));
+        return Component.translatable("Items." + this.name().toLowerCase(Locale.ENGLISH)).getString();
     }
 
-    public Block getReplaceableBlock() {
-        return switch (dimensionID.registry().getPath()) {
-            case "0" -> Blocks.STONE;
-            case "the_end" -> Blocks.END_STONE;
-            case "the_nether" -> Blocks.NETHERRACK;
-//            case 7 -> Blocks.STONE;
-            default -> Blocks.STONE;
-        };
-    }
+    public Block getReplaceableBlock() { return Blocks.STONE; }
 
     public boolean isValidDimension(ResourceKey<Level> id) {
         if (id == dimensionID)
@@ -186,44 +173,20 @@ public enum ElectriOres implements OreEnum {
         return this.isValidBiome(world.getBiome(new BlockPos(chunkX << 4,0, chunkZ << 4)).value());// || id == ReikaTwilightHelper.getDimensionID();
     }
 
-    private boolean shouldGen() {
-        return true;
-    }
+    private boolean shouldGen() { return this != COPPER && isOreEnabled(); }
 
-    public boolean canGenAt(Level world, int x, int y, int z) {
-        return this.isOreEnabled();
-    }
+    public boolean canGenAt(Level world, int x, int y, int z) { return canGenAt(world,new BlockPos(x,y,z)); }
 
+    /** A true option forces generation; false falls back to the original equivalent-ore rule. */
     public boolean isOreEnabled() {
-//       todo if (ElectriCraft.config.isOreGenEnabled(this))
-//            return true;
-//	todo	if (ModList.CONDENSEDORES.isLoaded() && CondensedOreAPI.instance.doesBlockGenerate(this.getBlock(), this.getBlockMetadata()))
-//			return false;
-        return !this.hasEquivalents();
+        return this != COPPER && (ElectriCraft.config.isOreGenEnabled(this) || !hasEquivalents());
     }
 
     public boolean hasEquivalents() {
-        Boolean b = equivalents.get(this);
-        if (b == null) {
-            ArrayList<ItemStack> li = null;//todo OreDictionary.getOres(this.getDictionaryName());
-            boolean flag = false;
-            for (int i = 0; i < li.size() && !flag; i++) {
-                ItemStack is = li.get(i);
-                if (!ReikaItemHelper.matchStacks(is, this.getOreBlock())) {
-                    b = true;
-                    flag = true;
-                }
-            }
-            b = flag;
-            equivalents.put(this, b);
-        }
-        return b.booleanValue();
+        return LegacyOreVeins.hasEquivalent(getBlock(),name().toLowerCase(Locale.ROOT),getDeepslateBlock());
     }
 
-    public boolean dropsSelf() {
-        List<ItemStack> li = this.getOreDrop();
-        return li.size() == 1 && ReikaItemHelper.matchStackWithBlock(li.get(0), ElectriBlocks.ORE.get().defaultBlockState());
-    }
+    public boolean dropsSelf() { return this != COPPER; }
 
     @Override
     public int getHarvestLevel() {
@@ -242,12 +205,12 @@ public enum ElectriOres implements OreEnum {
 
     @Override
     public boolean dropsSelf(Level world, BlockPos pos) {
-        return false;
+        return dropsSelf();
     }
 
     @Override
     public boolean enforceHarvestLevel() {
-        return false;
+        return true;
     }
 
     @Override

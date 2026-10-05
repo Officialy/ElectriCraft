@@ -6,9 +6,6 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -21,21 +18,17 @@ import java.util.function.Consumer;
 public final class ElectriCableItemRenderer implements NoDataSpecialModelRenderer {
 
     public static final Identifier ID = Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "rf_cable");
-    private static final Identifier CENTRE_ID = Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "blocks/rf");
+    private static final Identifier CENTRE_TEXTURE = Identifier.fromNamespaceAndPath(ElectriCraft.MODID, "textures/blocks/rf.png");
 
-    private final TextureAtlasSprite centre;
-
-    private ElectriCableItemRenderer(TextureAtlasSprite centre) {
-        this.centre = centre;
-    }
+    private ElectriCableItemRenderer() { }
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, int overlay,
                        boolean hasFoil, int outlineColor) {
         PoseStack snapshot = new PoseStack();
         snapshot.last().set(poseStack.last());
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS),
-                (ignored, vertices) -> RenderWire.emitBox(snapshot.last(), centre.wrap(vertices),
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(CENTRE_TEXTURE),
+                (ignored, vertices) -> RenderWire.emitBox(snapshot.last(), vertices,
                         .375F, .375F, .375F, .625F, .625F, .625F, light));
     }
 
@@ -57,8 +50,9 @@ public final class ElectriCableItemRenderer implements NoDataSpecialModelRendere
 
         @Override
         public ElectriCableItemRenderer bake(SpecialModelRenderer.BakingContext context) {
-            TextureAtlasSprite sprite = context.sprites().get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, CENTRE_ID));
-            return new ElectriCableItemRenderer(sprite);
+            // Models bake before the live atlases upload during the initial resource reload.
+            // The original conductor uses full 0..1 UVs, like ElectriWireItemRenderer.
+            return new ElectriCableItemRenderer();
         }
     }
 }

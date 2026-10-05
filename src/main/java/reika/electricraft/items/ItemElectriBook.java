@@ -24,6 +24,9 @@ public class ItemElectriBook extends ElectriItemBase {
 
     @Override
     public InteractionResult use(Level level, Player ep, InteractionHand hand) {
+        if (!level.isClientSide())
+            reika.dragonapi.libraries.AdvancementHelper.grant(ep,
+                    net.minecraft.resources.Identifier.fromNamespaceAndPath("electricraft", "read_handbook"));
         // Client-only screen open, gated exactly like RotaryCraft's ItemHandBook.
         if (level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             reika.electricraft.client.ClientScreens.openElectriBook(ep, level);

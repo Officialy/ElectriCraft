@@ -325,7 +325,7 @@ public final class WireNetwork implements NetworkObject {
 						Direction dir = dirs[i];
 						BlockEntity adj = wire2.getAdjacentBlockEntity(dir);
 						if (adj instanceof NetworkTile nw) {
-							if (((NetworkTile)adj).canNetworkOnSide(dir.getOpposite()))
+							if (nw.canNetworkOnSide(dir.getOpposite()))
 								sides.add(dir);
 						}
 					}
