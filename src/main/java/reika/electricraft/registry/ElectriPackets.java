@@ -34,7 +34,7 @@ public enum ElectriPackets {
 
 	public static final ElectriPackets getEnum(int id) {
 		ElectriPackets[] list = values();
-		id = Math.max(0, Math.min(id, list.length-1));
+		if (id < 0 || id >= list.length) throw new IllegalArgumentException("Invalid Electri packet: " + id);
 		return list[id];
 	}
 

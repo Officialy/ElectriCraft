@@ -29,6 +29,7 @@ import reika.electricraft.blockentities.modinterface.BlockEntityRFCable;
 public class ElectriPacketCore implements PacketHandler {
 
 	public void handleData(ReikaPacketHelper.PacketObj packet, Level world, Player ep) {
+		if (!world.isClientSide() && packet.getType().isClientboundOnly()) return;
 		DataInputStream inputStream = packet.getDataIn();
 		int control = Integer.MIN_VALUE;
 		int len;
@@ -119,7 +120,7 @@ public class ElectriPacketCore implements PacketHandler {
 					break;
 				case PREFIXED:
 					control = inputStream.readInt();
-					len = inputStream.readInt();
+					len = reika.dragonapi.libraries.io.PacketValidation.readIntCount(inputStream);
 					data = new int[len];
 					for (int i = 0; i < len; i++)
 						data[i] = inputStream.readInt();
@@ -148,11 +149,17 @@ public class ElectriPacketCore implements PacketHandler {
 				z = inputStream.readInt();
 			}
 		}
-		catch (IOException e) {
+		catch (IOException | IllegalArgumentException e) {
 			e.printStackTrace();
 			return;
 		}
-		BlockEntity te = world.getBlockEntity(new BlockPos(x, y, z));
+        if (pack == null) return;
+        BlockPos target = new BlockPos(x, y, z);
+        if (!world.hasChunkAt(target)) return;
+        BlockEntity te = world.getBlockEntity(target);
+        if (!reika.dragonapi.libraries.io.PacketValidation.hasMenu(ep, world, target, te)) return;
+        if (pack == ElectriPackets.RFCABLE && (data.length != 1 || data[0] < 0)) return;
+        if (pack == ElectriPackets.TRANSFORMER && (data.length != 2 || data[0] <= 0 || data[1] <= 0 || data[0] > 9999 || data[1] > 9999)) return;
 		try {
 			switch (pack) {
 				case RFCABLE:
