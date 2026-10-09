@@ -74,6 +74,8 @@ public abstract class BlockEntityResistorBase extends BlockEntityWireComponent i
 			return false;
 		//ReikaJavaLibrary.pConsole(band);
 		ColorBand[] bands = this.getColorBands();
+		if (digit < 1 || digit > bands.length)
+			return false;
 		if (band.ordinal() > 7 && digit == bands.length)
 			return false;
 		this.assignBand(band, digit);

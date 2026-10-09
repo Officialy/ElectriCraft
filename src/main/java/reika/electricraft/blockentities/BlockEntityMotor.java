@@ -136,27 +136,25 @@ public class BlockEntityMotor extends ElectricalReceiver implements Screwdrivera
 		return (int)(curlim*f);
 	}
 
-	public boolean upgrade(ItemStack is) {
-		boolean flag = false;
-		if (ReikaItemHelper.matchStacks(is, RotaryItems.INDUCTIVE_INGOT.get()) && maxAmp < 2) {
-			maxAmp = 2;
-			flag = true;
-		}
-		else if (ReikaItemHelper.matchStacks(is, RotaryItems.TUNGSTEN_ALLOY_INGOT.get()) && maxAmp < 4) {
-			maxAmp = 4;
-			flag = true;
-		}
-		else if (ReikaItemHelper.matchStacks(is, RotaryItems.BEDROCK_ALLOY_INGOT.get()) && maxAmp < 1000) {
-			maxAmp = 1000;
-			flag = true;
-		}
+	/** Side-effect-free preview for client interaction; the server commits the upgrade. */
+	public boolean canUpgrade(ItemStack stack) {
+		int limit = this.getUpgradeLimit(stack);
+		return limit > 0 && limit > maxAmp;
+	}
 
-		if (flag) {
-			if (network != null) {
-				network.updateWires();
-			}
-		}
-		return flag;
+	private int getUpgradeLimit(ItemStack stack) {
+		if (ReikaItemHelper.matchStacks(stack, RotaryItems.INDUCTIVE_INGOT.get())) return 2;
+		if (ReikaItemHelper.matchStacks(stack, RotaryItems.TUNGSTEN_ALLOY_INGOT.get())) return 4;
+		if (ReikaItemHelper.matchStacks(stack, RotaryItems.BEDROCK_ALLOY_INGOT.get())) return 1000;
+		return 0;
+	}
+
+	public boolean upgrade(ItemStack stack) {
+		int limit = this.getUpgradeLimit(stack);
+		if (limit <= 0 || limit <= maxAmp) return false;
+		maxAmp = limit;
+		if (network != null) network.updateWires();
+		return true;
 	}
 
 	private float getSoundVolume(Level world, BlockPos pos) {

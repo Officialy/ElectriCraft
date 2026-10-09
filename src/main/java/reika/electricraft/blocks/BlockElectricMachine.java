@@ -11,6 +11,9 @@ package reika.electricraft.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -154,57 +157,48 @@ public abstract class BlockElectricMachine extends ElectriBlock {// implements I
         return super.getCollisionBoundingBoxFromPool(world, pos);
     }*/
 
-// todo   @Override
-    public boolean onBlockActivated(Level world, BlockPos pos, Player ep, int side, float a, float b, float c) {
-        ElectriTiles e = ElectriTiles.getTE(world, pos);
-        ItemStack is = ep.getUseItem();
-        RotaryItems ir = null;// RotaryItems.getEntry(is);
-        if (ir != null && ir.overridesRightClick(is))
-            return false;
-        if (RotaryAux.isHoldingScrewdriver(ep))
-            return false;
-        // 1.21.5: ReikaDyeHelper.isDyeItem/getColorFromItem haven't been ported yet — gate this branch off.
-        if (false) {
-            BlockEntityResistorBase te = (BlockEntityResistorBase) world.getBlockEntity(pos);
-            Direction dir = te.getFacing();
-            float inc = dir.getStepX() != 0 ? a : c;
-            if (dir.getStepX() > 0 || dir.getStepZ() > 0)
-                inc = 1F - inc;
-            if (te.isFlipped && dir.getStepZ() != 0) {
-                inc = 1 - inc;
-            }
-            double dl = 0.1875;
-            double l0 = 0.125;
-            double w = 0.125;
-            ColorBand[] bands = te.getColorBands();
-            int band = -1;
+    /** Native 26.3 held-item interaction, preserving V31a's band positions and motor upgrades. */
+    @Override
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world,
+            BlockPos pos, Player player, InteractionHand hand,
+            BlockHitResult hit) {
+        if (stack.is(RotaryItems.SCREWDRIVER.get()) || stack.is(RotaryItems.UPGRADE.get()))
+            return InteractionResult.PASS;
+        BlockEntity entity = world.getBlockEntity(pos);
+        if (entity instanceof BlockEntityResistorBase resistor && ReikaDyeHelper.isDyeItem(stack)) {
+            Direction dir = resistor.getFacing();
+            double inc = dir.getStepX() != 0 ? hit.getLocation().x - pos.getX() : hit.getLocation().z - pos.getZ();
+            if (dir.getStepX() > 0 || dir.getStepZ() > 0) inc = 1 - inc;
+            if (resistor.isFlipped && dir.getStepZ() != 0) inc = 1 - inc;
+            ColorBand[] bands = resistor.getColorBands();
+            int digit = -1;
             for (int i = 0; i < bands.length; i++) {
-                double d0 = dl * i;
-                if (ReikaMathLibrary.isValueInsideBoundsIncl(d0 + l0, d0 + l0 + w, inc)) {
-                    band = i + 1;
+                if (ReikaMathLibrary.isValueInsideBoundsIncl(0.1875 * i + 0.125, 0.1875 * i + 0.25, inc)) {
+                    digit = i + 1;
                     break;
                 }
             }
-            if (band > 0) {
-                if (te.setColor((ReikaDyeHelper) null, band)) {
-                    if (!ep.isCreative())
-                        is.setCount(is.getCount() - 1);
-                    return true;
-                } else {
-                    return false;
-                }
+            ReikaDyeHelper color = ReikaDyeHelper.getColorFromItem(stack);
+            ColorBand band = ColorBand.getBandFromColor(color);
+            if (digit < 1 || band == null || (digit == bands.length && band.ordinal() > 7))
+                return InteractionResult.PASS;
+            if (!world.isClientSide()) {
+                if (!resistor.setColor(color, digit)) return InteractionResult.PASS;
+                if (!player.isCreative()) stack.shrink(1);
+                resistor.syncAllData(false);
             }
+            return InteractionResult.SUCCESS;
         }
-        if (e == ElectriTiles.MOTOR) {
-            BlockEntityMotor te = (BlockEntityMotor) world.getBlockEntity(pos);
-            if (is != null && te.upgrade(is)) {
-                if (!ep.isCreative())
-                    is.setCount(is.getCount() - 1);
-                return true;
+        if (entity instanceof BlockEntityMotor motor && motor.canUpgrade(stack)) {
+            if (!world.isClientSide()) {
+                if (!motor.upgrade(stack)) return InteractionResult.PASS;
+                if (!player.isCreative()) stack.shrink(1);
+                motor.syncAllData(false);
             }
+            return InteractionResult.SUCCESS;
         }
-        //	todo		ep.openMenu(ElectriCraft.instance, 0, world, x, y, z);
-        return e == ElectriTiles.TRANSFORMER;
+        // Transformer useWithoutItem already opens its native menu; allow vanilla's fallback to reach it.
+        return super.useItemOn(stack, state, world, pos, player, hand, hit);
     }
 
 }

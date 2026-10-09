@@ -95,6 +95,12 @@ public final class ElectriGameTests {
         register(event, env, "stateful_block_drops", 20, ElectriGameTests::statefulBlockDrops);
         register(event, env, "machine_survival_break", 20, ElectriGameTests::machineSurvivalBreak);
         register(event, env, "survival_recipe_catalog", 20, ElectriGameTests::survivalRecipeCatalog);
+        register(event, env, "dye_native_identities", 20, DyeInteractionGameTests::nativeIdentities);
+        register(event, env, "dye_tag_rebinding", 20, DyeInteractionGameTests::tagRebinding);
+        register(event, env, "resistor_dye_orientation", 20, DyeInteractionGameTests::orientation);
+        register(event, env, "resistor_dye_consumption", 20, DyeInteractionGameTests::consumption);
+        register(event, env, "resistor_dye_rejection", 20, DyeInteractionGameTests::rejection);
+        register(event, env, "motor_upgrade_interaction", 20, DyeInteractionGameTests::motorUpgrade);
     }
 
     /** Catches missing/wrong BlockEntityType registrations and first-tick lifecycle crashes. */
