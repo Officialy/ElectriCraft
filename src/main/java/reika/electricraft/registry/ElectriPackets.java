@@ -11,31 +11,30 @@ package reika.electricraft.registry;
 
 import reika.dragonapi.auxiliary.PacketTypes;
 
-public enum ElectriPackets {
+public enum ElectriPackets implements reika.dragonapi.interfaces.PacketId {
 
-	RFCABLE(1),
-	TRANSFORMER(2);
+	RFCABLE(0, 1),
+	TRANSFORMER(1, 2);
+
+	private final int wireId;
+	private static final java.util.Map<Integer, ElectriPackets> BY_ID = reika.dragonapi.interfaces.PacketId.index(values());
+	@Override public int wireId() { return wireId; }
 
 	public final int numInts;
 	public final PacketTypes type;
 
-	ElectriPackets() {
-		this(0);
-	}
+	ElectriPackets(int id) { this(id, 0); }
 
-	ElectriPackets(int size) {
-		this(size, PacketTypes.DATA);
-	}
+	ElectriPackets(int id, int size) { this(id, size, PacketTypes.DATA); }
 
-	ElectriPackets(int size, PacketTypes t) {
+	ElectriPackets(int id, int size, PacketTypes t) {
+		wireId = id;
 		numInts = size;
 		type = t;
 	}
 
 	public static final ElectriPackets getEnum(int id) {
-		ElectriPackets[] list = values();
-		if (id < 0 || id >= list.length) throw new IllegalArgumentException("Invalid Electri packet: " + id);
-		return list[id];
+		return reika.dragonapi.interfaces.PacketId.lookup(BY_ID, id);
 	}
 
 	public boolean hasData() {

@@ -62,7 +62,7 @@ public class GuiTransformer extends AbstractContainerScreen<BlankContainer<Block
         int n2 = parse(input2.getValue());
         if (n1 <= 0 || n2 <= 0)
             return;
-        ReikaPacketHelper.sendPacketToServer(ElectriCraft.packetChannel, ElectriPackets.TRANSFORMER.ordinal(), trans, n1, n2);
+        ReikaPacketHelper.sendPacketToServer(ElectriCraft.packetChannel, ElectriPackets.TRANSFORMER.wireId(), trans, n1, n2);
     }
 
     private static int parse(String s) {

@@ -82,7 +82,7 @@ public class GuiRFCable extends AbstractContainerScreen<BlankContainer<BlockEnti
     private void setLimit(int value) {
         limit = value;
         cable.setRFLimit(limit);
-        ReikaPacketHelper.sendPacketToServer(ElectriCraft.packetChannel, ElectriPackets.RFCABLE.ordinal(), cable, limit);
+        ReikaPacketHelper.sendPacketToServer(ElectriCraft.packetChannel, ElectriPackets.RFCABLE.wireId(), cable, limit);
     }
 
     @Override

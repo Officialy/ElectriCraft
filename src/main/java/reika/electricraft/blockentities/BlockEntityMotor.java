@@ -130,7 +130,7 @@ public class BlockEntityMotor extends ElectricalReceiver implements Screwdrivera
 			if (rand.nextInt(10) == 0) {
 				ReikaSoundHelper.playSoundAtBlock(world, pos, SoundEvents.TNT_PRIMED);
 				//ReikaParticleHelper.SMOKE.spawnAroundBlock(world, x, y, z, 2);
-				ReikaPacketHelper.sendDataPacketWithRadius(DragonAPI.packetChannel, APIPacketHandler.PacketIDs.PARTICLE.ordinal(), this, 32, ReikaParticleHelper.SMOKE.ordinal(), 1);
+				ReikaPacketHelper.sendDataPacketWithRadius(DragonAPI.packetChannel, APIPacketHandler.PacketIDs.PARTICLE.wireId(), this, 32, ReikaParticleHelper.SMOKE.ordinal(), 1);
 			}
 		}
 		return (int)(curlim*f);

@@ -97,7 +97,7 @@ public class BlockEntityFuse extends BlockEntityWireComponent implements WireFus
 		overloaded = true;
 		ReikaSoundHelper.playBreakSound(level, worldPosition, Blocks.GLASS);
 		ReikaSoundHelper.playSoundAtBlock(level, worldPosition, SoundEvents.TNT_PRIMED, 2, 1);
-		ReikaPacketHelper.sendDataPacketWithRadius(DragonAPI.packetChannel, APIPacketHandler.PacketIDs.COLOREDPARTICLE.ordinal(), this, 24, 1, 1, 1, 32, 0);
+		ReikaPacketHelper.sendDataPacketWithRadius(DragonAPI.packetChannel, APIPacketHandler.PacketIDs.COLOREDPARTICLE.wireId(), this, 24, 1, 1, 1, 32, 0);
 	}
 
 	@Override
