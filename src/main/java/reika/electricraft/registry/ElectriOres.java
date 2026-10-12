@@ -36,10 +36,10 @@ public enum ElectriOres implements OreEnum {
 
     COPPER(32, 64, 6, 8, Level.OVERWORLD, 0.5F, 1, "ore.copper"),
     TIN(48, 72, 8, 8, Level.OVERWORLD, 0.2F, 1, "ore.tin"),
-    SILVER(0, 32, 6, 4, Level.OVERWORLD, 0.8F, 2, "ore.silver"),
-    NICKEL(16, 48, 8, 6, Level.OVERWORLD, 0.3F, 1, "ore.nickel"),
-    ALUMINUM(60, 128, 8, 10, Level.OVERWORLD, 0.4F, 1, "ore.aluminum"),
-    PLATINUM(0, 16, 4, 2, Level.OVERWORLD, 1F, 2, "ore.platinum");
+    SILVER(-60, 0, 6, 4, Level.OVERWORLD, 0.8F, 2, "ore.silver"),
+    NICKEL(-32, 32, 8, 6, Level.OVERWORLD, 0.3F, 1, "ore.nickel"),
+    ALUMINUM(60, 292, 8, 10, Level.OVERWORLD, 0.4F, 1, "ore.aluminum"),
+    PLATINUM(-60, -32, 4, 2, Level.OVERWORLD, 1F, 2, "ore.platinum");
 
     public final int minY;
     public final int maxY;

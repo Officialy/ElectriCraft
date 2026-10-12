@@ -41,8 +41,11 @@ public record BasicElectriOreGenerator(ElectriOres ore, int count, int size, int
         boolean placed = false;
         for (int i=0; i<count*discrete; i++) {
             int x=origin.getX()+random.nextInt(16), z=origin.getZ()+random.nextInt(16);
-            int y=minY+random.nextInt(maxY-minY+1);
-            placed |= LegacyOreVeins.place(world,random,ore.getBlock().defaultBlockState(),size,0,x,y,z);
+            int y=reika.dragonapi.libraries.level.WorldgenHeight.randomBetween(world,random,minY,maxY);
+            var stoneOre = ore.getBlock().defaultBlockState();
+            var deepBlock = ore.getDeepslateBlock();
+            placed |= LegacyOreVeins.place(world,random,stoneOre,
+                    deepBlock == null ? stoneOre : deepBlock.defaultBlockState(),size,0,x,y,z);
         }
         return placed;
     }
